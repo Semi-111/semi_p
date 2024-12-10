@@ -1,5 +1,41 @@
 ﻿@charset "UTF-8";
 
+/* trainee css/footer.css */
+
+.container-fluid .nav {
+    justify-content: center;
+    padding: 1rem;
+}
+
+.nav-item .text-reset {
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-item span {
+    color: #666;
+}
+
+#loadingLayout {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9000;
+    background: #eee;
+}
+
+.loader {
+    /* 로더 관련 스타일 추가 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
 /* Navigation */
 .navbar {
 	background-color: #fcfafb;
