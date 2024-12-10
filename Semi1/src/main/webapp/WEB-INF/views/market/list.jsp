@@ -205,7 +205,7 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="${pageContext.request.contextPath}/test/images/trainee.png" alt="트레이니 로고">
+                <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 로고">
             </div>
             <div class="nav-links">
                 <a href="#">게시판</a>
