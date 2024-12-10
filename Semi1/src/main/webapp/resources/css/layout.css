@@ -1,77 +1,53 @@
 ﻿@charset "UTF-8";
 
-/* Navigation */
-.navbar {
-	background-color: #fcfafb;
-	font-weight: 500;
-	font-size: 0.875rem;
-	line-height: 0.2rem;
-	box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.05);
+/* trainee css/footer.css */
+
+/* trainee css/footer.css */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
 }
 
-.navbar .navbar-nav {
-	margin-top: 0.75rem;
-	margin-bottom: 0.5rem;
+body {
+    position: relative;
+    padding-bottom: 160px; /* footer의 높이보다 크게 설정 */
 }
 
-.navbar .nav-item .nav-link {
-	color: #5e6576;
-	transition: all 0.2s ease;
-	padding-top: 0.5rem;
-	padding-bottom: 0.5rem;
+/* 푸터 */
+footer {
+    background-color: #f9fafb;
+    padding: 2rem 1rem;
+    border-top: 1px solid #eee;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.navbar .nav-item .nav-link:hover,
-.navbar .nav-item .nav-link.active {
-	color: #0092ff;
-	text-decoration: none;
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #666;
 }
 
-.navbar .dropdown-menu {
-	margin-top: 0.25rem;
-	margin-bottom: 0.25rem;
+.footer-links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
 }
 
-.navbar .dropdown-item {
-	color: #5e6576;
-	font-weight: 500;
-	font-size: 0.875rem;
-	line-height: 0.875rem;
-	padding-top: 0.625rem;
-	padding-bottom: 0.625rem;	
+.footer-links a {
+    text-decoration: none;
+    color: #666;
 }
 
-.navbar .dropdown-item:hover {
-	background-color: #fcfafb;
-	color: #0092ff;
-	text-decoration: none;
+.footer-links a:hover {
+    color: #a855f7;
 }
 
-/* body */
-.body-container {
-    clear:both;
-    margin: 0 auto 10px;
-    min-height: 500px;
-    padding-top: 20px;
-}
-
-.body-title {
-    color: #424951;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    margin: 0 0 25px 0;
-    border-bottom: 1px solid #dddddd;
-}
-.body-title h3 {
-    font-size: 23px;
-    min-width: 300px;
-    font-family:"Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-    font-weight: bold;
-    margin: 0 0 -5px 0;
-    padding-bottom: 5px;
-    display: inline-block;
-    border-bottom: 3px solid #424951;
-}
 
 /* 페이징 */
 .page-navigation {
