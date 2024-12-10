@@ -4,6 +4,7 @@
 
 <!-- CSS 파일 링크 추가 -->
 
+
 <footer>
     <div class="footer-content">
         <p>씨유트레이니 주식회사</p>
