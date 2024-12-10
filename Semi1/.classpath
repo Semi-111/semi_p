@@ -13,9 +13,5 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="/Test/WebContent/lib/jakarta.servlet.jsp.jstl-3.0.1.jar"/>
-	<classpathentry kind="lib" path="/Test/WebContent/lib/jakarta.servlet.jsp.jstl-api-3.0.2.jar"/>
-	<classpathentry kind="lib" path="/Test/WebContent/lib/json-20240303.jar"/>
-	<classpathentry kind="lib" path="/Test/WebContent/lib/ojdbc11-23.6.0.24.10.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
