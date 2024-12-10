@@ -33,8 +33,7 @@ public class MarketController {
 		// 이곳에 글 리스트가 와야함. 페이징 처리 등등....
 		// 게시글 리스트 : 파라미터 - [page], [schType, kwd]
 		ModelAndView mav = new ModelAndView("market/list");
-		 
-		
+
 		MarketDAO dao = new MarketDAO();
 		MyUtil util = new MyUtilBootstrap();
 
@@ -94,8 +93,10 @@ public class MarketController {
 			// 페이징 처리
 			String cp = req.getContextPath();
 			String listUrl = cp + "/market/list";
+
 			// 글리스트 주소
 			String articleUrl = cp + "/market/article?page=" + current_page;
+
 			// 글보기 주소
 			if (query.length() != 0) {
 				listUrl += "?" + query;
@@ -106,7 +107,7 @@ public class MarketController {
 			String paging = util.paging(current_page, total_page, listUrl);
 
 			// 포워딩할 JSP에 전달할 속성
-			mav.addObject("list", list); 
+			mav.addObject("list", list);
 			mav.addObject("page", current_page);
 			mav.addObject("total_page", total_page);
 			mav.addObject("dataCount", dataCount);
@@ -119,10 +120,9 @@ public class MarketController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return mav;
 	}
-
 
 	// 장터 글쓰기폼
 	@RequestMapping(value = "/market/write", method = RequestMethod.GET)
@@ -134,7 +134,8 @@ public class MarketController {
 
 	// 글 작성
 	@RequestMapping(value = "/market/write", method = RequestMethod.POST)
-	public ModelAndView marketWriteSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView marketWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		MarketDTO dto = new MarketDTO();
 
 		try {
@@ -145,7 +146,7 @@ public class MarketController {
 			if (filePart != null && filePart.getSize() > 0) {
 				// 실제 파일 이름 가져오기
 				fileName = filePart.getSubmittedFileName();
-				
+
 				// 파일을 서버에 저장
 				String path = req.getServletContext().getRealPath("/uploads");
 				File f = new File(path);
@@ -166,7 +167,7 @@ public class MarketController {
 			dto.setMb_num(5); // 5는 임시 / 진짜는 세션에서 가져온다
 
 			MarketDAO dao = new MarketDAO();
-			
+
 			dao.insertMarket(dto);
 
 		} catch (Exception e) {
@@ -174,5 +175,61 @@ public class MarketController {
 		}
 
 		return new ModelAndView("redirect:/market/list");
+	}
+
+	// 글 보기
+	@RequestMapping(value = "/market/article", method = RequestMethod.GET)
+	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		MarketDAO dao = new MarketDAO();
+		MyUtil util = new MyUtilBootstrap();
+
+		String page = req.getParameter("page");
+		String query = "page=" + page;
+
+		try {
+			// 글번호
+			long marketNum = Long.parseLong(req.getParameter("marketNum"));
+			String schType = req.getParameter("schType");
+			String kwd = req.getParameter("kwd");
+
+			// 검색어가 없다면 검색타입은 all, 검색창은 비운다.
+			if (schType == null) {
+				schType = "all";
+				kwd = "";
+			}
+			// 키워드가 한글로 올 수도 있으니 디코드.
+			kwd = URLDecoder.decode(kwd, "urf-8");
+
+			// 검색어가 있는 경우
+			if (kwd.length() != 0) {
+				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+			}
+
+			// 조회수 증가하는 dao 메소드 1
+			// dao.updateHitCount
+
+			// 보고자하는 게시물 가져오기 dao 메소드 2
+			// BoardDTO dto = dao.findById(num);
+
+			/*
+			 * 게시물이 없는 경우 리스트로 다시 돌아간다. if (dto == null) { return new
+			 * ModelAndView("redirect:/market/list"); }
+			 */
+
+			// 이전글, 다음글 메소드 3,4
+//			BoardDTO prevDto = dao.findByPrev(dto.getNum(), schType, kwd);
+//			BoardDTO nextDto = dao.findByNext(dto.getNum(), schType, kwd);
+
+			// + 좋아요 기능있으면 좋다.
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		ModelAndView mav = new ModelAndView("redirect:/market/list" + query);
+
+		return mav;
+
 	}
 }

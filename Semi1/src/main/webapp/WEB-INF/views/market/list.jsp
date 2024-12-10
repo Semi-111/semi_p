@@ -425,14 +425,12 @@ footer {
 
 						<!-- 다음 페이지 -->
 						<c:if test="${current_page < total_page}">
-							<a href="${listUrl}?page=${current_page+1}" class="page-link"
-								title="다음">〉</a>
+							<a href="${listUrl}?page=${current_page+1}" class="page-link" title="다음">〉</a>
 						</c:if>
 
 						<!-- 마지막 페이지 -->
 						<c:if test="${current_page < total_page}">
-							<a href="${listUrl}?page=${total_page}" class="page-link"
-								title="마지막">⌋</a>
+							<a href="${listUrl}?page=${total_page}" class="page-link" title="마지막">⌋</a>
 						</c:if>
 					</div>
 
