@@ -1,0 +1,99 @@
+﻿@charset "UTF-8";
+@charset "UTF-8";
+
+* { padding: 0; margin: 0; }
+*, *::after, *::before { box-sizing: border-box; }
+
+body { font-size: 14px; font-family: "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif; }
+
+a { text-decoration: none; color: #333; }
+a:hover, a:active{ text-decoration: underline; cursor: pointer; color: #F28011; }
+
+textarea:focus, input:focus { outline: none; }
+
+/* clear */
+.clear::after { content:''; display:block; clear: both; }
+
+.border-top1 { border-top: 1px solid #212529; }
+.border-top2 { border-top: 2px solid #212529; }
+.border-bottom1 { border-bottom: 1px solid #212529; }
+.border-bottom2 { border-bottom: 2px solid #212529; }
+
+/* header */
+.fixed-top { position: fixed; top: 0; left: 0; right: 0; }
+header {
+	background: #eeeeee;
+	box-shadow: rgba(0, 0, 0, 0.5) 0 -20px 20px 20px;
+}
+header .img-person {
+	border: 1px solid #ccc;
+	width: 35px;
+	height: 35px;
+	border-radius: 35px;
+	background-repeat : no-repeat;
+	background-size : cover;
+	margin-right: 5px;
+	display: block;
+}
+
+/* main */
+main { margin-top: 55px; }
+
+.wrapper {
+	padding: 30px 30px 15px;
+	transition: all 0.3s ease-out;
+}
+
+/* Small devices (tablets) */
+@media (min-width: 768px) {
+}
+
+/* Medium devices (desktops) */
+@media (min-width: 992px) {
+  body {
+    overflow-y: scroll;
+  }
+
+  .wrapper {
+    margin-left: 200px;
+  }
+
+  .wrapper__minify {
+    margin-left: 50px;
+  }
+}
+
+/* container */
+.body-container {
+	padding: 10px;
+	clear: both;
+}
+
+.body-title {
+    color: #424951;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin: 0 0 25px 0;
+    border-bottom: 1px solid #ddd;
+}
+.body-title h3 {
+    font-size: 23px;
+    min-width: 300px;
+    font-family:"Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+    font-weight: bold;
+    margin: 0 0 -5px 0;
+    padding-bottom: 5px;
+    display: inline-block;
+    border-bottom: 3px solid #424951;
+}
+
+.body-main {
+	padding-bottom: 15px;
+}
+
+/* 페이징 */
+.page-navigation {
+	clear: both;
+	padding: 20px 0;
+	text-align: center;
+}

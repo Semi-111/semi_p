@@ -1,0 +1,115 @@
+	* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
+		}
+
+		body {
+			background-color: #f5f5f5;
+		}
+
+		header {
+			background: white;
+			border-bottom: 1px solid #e1e1e1;
+		}
+
+		.top-icons {
+			display: flex;
+			justify-content: flex-end;
+			padding: 10px 20px;
+			background-color: #ffffff;
+		}
+
+		.top-icons i {
+			font-size: 20px;
+			color: #666;
+			cursor: pointer;
+			margin-left: 15px;
+		}
+
+		.top-icons i:hover {
+			color: #a855f7;
+		}
+
+		nav {
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 20px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			height: 100px;
+		}
+
+		.logo img {
+			height: 70px;
+			width: auto;
+		}
+
+		.nav-links {
+			display: flex;
+			align-items: center;
+			gap: 2rem;
+		}
+
+		.nav-links a {
+			text-decoration: none;
+			color: #666;
+			font-size: 16px;
+			transition: color 0.3s;
+		}
+
+		.nav-links a:hover {
+			color: #a855f7;
+		}
+
+		.nav-links a.active {
+			color: #a855f7;
+			font-weight: bold;
+		}
+
+		.hamburger {
+			display: none;
+			font-size: 28px;
+			cursor: pointer;
+		}
+
+		@media (max-width: 768px) {
+			nav {
+				padding: 0 10px;
+				position: relative;
+			}
+
+			.nav-links {
+				display: none;
+				flex-direction: column;
+				background-color: rgba(255, 255, 255, 0.95);
+				position: absolute;
+				top: 100px;
+				right: 10px;
+				width: 80%;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				transform: translateX(100%);
+				opacity: 0;
+				transition: transform 0.3s ease, opacity 0.3s ease;
+				border-radius: 8px;
+			}
+
+			.nav-links.active {
+				display: flex;
+				transform: translateX(0);
+				opacity: 1;
+			}
+
+			.nav-links a {
+				padding: 15px;
+				font-size: 14px;
+				border-bottom: 1px solid #e1e1e1;
+				text-align: center;
+			}
+
+			.hamburger {
+				display: block;
+			}
+		}

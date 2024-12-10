@@ -1,0 +1,57 @@
+﻿@charset "UTF-8";
+
+/* trainee css/footer.css */
+
+/* trainee css/footer.css */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body {
+    position: relative;
+    padding-bottom: 160px; /* footer의 높이보다 크게 설정 */
+}
+
+/* 푸터 */
+footer {
+    background-color: #f9fafb;
+    padding: 2rem 1rem;
+    border-top: 1px solid #eee;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: #666;
+}
+
+.footer-links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #666;
+}
+
+.footer-links a:hover {
+    color: #a855f7;
+}
+
+
+/* 페이징 */
+.page-navigation {
+	clear: both;
+	padding: 20px 0;
+	text-align: center;
+}
