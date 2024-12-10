@@ -390,7 +390,7 @@ footer {
 				<c:forEach var="dto" items="${list}">
 					<div class="post-item">
 						<h3 class="post-title">
-							<a href="${articleUrl}&marketNum=${dto.marketNum}">${dto.title}</a>
+						 	<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${page}">${dto.title}</a>
 						</h3>
 						<div class="post-info">
 							<span>작성자: ${dto.nickName}</span> <span>작성일:

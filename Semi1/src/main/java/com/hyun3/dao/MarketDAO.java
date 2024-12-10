@@ -137,31 +137,40 @@ public class MarketDAO {
 	}
 
 	// 전체 데이터 개수
-	public int dataCount(String schType, String ksd) throws SQLException {
+	public int dataCount(String schType, String kwd) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 
 		try {
-			sql = "SELECT COUNT(*) FROM marketplace";
+			sql = "SELECT COUNT(*) cnt " + " FROM marketplace m " + " JOIN member mb ON m.MB_num = mb.MB_num ";
+
+			if (schType.equals("all")) {
+				sql += " WHERE INSTR(title, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+			} else {
+				sql += " WHERE INSTR(" + schType + ", ?) >= 1 ";
+			}
+
 			pstmt = conn.prepareStatement(sql);
+
+			if (schType.equals("all")) {
+				pstmt.setString(1, kwd);
+				pstmt.setString(2, kwd);
+			} else {
+				pstmt.setString(1, kwd);
+			}
 
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				result = rs.getInt(1);
+				result = rs.getInt("cnt");
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
-			if (pstmt != null)
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
 		}
 
 		return result;
@@ -188,6 +197,167 @@ public class MarketDAO {
 		}
 
 		return result;
+	}
+
+	// 조회수 증가
+	public void updateHitCount(long marketNum) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE marketplace SET views = views + 1 WHERE marketNum = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, marketNum);
+			pstmt.executeUpdate();
+
+		} finally {
+			DBUtil.close(pstmt);
+		}
+	}
+
+	// 게시글 가져오기
+	public MarketDTO findById(long marketNum) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MarketDTO dto = null;
+		String sql;
+
+		try {
+			sql = "SELECT m.marketNum, m.title, m.content, m.views, "
+					+ " m.CA_date, m.fileName, m.MB_num, m.CT_num, mb.nickName " + " FROM marketplace m "
+					+ " JOIN member mb ON m.MB_num = mb.MB_num " + " WHERE marketNum = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, marketNum);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto = new MarketDTO();
+
+				dto.setMarketNum(rs.getInt("marketNum"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setViews(rs.getInt("views"));
+				dto.setCa_date(rs.getString("CA_date"));
+				dto.setFileName(rs.getString("fileName"));
+				dto.setMb_num(rs.getInt("MB_num"));
+				dto.setCt_num(rs.getInt("CT_num"));
+				dto.setNickName(rs.getString("nickName"));
+			}
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return dto;
+	}
+
+	// 이전글
+	public MarketDTO findByPrev(long marketNum, String schType, String kwd) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MarketDTO dto = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			if (kwd != null && kwd.length() != 0) {
+				sb.append("SELECT marketNum, title ");
+				sb.append(" FROM marketplace m ");
+				sb.append(" JOIN member mb ON m.MB_num = mb.MB_num ");
+				sb.append(" WHERE marketNum > ? ");
+				if (schType.equals("all")) {
+					sb.append(" AND (INSTR(title, ?) >= 1 OR INSTR(content, ?) >= 1) ");
+				} else {
+					sb.append(" AND INSTR(" + schType + ", ?) >= 1 ");
+				}
+				sb.append(" ORDER BY marketNum ASC ");
+				sb.append(" FETCH FIRST 1 ROWS ONLY ");
+
+				pstmt = conn.prepareStatement(sb.toString());
+
+				pstmt.setLong(1, marketNum);
+				pstmt.setString(2, kwd);
+				if (schType.equals("all")) {
+					pstmt.setString(3, kwd);
+				}
+			} else {
+				sb.append("SELECT marketNum, title FROM marketplace ");
+				sb.append(" WHERE marketNum > ? ");
+				sb.append(" ORDER BY marketNum ASC ");
+				sb.append(" FETCH FIRST 1 ROWS ONLY ");
+
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setLong(1, marketNum);
+			}
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto = new MarketDTO();
+				dto.setMarketNum(rs.getInt("marketNum"));
+				dto.setTitle(rs.getString("title"));
+			}
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return dto;
+	}
+
+	// 다음글
+	public MarketDTO findByNext(long marketNum, String schType, String kwd) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MarketDTO dto = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			if (kwd != null && kwd.length() != 0) {
+				sb.append("SELECT marketNum, title ");
+				sb.append(" FROM marketplace m ");
+				sb.append(" JOIN member mb ON m.MB_num = mb.MB_num ");
+				sb.append(" WHERE marketNum < ? ");
+				if (schType.equals("all")) {
+					sb.append(" AND (INSTR(title, ?) >= 1 OR INSTR(content, ?) >= 1) ");
+				} else {
+					sb.append(" AND INSTR(" + schType + ", ?) >= 1 ");
+				}
+				sb.append(" ORDER BY marketNum DESC ");
+				sb.append(" FETCH FIRST 1 ROWS ONLY ");
+
+				pstmt = conn.prepareStatement(sb.toString());
+
+				pstmt.setLong(1, marketNum);
+				pstmt.setString(2, kwd);
+				if (schType.equals("all")) {
+					pstmt.setString(3, kwd);
+				}
+			} else {
+				sb.append("SELECT marketNum, title FROM marketplace ");
+				sb.append(" WHERE marketNum < ? ");
+				sb.append(" ORDER BY marketNum DESC ");
+				sb.append(" FETCH FIRST 1 ROWS ONLY ");
+
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setLong(1, marketNum);
+			}
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				dto = new MarketDTO();
+				dto.setMarketNum(rs.getInt("marketNum"));
+				dto.setTitle(rs.getString("title"));
+			}
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return dto;
 	}
 
 }
