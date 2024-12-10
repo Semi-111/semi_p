@@ -33,7 +33,7 @@ public class MarketController {
 		// 이곳에 글 리스트가 와야함. 페이징 처리 등등....
 		// 게시글 리스트 : 파라미터 - [page], [schType, kwd]
 		ModelAndView mav = new ModelAndView("market/list");
-		
+		 
 		/*
 		MarketDAO dao = new MarketDAO();
 		MyUtil util = new MyUtilBootstrap();

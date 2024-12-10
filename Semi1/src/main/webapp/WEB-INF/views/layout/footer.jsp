@@ -3,7 +3,6 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 <!-- CSS 파일 링크 추가 -->
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/footer.css">
 
 <footer>
     <div class="footer-content">
