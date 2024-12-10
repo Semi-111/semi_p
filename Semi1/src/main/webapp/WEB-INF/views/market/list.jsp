@@ -340,7 +340,7 @@ footer {
 		<nav>
 			<div class="logo">
 				<img
-					src="${pageContext.request.contextPath}/resources/images/trainee.png"
+					src="${pageContext.request.contextPath}/resources/images/logo.png"
 					alt="트레이니 로고">
 			</div>
 			<div class="nav-links">
@@ -438,8 +438,7 @@ footer {
 
 					<!-- 데이터 수와 현재 페이지 -->
 					<div style="text-align: center; margin-top: 10px;">
-						<span style="color: #666;">${dataCount}개(${current_page}/${total_page}
-							페이지)</span>
+						<span style="color: #666;">${dataCount}개(${current_page}/${total_page}페이지)</span>
 					</div>
 				</div>
 			</div>

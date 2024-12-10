@@ -34,7 +34,7 @@ public class MarketController {
 		// 게시글 리스트 : 파라미터 - [page], [schType, kwd]
 		ModelAndView mav = new ModelAndView("market/list");
 		 
-		/*
+		
 		MarketDAO dao = new MarketDAO();
 		MyUtil util = new MyUtilBootstrap();
 
@@ -119,7 +119,7 @@ public class MarketController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		*/
+		
 		return mav;
 	}
 
