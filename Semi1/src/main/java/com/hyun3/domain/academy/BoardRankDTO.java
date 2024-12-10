@@ -5,6 +5,7 @@ public class BoardRankDTO {
 	private String userId;		// 아이디
 	private String nickName;	// 닉네임
 	
+	
 	private long cm_Num; 		// 게시글번호
     private String title; 		// 글제목
     private String ca_Date;		// 게시글 생성일
