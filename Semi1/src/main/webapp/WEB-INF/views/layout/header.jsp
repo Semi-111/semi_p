@@ -2,19 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Responsive Header with Icons</title>
-	<!-- Bootstrap Icons CDN -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
-
-</head>
-<body>
 <header>
 	<div class="top-icons">
 		<!-- 로그인 상태에 따른 버튼 표시 -->
@@ -45,12 +32,8 @@
 			<a href="#">시간표</a>
 			<a href="#">학점계산기</a>
 			<a href="#">친구</a>
-			<a href="${pageContext.request.contextPath}/market/list">장터</a>
+			<a href="#">장터</a>
 			<a href="#">맛집</a>
 		</div>
 	</nav>
 </header>
-
-
-</body>
-</html>

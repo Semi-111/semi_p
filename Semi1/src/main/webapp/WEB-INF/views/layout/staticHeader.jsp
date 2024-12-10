@@ -16,3 +16,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/core.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
