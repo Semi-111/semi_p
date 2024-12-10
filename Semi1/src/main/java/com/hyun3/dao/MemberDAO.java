@@ -19,10 +19,10 @@ public class MemberDAO {
     String sql;
 
     try {
-      sql = "SELECT mb_Num, userId, NICKNAME, "
+      sql = "SELECT mb_Num, userId, nickname, "
           + " role, ca_Day, modifyDay "
           + " FROM member "
-          + " WHERE userId = ? AND pwd = ? AND block = 1";
+          + " WHERE userId = ? AND pwd = ? AND block = 0";
 
       pstmt = conn.prepareStatement(sql);
 
@@ -36,7 +36,7 @@ public class MemberDAO {
 
         dto.setMb_Num(rs.getLong("mb_Num"));
         dto.setUserId(rs.getString("userId"));
-        dto.setName(rs.getString("name"));
+        dto.setName(rs.getString("nickname"));
         dto.setRole(rs.getInt("role"));
         dto.setCa_Day(rs.getString("ca_Day"));
         dto.setModifyDay(rs.getString("modifyDay"));
@@ -59,7 +59,7 @@ public class MemberDAO {
     try {
       conn.setAutoCommit(false);
 
-      sql = "INSERT INTO member(mb_Num, userId, pwd, NICKNAME, nickName, block, role, ca_Day, modifyDay) "
+      sql = "INSERT INTO member(mb_Num, userId, pwd, name, nickName, block, role, ca_Day, modifyDay) "
           + " VALUES (member_seq.NEXTVAL, ?, ?, ?, ?, 1, 1, SYSDATE, SYSDATE)";
       pstmt = conn.prepareStatement(sql);
 
@@ -184,7 +184,7 @@ public class MemberDAO {
       pstmt.close();
       pstmt = null;
 
-      sql = "UPDATE dt_member SET birth=TO_DATE(?,'YYYY-MM-DD'), email=?, tel=?, WHERE userId=?";
+      sql = "UPDATE dt_member SET birth=TO_DATE(?,'YYYY-MM-DD'), email=?, tel=? WHERE userId=?";
       pstmt = conn.prepareStatement(sql);
 
       pstmt.setString(1, dto.getBirth());
@@ -228,7 +228,7 @@ public class MemberDAO {
     String sql;
 
     try {
-      sql = "UPDATE member SET block.=0, role=0 WHERE userId=?";
+      sql = "UPDATE member SET block=0, role=0 WHERE userId=?";
       pstmt = conn.prepareStatement(sql);
 
       pstmt.setString(1, userId);
