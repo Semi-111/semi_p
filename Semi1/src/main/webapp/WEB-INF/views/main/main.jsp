@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html; charset=UTF-8" %>
+﻿<%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
@@ -9,7 +9,7 @@
 <title>spring</title>
 
 
-	 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 
 <style type="text/css">
 .body-container {
@@ -20,23 +20,18 @@
 </head>
 <body>
 
-<header>
-	<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
-</header>
+	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
-<main>
-	<div class="container">
-		<div class="body-container">
-			<div class="d-grid">
+	<main>
+		<div class="container">
+			<div class="body-container">
+				<div class="d-grid"></div>
+				ㄹㄹㄹ
 			</div>
 		</div>
-	</div>
-</main>
+	</main>
 
-<footer>
-	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
-</footer>
-
-	<!--  <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>  -->
+	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 </body>
 </html>
