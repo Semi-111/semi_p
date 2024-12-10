@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap5/icon/bootstrap-icons.css"
           type="text/css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/core2.css" type="text/css">
-
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.min.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
@@ -19,6 +18,7 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             height: 100vh;
             margin: 0;
         }
@@ -29,8 +29,8 @@
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: absolute;
             display: block;
-            top: 0;
-            height: 100%;
+            top: 56px; /* Adjusted for navbar height */
+            height: calc(100% - 56px); /* Adjusted for navbar height */
             background: white;
             z-index: 1002;
             transition: display 0.3s ease;
@@ -46,9 +46,11 @@
         }
 
         #toggleButton {
+            width: 60px;
+            height: 60px;
             position: absolute;
-            left: 0;
-            top: 20px;
+            left: 10px;
+            top: 66px;
             z-index: 1001;
             font-size: 1.5rem;
             background-color: #6f42c1;
@@ -80,12 +82,34 @@
             border-bottom: 1px solid #ddd;
         }
     </style>
-    <script type="text/javascript"
-            src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=testyeoahv"></script>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">상단바</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">게시판</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">시간표</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">학점계산기</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">장터</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<main>
     <button id="toggleButton" class="btn btn-primary" onclick="toggleSearch()">☰</button>
     <div id="search">
         <div class="search-header">
@@ -98,15 +122,27 @@
             <ul id="results"></ul>
         </div>
     </div>
-</main>
-    <div id="map"></div>
 
 
+<div id="map"></div>
+
+
+<script type="text/javascript"
+        src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${NaverClientID}"></script>
 <script>
-
     let map = new naver.maps.Map('map', {
         center: new naver.maps.LatLng(37.556601, 126.919494),
-        zoom: 16
+        zoom: 18
+    });
+    let marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(37.556601, 126.919494),
+        map: map,
+        icon: {
+            url: '${pageContext.request.contextPath}/resources/images/map/marker.png',
+            size: new naver.maps.Size(48, 48),
+            origin: new naver.maps.Point(0, 0),
+            anchor: new naver.maps.Point(25, 25)
+        }
     });
 
     function toggleSearch() {
@@ -121,6 +157,9 @@
     function searchPlaces() {
 
     }
+
+
 </script>
+
 </body>
 </html>

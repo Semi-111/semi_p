@@ -2,15 +2,16 @@ package com.hyun3.domain.map_api;
 
 import java.util.List;
 
-public class MapDTO {
+public class MapDTO  implements Comparable<MapDTO> {
 
     private Long stId;
     private String stName;
     private String address;
     private String tel;
-    private String lat;
-    private String lon;
+    private double lat;
+    private double lon;
     private String ctGroup;
+    private String divisionCode;
     private String ctName;
 
     private List<StImgDTO> stImgDTO;
@@ -18,6 +19,15 @@ public class MapDTO {
 
     public Long getStId() {
         return stId;
+    }
+
+    public String getDivisionCode() {
+
+        return divisionCode;
+    }
+
+    public void setDivisionCode(String divisionCode) {
+        this.divisionCode = divisionCode;
     }
 
     public void setStId(Long stId) {
@@ -48,19 +58,19 @@ public class MapDTO {
         this.tel = tel;
     }
 
-    public String getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(String lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public String getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(String lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -94,5 +104,10 @@ public class MapDTO {
 
     public void setBlogDTO(List<BlogDTO> blogDTO) {
         this.blogDTO = blogDTO;
+    }
+
+    @Override
+    public int compareTo(MapDTO other) {
+        return this.stName.compareTo(other.stName);
     }
 }
