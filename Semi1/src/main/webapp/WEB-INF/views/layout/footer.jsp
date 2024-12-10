@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
@@ -48,5 +47,5 @@
 
 <div id="loadingLayout">
     <div class="loader"></div>
->>>>>>> branch 'master' of https://github.com/Semi-111/semi_p
+
 </div>
