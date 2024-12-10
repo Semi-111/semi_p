@@ -26,7 +26,7 @@
 		<div class="container">
 			<div class="body-container">
 				<div class="d-grid"></div>
-				ㄹㄹㄹ
+				
 			</div>
 		</div>
 	</main>

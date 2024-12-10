@@ -2,8 +2,6 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
-<!-- CSS 파일 링크 추가 -->
-
 
 <footer>
     <div class="footer-content">
