@@ -27,7 +27,7 @@
 <main>
 	<div class="container">
 		<div class="body-container">
-			<div class="d-grid">'
+			<div class="d-grid">
 				<a href="${pageContext.request.contextPath}/market/list">장터게시판</a>
 			</div>
 		</div>
@@ -38,6 +38,6 @@
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 </footer>
 
-<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>
+	<!-- <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/> --> 
 </body>
 </html>
