@@ -103,7 +103,7 @@ public class MapController {
     public void naverBlog(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String clientId = NAVER_CLIENT_ID;
         String clientSecret = NAVER_MAP_SECRET_KEY;
-        System.out.println("ㄴㄴㄴㄴㄴ");
+       
         int startNum = 0;
 
         String text;
