@@ -45,7 +45,7 @@
 			<a href="#">시간표</a>
 			<a href="#">학점계산기</a>
 			<a href="#">친구</a>
-			<a href="#">장터</a>
+			<a href="${pageContext.request.contextPath}/market/list">장터</a>
 			<a href="#">맛집</a>
 		</div>
 	</nav>
