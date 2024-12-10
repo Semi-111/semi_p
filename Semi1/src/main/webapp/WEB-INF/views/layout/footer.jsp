@@ -20,8 +20,3 @@
         </div>
     </div>
 </footer>
-
-<div id="loadingLayout">
-    <div class="loader"></div>
-
-</div>

@@ -9,7 +9,7 @@
 <title>spring</title>
 
 
-	<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+	 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
 <style type="text/css">
 .body-container {
@@ -27,8 +27,8 @@
 <main>
 	<div class="container">
 		<div class="body-container">
-			<div class="d-grid">
-				메인 화면 입니다.
+			<div class="d-grid">'
+				<a href="${pageContext.request.contextPath}/market/list">장터게시판</a>
 			</div>
 		</div>
 	</div>

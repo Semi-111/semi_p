@@ -9,6 +9,22 @@ public class MarketDTO {
 	private int mb_num;
 	private int ct_num; // 카테고리 번호
 	private String ct_name; // 카테고리 이름
+	private String nickName;
+	private int views;
+	
+	
+	public int getViews() {
+		return views;
+	}
+	public void setViews(int views) {
+		this.views = views;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public int getMarketNum() {
 		return marketNum;
 	}
