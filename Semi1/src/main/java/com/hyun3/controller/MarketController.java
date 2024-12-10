@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import com.hyun3.dao.MarketDAO;
+import com.hyun3.domain.MemberDTO;
 import com.hyun3.domain.sw.MarketDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 @Controller
@@ -108,7 +110,7 @@ public class MarketController {
 
 			// 포워딩할 JSP에 전달할 속성
 			mav.addObject("list", list);
-			mav.addObject("page", current_page);
+			mav.addObject("current_page", current_page);
 			mav.addObject("total_page", total_page);
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("size", size);
@@ -177,59 +179,63 @@ public class MarketController {
 		return new ModelAndView("redirect:/market/list");
 	}
 
-	// 글 보기
 	@RequestMapping(value = "/market/article", method = RequestMethod.GET)
 	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		MarketDAO dao = new MarketDAO();
-		MyUtil util = new MyUtilBootstrap();
+
+		// 세션에서 로그인 정보 가져오기
+		HttpSession session = req.getSession();
+		MemberDTO member = (MemberDTO) session.getAttribute("member");
 
 		String page = req.getParameter("page");
 		String query = "page=" + page;
 
 		try {
-			// 글번호
 			long marketNum = Long.parseLong(req.getParameter("marketNum"));
 			String schType = req.getParameter("schType");
 			String kwd = req.getParameter("kwd");
 
-			// 검색어가 없다면 검색타입은 all, 검색창은 비운다.
 			if (schType == null) {
 				schType = "all";
 				kwd = "";
 			}
-			// 키워드가 한글로 올 수도 있으니 디코드.
-			kwd = URLDecoder.decode(kwd, "urf-8");
+			kwd = URLDecoder.decode(kwd, "utf-8");
 
-			// 검색어가 있는 경우
 			if (kwd.length() != 0) {
 				query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
 			}
 
-			// 조회수 증가하는 dao 메소드 1
-			// dao.updateHitCount
+			// 조회수 증가
+			dao.updateHitCount(marketNum);
 
-			// 보고자하는 게시물 가져오기 dao 메소드 2
-			// BoardDTO dto = dao.findById(num);
+			// 게시물 가져오기
+			MarketDTO dto = dao.findById(marketNum);
+			if (dto == null) {
+				return new ModelAndView("redirect:/market/list?" + query);
+			}
 
-			/*
-			 * 게시물이 없는 경우 리스트로 다시 돌아간다. if (dto == null) { return new
-			 * ModelAndView("redirect:/market/list"); }
-			 */
+			// 이전글, 다음글
+			MarketDTO prevDto = dao.findByPrev(marketNum, schType, kwd);
+			MarketDTO nextDto = dao.findByNext(marketNum, schType, kwd);
 
-			// 이전글, 다음글 메소드 3,4
-//			BoardDTO prevDto = dao.findByPrev(dto.getNum(), schType, kwd);
-//			BoardDTO nextDto = dao.findByNext(dto.getNum(), schType, kwd);
+			// JSP로 전달할 속성
+			ModelAndView mav = new ModelAndView("market/article");
 
-			// + 좋아요 기능있으면 좋다.
+			mav.addObject("member", member);
+			mav.addObject("dto", dto);
+			mav.addObject("prevDto", prevDto);
+			mav.addObject("nextDto", nextDto);
+			mav.addObject("page", page);
+			mav.addObject("query", query);
+
+			return mav;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		ModelAndView mav = new ModelAndView("redirect:/market/list" + query);
-
-		return mav;
-
+		return new ModelAndView("redirect:/market/list?" + query);
 	}
+
 }
