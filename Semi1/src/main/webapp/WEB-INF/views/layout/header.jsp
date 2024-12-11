@@ -6,6 +6,7 @@
 	<div class="header-container">
 		<!-- 로고 -->
 		<div class="logo">
+		
 			<a href="${pageContext.request.contextPath}/">
 				<img src="${pageContext.request.contextPath}/resources/images/logo.png">
 			</a>

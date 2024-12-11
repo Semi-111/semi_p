@@ -87,6 +87,8 @@ nav {
 	pointer-events: none;
 }
 
+
+
 .top-icons {
     display: flex;
     justify-content: flex-end; /* 아이콘을 오른쪽 정렬 */
