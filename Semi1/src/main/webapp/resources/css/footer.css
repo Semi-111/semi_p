@@ -2,7 +2,6 @@
 
 /* trainee css/footer.css */
 
-
 html, body {
     margin: 0;
     padding: 0;
@@ -14,11 +13,14 @@ body {
     padding-bottom: 160px; /* footer의 높이보다 크게 설정 */
 }
 
+.title{
+	font-size: 16px;
+}
+
 /* 푸터 */
 footer {
-    background-color: #f9fafb;
+    background-color: #EFECF0;
     padding: 2rem 1rem;
-    border-top: 1px solid #eee;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -29,7 +31,7 @@ footer {
     max-width: 1200px;
     margin: 0 auto;
     font-size: 12px;
-    color: #666;
+    color: #5A4E5E;
 }
 
 .footer-links {
@@ -40,13 +42,12 @@ footer {
 
 .footer-links a {
     text-decoration: none;
-    color: #666;
+    color: #5A4E5E;
 }
 
 .footer-links a:hover {
     color: #a855f7;
 }
-
 
 /* 페이징 */
 .page-navigation {
