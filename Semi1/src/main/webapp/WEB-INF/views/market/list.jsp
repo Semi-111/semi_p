@@ -339,14 +339,16 @@ footer {
 	<header>
 		<nav>
 			<div class="logo">
-				<img
-					src="${pageContext.request.contextPath}/resources/images/logo.png"
-					alt="트레이니 로고">
+				<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 로고">
 			</div>
 			<div class="nav-links">
-				<a href="#">게시판</a> <a href="#">시간표</a> <a href="#">학점계산기</a> <a
-					href="#">친구</a> <a href="#">공지</a> <a href="#">마이페이지</a> <a
-					href="#">맛집</a>
+				<a href="#">게시판</a>
+				 <a href="#">시간표</a> 
+				 <a href="#">학점계산기</a> 
+				 <a href="#">친구</a> 
+				 <a href="#">공지</a> 
+				 <a href="#">마이페이지</a> 
+				 <a href="#">맛집</a>
 			</div>
 		</nav>
 	</header>
@@ -399,12 +401,11 @@ footer {
 				<c:forEach var="dto" items="${list}">
 					<div class="post-item">
 						<h3 class="post-title">
-							<a
-								href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${current_page}">${dto.title}</a>
+							<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${current_page}">${dto.title}</a>
 						</h3>
 						<div class="post-info">
-							<span>작성자: ${dto.nickName}</span> <span>작성일:
-								${dto.ca_date}</span>
+							<span>작성자: ${dto.nickName}</span> 
+							<span>작성일: ${dto.ca_date}</span>
 						</div>
 					</div>
 				</c:forEach>

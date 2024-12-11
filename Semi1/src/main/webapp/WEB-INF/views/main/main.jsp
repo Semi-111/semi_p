@@ -15,6 +15,7 @@
 .body-container {
 	max-width: 800px;
 }
+
 </style>
 
 </head>

@@ -221,17 +221,19 @@ public class MarketDAO {
 	}
 
 	// 게시글 가져오기 - 게시글 번호로 조회 
-	public MarketDTO findById(long marketNum) throws SQLException {
+	public MarketDTO findById (long marketNum) throws SQLException {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		MarketDTO dto = null;
 		String sql;
-
+		
 		try {
 			sql = "SELECT m.marketNum, m.title, m.content, m.views, "
-					+ " m.CA_date, m.fileName, m.MB_num, m.CT_num, mb.nickName " + " FROM marketplace m "
-					+ " JOIN member mb ON m.MB_num = mb.MB_num " + " WHERE marketNum = ?";
-
+					+ " m.CA_date, m.fileName, m.MB_num, m.CT_num, mb.nickName " 
+					+ " FROM marketplace m "
+					+ " JOIN member mb ON m.MB_num = mb.MB_num " 
+					+ " WHERE marketNum = ?";
+			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, marketNum);
 
@@ -264,7 +266,7 @@ public class MarketDAO {
 		ResultSet rs = null;
 		MarketDTO dto = null;
 		StringBuilder sb = new StringBuilder();
-
+		
 		try {
 			if (kwd != null && kwd.length() != 0) {
 				sb.append("SELECT marketNum, title ");

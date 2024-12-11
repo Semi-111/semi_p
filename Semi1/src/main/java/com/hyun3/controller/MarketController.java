@@ -175,6 +175,7 @@ public class MarketController {
 	    return new ModelAndView("redirect:/market/list");
 	}
 
+	// 글보기 
 	@RequestMapping(value = "/market/article", method = RequestMethod.GET)
 	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		MarketDAO dao = new MarketDAO();
@@ -223,7 +224,6 @@ public class MarketController {
 			    isLiked = dao.isLikedMarket(marketNum, member.getMb_Num());
 			}
 			int countLikes = dao.countLikes(marketNum);
-		    
 
 			// JSP로 전달할 속성
 			ModelAndView mav = new ModelAndView("market/article");
@@ -234,7 +234,7 @@ public class MarketController {
 			mav.addObject("page", page);
 			mav.addObject("query", query);
 			mav.addObject("member", member);
-			 
+			
 			mav.addObject("prevDto", prevDto);
 			mav.addObject("nextDto", nextDto);
 
@@ -243,7 +243,7 @@ public class MarketController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return new ModelAndView("redirect:/market/list?" + query);
 	}
 	
