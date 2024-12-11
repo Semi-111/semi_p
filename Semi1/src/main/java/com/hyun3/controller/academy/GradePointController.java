@@ -1,7 +1,11 @@
 package com.hyun3.controller.academy;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hyun3.dao.academy.GradePointDAO;
 import com.hyun3.domain.SessionInfo;
@@ -23,22 +27,37 @@ public class GradePointController {
 			throws ServletException, IOException {
 		
 		ModelAndView mav = new ModelAndView("grade/grade");
-		GradePointDAO dao = new GradePointDAO();
-		
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
 		
 		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			String userId = info.getUserId();
 			
 			String gradeYear = req.getParameter("gradeYear");
 			String semester = req.getParameter("semester");
 			
+			GradePointDAO dao = new GradePointDAO();
+			
 			// 학점 데이터 가져오기
 			List<GradePointDTO> gradeList = dao.findById(userId, gradeYear, semester);
 			
-			mav.addObject("gradeList", gradeList);
+			
+			List<Map<String, Object>> processedGradeList = new ArrayList<>();
+			
+			for (GradePointDTO dto : gradeList) {
+			    // Map 객체 생성
+			    Map<String, Object> map = new HashMap<>();
+
+			    // Map에 데이터 추가
+			    map.put("sb_Name", dto.getSb_Name()); 		// 과목명
+			    map.put("hakscore", dto.getHakscore());     // 학점
+			    map.put("grade", dto.getGrade());           // 성적
+			    map.put("gradeOptions", Arrays.asList("A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"));
+			    	// 성적 선택 옵션
+
+			    // 새롭게 가공된 Map 객체를 리스트에 추가
+			    processedGradeList.add(map);
+			}
 			
 			
 			// 취득 학점 계산
@@ -54,6 +73,8 @@ public class GradePointController {
 			
 			// 전체 평점 계산
 			double gpa = (totalCredits > 0) ? totalPoints / totalCredits : 0.0;
+			
+			mav.addObject("gradeList", gradeList);
 			
 			mav.addObject("totalCredits", totalCredits);
 			mav.addObject("gpa", Math.round(gpa * 100.0) / 100.0); // GPA 소수점 2자리 반올림

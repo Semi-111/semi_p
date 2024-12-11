@@ -40,57 +40,19 @@
 	    </div>
 	
 		<div class="semester-nav">
-		    <form method="get" action="${pageContext.request.contextPath}/grade/list">
-		        <button type="submit" class="semester-btn ${gradeYear == '1학년' && semester == '1학기' ? 'active' : ''}"
-		                name="gradeYear" value="1학년" formaction="?semester=1학기">
-		            1학년 1학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '1학년' && semester == '2학기' ? 'active' : ''}"
-		                name="gradeYear" value="1학년" formaction="?semester=2학기">
-		            1학년 2학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '2학년' && semester == '1학기' ? 'active' : ''}"
-		                name="gradeYear" value="2학년" formaction="?semester=1학기">
-		            2학년 1학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '2학년' && semester == '2학기' ? 'active' : ''}"
-		                name="gradeYear" value="2학년" formaction="?semester=2학기">
-		            2학년 2학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '3학년' && semester == '1학기' ? 'active' : ''}"
-		                name="gradeYear" value="3학년" formaction="?semester=1학기">
-		            3학년 1학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '3학년' && semester == '2학기' ? 'active' : ''}"
-		                name="gradeYear" value="3학년" formaction="?semester=2학기">
-		            3학년 2학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '4학년' && semester == '1학기' ? 'active' : ''}"
-		                name="gradeYear" value="4학년" formaction="?semester=1학기">
-		            4학년 1학기
-		        </button>
-		        <button type="submit" class="semester-btn ${gradeYear == '4학년' && semester == '2학기' ? 'active' : ''}"
-		                name="gradeYear" value="4학년" formaction="?semester=2학기">
-		            4학년 2학기
-		        </button>
-		    </form>
+		    <button class="semester-btn" data-semester="1학년 1학기">1학년 1학기</button>
+		    <button class="semester-btn" data-semester="1학년 2학기">1학년 2학기</button>
+		    <button class="semester-btn" data-semester="2학년 1학기">2학년 1학기</button>
+		    <button class="semester-btn" data-semester="2학년 2학기">2학년 2학기</button>
+		    <button class="semester-btn" data-semester="3학년 1학기">3학년 1학기</button>
+		    <button class="semester-btn" data-semester="3학년 2학기">3학년 2학기</button>
+		    <button class="semester-btn" data-semester="4학년 1학기">4학년 1학기</button>
+		    <button class="semester-btn" data-semester="4학년 2학기">4학년 2학기</button>
 		</div>
 
-		
-	   <!--  <div class="semester-nav">
-	        <button class="semester-btn">1학년 1학기</button>
-	        <button class="semester-btn">1학년 2학기</button>
-	        <button class="semester-btn">2학년 1학기</button>
-	        <button class="semester-btn">2학년 2학기</button>
-	        <button class="semester-btn">3학년 1학기</button>
-	        <button class="semester-btn">3학년 2학기</button>
-	        <button class="semester-btn active">4학년 1학기</button>
-	        <button class="semester-btn">4학년 2학기</button>
-	    </div> -->
-	
 	    <div class="grade-table">
 	        <div class="grade-header">
-	            <div class="grade-title">4학년 1학기</div>
+	            <div class="grade-title">학년 학기</div>
 	            <button class="submit-btn">시간표 불러오기</button>
 	        </div>
 	        <div class="grade-sub">
@@ -104,26 +66,25 @@
 	                    <th width="120">성적</th>
 	                </tr>
 	            </thead>
-	            <tbody>
-	            	<c:forEach var="dto" items="${gradeList}">
-	            		<tr>
-		            		<td>${dto.sb_Name}</td>
-		            		<td><input type="text" class="credit-input" value="${dto.hakscore}"></td>
-		            		<td>
-		            			<select>
-				            		<option value="A+" <c:if test="${dto.grade == 'A+'}">selected</c:if>>A+</option>
-				                    <option value="A0" <c:if test="${dto.grade == 'A0'}">selected</c:if>>A0</option>
-				                    <option value="B+" <c:if test="${dto.grade == 'B+'}">selected</c:if>>B+</option>
-				                    <option value="B0" <c:if test="${dto.grade == 'B0'}">selected</c:if>>B0</option>
-				                    <option value="C+" <c:if test="${dto.grade == 'C+'}">selected</c:if>>C+</option>
-				                    <option value="C0" <c:if test="${dto.grade == 'C0'}">selected</c:if>>C0</option>
-				                    <option value="D+" <c:if test="${dto.grade == 'D+'}">selected</c:if>>D+</option>
-				                    <option value="D0" <c:if test="${dto.grade == 'D0'}">selected</c:if>>D0</option>
-				                    <option value="F" <c:if test="${dto.grade == 'F'}">selected</c:if>>F</option>
-	                			</select>
-		            		</td>
-		            	</tr>
-	            	</c:forEach>
+	            
+	            <tbody id="semester-data">
+   					<tr>
+	            		<td>학과명</td>
+	            		<td><input type="text" class="credit-input" value="4"></td>
+	            		<td>
+		            		<select>
+				            	<option>A+</option>
+	                            <option>A0</option>
+	                            <option>B+</option>
+	                            <option>B0</option>
+	                            <option>C+</option>
+	                            <option>C0</option>
+	                            <option>D+</option>
+	                            <option>D0</option>
+	                            <option>F</option>
+	                		</select>
+	            		</td>
+		            </tr>
 	            </tbody>
 	        </table>
 	    </div>
@@ -135,6 +96,34 @@
 
 
 <script type="text/javascript">
+
+$(function () {
+    $(".semester-btn").click(function () {
+        // 모든 버튼에서 'active' 클래스 제거 후, 클릭된 버튼에 추가
+        $(".semester-btn").removeClass("active");
+        $(this).addClass("active");
+
+        // 버튼의 data-semester 속성에서 학년과 학기 정보를 추출
+        const semesterInfo = $(this).data("semester").split(" ");
+        const gradeYear = semesterInfo[0].replace("학년", ""); // '학년' 제거
+        const semester = semesterInfo[1].replace("학기", "");  // '학기' 제거
+
+        // 제목 변경
+        $(".grade-title").text(gradeYear + "학년 " + semester + "학기");
+        
+		
+
+        
+        
+        
+    });
+});
+
+
+
+
+
+
 // 학기별 학점 데이터
 const semesters = ["1학년 1학기", "1학년 2학기", "2학년 1학기", "2학년 2학기", "3학년 1학기", "3학년 2학기", "4학년 1학기", "4학년 2학기"];
 const overallGrades = [3.5, 3.8, 3.6, 3.9, 3.7, 3.8, 4.0, 3.9]; // 전체 평균
