@@ -363,5 +363,204 @@ public class MarketDAO {
 
 		return dto;
 	}
+	
+	// 게시글 삭제
+	public void deleteMarket(long marketNum) throws SQLException {
+	    PreparedStatement pstmt = null;
+	    String sql;
 
+	    try {
+	        sql = "DELETE FROM marketplace WHERE marketNum = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        pstmt.executeUpdate();
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
+	}
+	
+	// 좋아요 여부 확인
+	public boolean isLikedMarket(long marketNum, long mb_num) throws SQLException {
+	    boolean result = false;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql;
+
+	    try {
+	        sql = "SELECT marketNum FROM market_LK WHERE marketNum = ? AND MB_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        pstmt.setLong(2, mb_num);
+	        
+	        rs = pstmt.executeQuery();
+	        result = rs.next();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return result;
+	}
+
+	// 좋아요 추가
+	public void insertLike(long marketNum, long memberNum) throws SQLException {
+	    PreparedStatement pstmt = null;
+	    String sql;
+	    
+	    try {
+	        sql = "INSERT INTO market_LK(marketNum, MB_num, dateTime) VALUES (?, ?, SYSDATE)";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        pstmt.setLong(2, memberNum);
+	        
+	        pstmt.executeUpdate();
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
+	}
+
+	// 좋아요 삭제
+	public void deleteLike(long marketNum, long memberNum) throws SQLException {
+	    PreparedStatement pstmt = null;
+	    String sql;
+	    
+	    try {
+	        sql = "DELETE FROM market_LK WHERE marketNum = ? AND MB_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        pstmt.setLong(2, memberNum);
+	        
+	        pstmt.executeUpdate();
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
+	}
+
+	// 게시글의 좋아요 개수
+	public int countLikes(long marketNum) throws SQLException {
+	    int result = 0;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql;
+	    
+	    try {
+	        sql = "SELECT COUNT(*) FROM market_LK WHERE marketNum = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        
+	        rs = pstmt.executeQuery();
+	        if(rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+	    
+	    return result;
+	}
+
+	// 글수정
+	public void updateMarket(MarketDTO dto) throws SQLException {
+	    PreparedStatement pstmt = null;
+	    String sql;
+
+	    try {
+	        sql = "UPDATE marketplace SET title=?, content=?, filename=?, "
+	            + " CT_num=? "
+	            + " WHERE marketNum=?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setString(1, dto.getTitle());
+	        pstmt.setString(2, dto.getContent());
+	        pstmt.setString(3, dto.getFileName());
+	        pstmt.setInt(4, dto.getCt_num());
+	        pstmt.setInt(5, dto.getMarketNum());
+	        
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
+	}
+	
+	// 카테고리별 데이터 개수
+	public int dataCount(int category) throws SQLException {
+	    int result = 0;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql;
+
+	    try {
+	        sql = "SELECT COUNT(*) FROM marketplace WHERE CT_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setInt(1, category);
+
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return result;
+	}
+
+	// 카테고리별 게시글 리스트
+	public List<MarketDTO> listBoard(int offset, int size, int category) throws SQLException {
+	    List<MarketDTO> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    StringBuilder sb = new StringBuilder();
+
+	    try {
+	        sb.append(" SELECT marketNum, title, content, CA_date, ");
+	        sb.append("    filename, mb.nickName, ");
+	        sb.append("    ROW_NUMBER() OVER(ORDER BY marketNum DESC) rankNum ");
+	        sb.append(" FROM marketplace m ");
+	        sb.append(" JOIN member mb ON m.MB_num = mb.MB_num ");
+	        sb.append(" WHERE CT_num = ? ");
+	        sb.append(" ORDER BY marketNum DESC ");
+	        sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setInt(1, category);
+	        pstmt.setInt(2, offset);
+	        pstmt.setInt(3, size);
+
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            MarketDTO dto = new MarketDTO();
+
+	            dto.setMarketNum(rs.getInt("marketNum"));
+	            dto.setTitle(rs.getString("title"));
+	            dto.setContent(rs.getString("content"));
+	            dto.setCa_date(rs.getString("CA_date"));
+	            dto.setFileName(rs.getString("filename"));
+	            dto.setNickName(rs.getString("nickName"));
+
+	            list.add(dto);
+	        }
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return list;
+	}
 }

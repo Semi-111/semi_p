@@ -5,8 +5,8 @@
 <html lang="ko">
 <head>
    <meta charset="UTF-8">
+   <title>${mode=="update"?"게시글 수정":"게시글 작성"}</title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>게시글 작성</title>
    <style>
        * {
            margin: 0;
@@ -141,7 +141,6 @@
        .preview-image {
            max-width: 200px;
            margin-top: 10px;
-           display: none;
        }
 
        .button-group {
@@ -224,6 +223,38 @@
                reader.readAsDataURL(input.files[0]);
            }
        }
+
+       function submitForm() {
+           const f = document.marketForm;
+           
+           if (!f.category.value) {
+               alert("카테고리를 선택하세요.");
+               f.category.focus();
+               return;
+           }
+           
+           if (!f.title.value.trim()) {
+               alert("제목을 입력하세요.");
+               f.title.focus();
+               return;
+           }
+           
+           if (!f.content.value.trim()) {
+               alert("내용을 입력하세요.");
+               f.content.focus();
+               return;
+           }
+           
+        	// mode가 update면 수정, 아니면 write로 설정
+           let mode = '${mode}';
+           if(mode === 'update') {
+               f.action = "${pageContext.request.contextPath}/market/update";
+           } else {
+               f.action = "${pageContext.request.contextPath}/market/write";
+           }
+           
+           f.submit();
+       }
    </script>
 </head>
 <body>
@@ -233,7 +264,7 @@
                <img src="${pageContext.request.contextPath}/resources/images/trainee.png" alt="트레이니 로고">
            </div>
            <div class="nav-links">
-               <a href="#">게시판</a>
+               <a href="#" class="active">게시판</a>
                <a href="#">시간표</a>
                <a href="#">학점계산기</a>
                <a href="#">친구</a>
@@ -245,26 +276,26 @@
    </header>
 
    <div class="container">
-       <h1 class="board-title">게시글 작성</h1>
+       <h1 class="board-title">${mode=="update"?"게시글 수정":"게시글 작성"}</h1>
        
        <div class="write-form">
-           <form name="marketForm" method="post" action="${pageContext.request.contextPath}/market/write" enctype="multipart/form-data">
+           <form name="marketForm" method="post" enctype="multipart/form-data">
                <div class="form-group">
                    <label for="category">카테고리</label>
                    <select id="category" name="category" required>
                        <option value="">카테고리 선택</option>
-                       <option value="1">삽니다</option>
-                       <option value="2">팝니다</option>
-                       <option value="3">룸</option>
-                       <option value="4">책</option>
-                       <option value="5">옷</option>
-                       <option value="6">기타</option>
+                       <option value="1" ${dto.ct_num==1?"selected":""}>삽니다</option>
+                       <option value="2" ${dto.ct_num==2?"selected":""}>팝니다</option>
+                       <option value="3" ${dto.ct_num==3?"selected":""}>룸</option>
+                       <option value="4" ${dto.ct_num==4?"selected":""}>책</option>
+                       <option value="5" ${dto.ct_num==5?"selected":""}>옷</option>
+                       <option value="6" ${dto.ct_num==6?"selected":""}>기타</option>
                    </select>
                </div>
 
                <div class="form-group">
                    <label for="title">제목</label>
-                   <input type="text" id="title" name="title" required>
+                   <input type="text" id="title" name="title" required value="${dto.title}">
                </div>
 
                <div class="form-group">
@@ -273,20 +304,36 @@
                        <label for="image">파일 선택</label>
                        <input type="file" id="image" name="selectFile" accept="image/*" 
                               onchange="previewImage(this);">
-                       <span id="fileName" class="file-name">선택된 파일 없음</span>
+                       <span id="fileName" class="file-name">
+                           ${empty dto.fileName ? "선택된 파일 없음" : dto.fileName}
+                       </span>
                    </div>
-                   <img id="preview" class="preview-image" src="#" alt="미리보기">
+                   <c:if test="${not empty dto.fileName}">
+                       <img id="preview" class="preview-image" 
+                            src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" 
+                            style="display: block;">
+                   </c:if>
+                   <c:if test="${empty dto.fileName}">
+                       <img id="preview" class="preview-image" src="#" style="display: none;">
+                   </c:if>
                </div>
 
                <div class="form-group">
                    <label for="content">내용</label>
-                   <textarea id="content" name="content" required></textarea>
+                   <textarea id="content" name="content" required>${dto.content}</textarea>
                </div>
 
                <div class="button-group">
-                   <button type="submit" class="submit-button">등록하기</button>
+                   <button type="button" class="submit-button" onclick="submitForm();">
+                       ${mode=="update"?"수정완료":"등록하기"}
+                   </button>
                    <a href="${pageContext.request.contextPath}/market/list" class="cancel-button">취소</a>
                </div>
+
+               <c:if test="${mode=='update'}">
+                   <input type="hidden" name="marketNum" value="${dto.marketNum}">
+                   <input type="hidden" name="page" value="${page}">
+               </c:if>
            </form>
        </div>
    </div>
