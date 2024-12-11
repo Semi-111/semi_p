@@ -26,19 +26,11 @@
 	        <div class="stats-grid">
 	            <div class="stat-item">
 	                <div class="stat-label">전체 평점</div>
-<<<<<<< HEAD
-	                <div class="stat-value">3.8<span class="stat-max">/4.5</span></div>
-=======
 	                <div class="stat-value">${gpa}<span class="stat-max">/4.5</span></div>
->>>>>>> branch 'master' of https://github.com/Semi-111/semi_p.git
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
-<<<<<<< HEAD
-	                <div class="stat-value">130<span class="stat-max">/150</span></div>
-=======
 	                <div class="stat-value">${totalCredits}<span class="stat-max">/150</span></div>
->>>>>>> branch 'master' of https://github.com/Semi-111/semi_p.git
 	            </div>
 	        </div>
 	        
