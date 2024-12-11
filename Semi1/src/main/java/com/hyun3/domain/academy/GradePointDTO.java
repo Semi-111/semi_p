@@ -8,7 +8,7 @@ public class GradePointDTO {
 	
 	private long sb_Num; // 과목 번호 
 	private String sb_Name; // 과목명
-	private String pf_Name; // 교수 이름
+	// private String pf_Name; // 교수 이름
 	
 	private String semester; // 학기
 	private String grade_year; // 학년
@@ -54,12 +54,7 @@ public class GradePointDTO {
 	public void setSb_Name(String sb_Name) {
 		this.sb_Name = sb_Name;
 	}
-	public String getPf_Name() {
-		return pf_Name;
-	}
-	public void setPf_Name(String pf_Name) {
-		this.pf_Name = pf_Name;
-	}
+	
 	public String getSemester() {
 		return semester;
 	}

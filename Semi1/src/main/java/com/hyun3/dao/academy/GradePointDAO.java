@@ -16,7 +16,7 @@ import com.hyun3.util.DBUtil;
 public class GradePointDAO {
 	private Connection conn = DBConn.getConnection();
 	
-	public List<GradePointDTO> findByMemberId(long mb_Num) {
+	public List<GradePointDTO> findById(String userId, String gradeYear, String semester) {
 		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -31,11 +31,13 @@ public class GradePointDAO {
 			sb.append(" JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
 			sb.append(" JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
 			sb.append(" JOIN member m ON a.mb_Num = m.mb_Num ");
-			sb.append(" WHERE m.mb_Num=? ");
+			sb.append(" WHERE m.userId=? AND grade_year = ? AND a.semester = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
-			pstmt.setLong(1, mb_Num);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, gradeYear);
+			pstmt.setString(3, semester);
 			
 			rs = pstmt.executeQuery();
 			
@@ -77,6 +79,7 @@ public class GradePointDAO {
         default: return 0.0;
 		}
 	}
+<<<<<<< HEAD
 	
 	public Map<String, Double> calculateGrade(List<GradePointDTO> grades) {
 	    double totalPoints = 0.0;
@@ -97,4 +100,7 @@ public class GradePointDAO {
 	}
 	
 	
+=======
+
+>>>>>>> branch 'master' of https://github.com/Semi-111/semi_p.git
 }

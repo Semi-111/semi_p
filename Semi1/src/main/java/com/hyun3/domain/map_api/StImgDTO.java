@@ -1,6 +1,6 @@
 package com.hyun3.domain.map_api;
 
-public class StImgDTO {
+public class StImgDTO implements Comparable<StImgDTO> {
 
     private Long imgNum;
     private String imgUrl;
@@ -48,5 +48,19 @@ public class StImgDTO {
 
     public void setMapDTO(MapDTO mapDTO) {
         this.mapDTO = mapDTO;
+    }
+
+    @Override
+    public int compareTo(StImgDTO o) {
+        if (this.imgNum == null && o.imgNum == null) {
+            return 0;
+        }
+        if (this.imgNum == null) {
+            return -1;
+        }
+        if (o.imgNum == null) {
+            return 1;
+        }
+        return this.imgNum.compareTo(o.imgNum);
     }
 }
