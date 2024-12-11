@@ -19,21 +19,18 @@
 
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
-<main class="">
+<main class="grade-main">
 	<div class="container">
 	    <div class="stats-container">
+	    	<!-- 학점 통계 -->
 	        <div class="stats-grid">
 	            <div class="stat-item">
 	                <div class="stat-label">전체 평점</div>
-	                <div class="stat-value">3.85<span class="stat-max">/4.5</span></div>
-	            </div>
-	            <div class="stat-item">
-	                <div class="stat-label">전공 평점</div>
-	                <div class="stat-value">3.74<span class="stat-max">/4.5</span></div>
+	                <div class="stat-value">3.8<span class="stat-max">/4.5</span></div>
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
-	                <div class="stat-value">128<span class="stat-max">/150</span></div>
+	                <div class="stat-value">130<span class="stat-max">/150</span></div>
 	            </div>
 	        </div>
 	        

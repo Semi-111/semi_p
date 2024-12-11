@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hyun3.domain.academy.GradePointDTO;
 import com.hyun3.util.DBConn;
@@ -76,6 +78,23 @@ public class GradePointDAO {
 		}
 	}
 	
+	public Map<String, Double> calculateGrade(List<GradePointDTO> grades) {
+	    double totalPoints = 0.0;
+	    int totalCredits = 0;
+
+	    for (GradePointDTO dto : grades) {
+	        double gradePoint = convertGradeToPoint(dto.getGrade());
+	        totalPoints += gradePoint * dto.getHakscore();
+	        totalCredits += dto.getHakscore();
+	    }
+
+	    double gpa = (totalCredits > 0) ? totalPoints / totalCredits : 0.0;
+
+	    Map<String, Double> stats = new HashMap<>();
+	    stats.put("GPA", gpa);
+	    stats.put("TotalCredits", (double) totalCredits);
+	    return stats;
+	}
 	
 	
 }
