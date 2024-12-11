@@ -28,9 +28,13 @@ body {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0px;
     margin-bottom: 20px;
+    
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+    text-align: center;
 }
 
 .stat-item {
@@ -69,8 +73,8 @@ body {
 
 .semester-nav {
     display: flex;
-    gap: 18px;
-    margin: 20px 0;
+    gap: 30px;
+    margin: 20px 10px;
     overflow-x: auto;
     padding-bottom: 10px;
 }
@@ -151,7 +155,7 @@ table {
 th, td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid #eee;
 }
 
 th {

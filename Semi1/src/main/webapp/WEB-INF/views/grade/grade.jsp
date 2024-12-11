@@ -25,15 +25,11 @@
 	        <div class="stats-grid">
 	            <div class="stat-item">
 	                <div class="stat-label">전체 평점</div>
-	                <div class="stat-value">3.85<span class="stat-max">/4.5</span></div>
-	            </div>
-	            <div class="stat-item">
-	                <div class="stat-label">전공 평점</div>
-	                <div class="stat-value">3.74<span class="stat-max">/4.5</span></div>
+	                <div class="stat-value">${gpa}<span class="stat-max">/4.5</span></div>
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
-	                <div class="stat-value">128<span class="stat-max">/150</span></div>
+	                <div class="stat-value">${totalCredits}<span class="stat-max">/150</span></div>
 	            </div>
 	        </div>
 	        
@@ -42,7 +38,45 @@
 	        </div>
 	    </div>
 	
-	    <div class="semester-nav">
+		<div class="semester-nav">
+		    <form method="get" action="${pageContext.request.contextPath}/grade/list">
+		        <button type="submit" class="semester-btn ${gradeYear == '1학년' && semester == '1학기' ? 'active' : ''}"
+		                name="gradeYear" value="1학년" formaction="?semester=1학기">
+		            1학년 1학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '1학년' && semester == '2학기' ? 'active' : ''}"
+		                name="gradeYear" value="1학년" formaction="?semester=2학기">
+		            1학년 2학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '2학년' && semester == '1학기' ? 'active' : ''}"
+		                name="gradeYear" value="2학년" formaction="?semester=1학기">
+		            2학년 1학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '2학년' && semester == '2학기' ? 'active' : ''}"
+		                name="gradeYear" value="2학년" formaction="?semester=2학기">
+		            2학년 2학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '3학년' && semester == '1학기' ? 'active' : ''}"
+		                name="gradeYear" value="3학년" formaction="?semester=1학기">
+		            3학년 1학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '3학년' && semester == '2학기' ? 'active' : ''}"
+		                name="gradeYear" value="3학년" formaction="?semester=2학기">
+		            3학년 2학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '4학년' && semester == '1학기' ? 'active' : ''}"
+		                name="gradeYear" value="4학년" formaction="?semester=1학기">
+		            4학년 1학기
+		        </button>
+		        <button type="submit" class="semester-btn ${gradeYear == '4학년' && semester == '2학기' ? 'active' : ''}"
+		                name="gradeYear" value="4학년" formaction="?semester=2학기">
+		            4학년 2학기
+		        </button>
+		    </form>
+		</div>
+
+		
+	   <!--  <div class="semester-nav">
 	        <button class="semester-btn">1학년 1학기</button>
 	        <button class="semester-btn">1학년 2학기</button>
 	        <button class="semester-btn">2학년 1학기</button>
@@ -51,7 +85,7 @@
 	        <button class="semester-btn">3학년 2학기</button>
 	        <button class="semester-btn active">4학년 1학기</button>
 	        <button class="semester-btn">4학년 2학기</button>
-	    </div>
+	    </div> -->
 	
 	    <div class="grade-table">
 	        <div class="grade-header">
@@ -59,7 +93,7 @@
 	            <button class="submit-btn">시간표 불러오기</button>
 	        </div>
 	        <div class="grade-sub">
-	        	평점<span class="highlight">3.9</span> 전공<span class="highlight">0</span> 취득<span class="highlight">10</span>
+	        	평점<span class="highlight">${gpa}</span> 취득<span class="highlight">${totalCredits}</span>
 	        </div>
 	        <table>
 	            <thead>
@@ -70,41 +104,25 @@
 	                </tr>
 	            </thead>
 	            <tbody>
-	                <tr>
-	                    <td>실무프로젝트</td>
-	                    <td><input type="text" class="credit-input" value="4"></td>
-	                    <td>
-	                        <select>
-								<option>A+</option>
-	                            <option>A0</option>
-	                            <option>B+</option>
-	                            <option>B0</option>
-	                            <option>C+</option>
-	                            <option>C0</option>
-	                            <option>D+</option>
-	                            <option>D0</option>
-	                            <option>F</option>
-	                        </select>
-	                    </td>
-	                </tr>
-	                <tr>
-	                    <td>모바일프로그래밍</td>
-	                    <td><input type="text" class="credit-input" value="3"></td>
-	                    <td>
-	                        <select>
-								<option>A+</option>
-	                            <option>A0</option>
-	                            <option>B+</option>
-	                            <option>B0</option>
-	                            <option>C+</option>
-	                            <option>C0</option>
-	                            <option>D+</option>
-	                            <option>D0</option>
-	                            <option>F</option>
-	                        </select>
-	                    </td>
-	                </tr>
-	                <!-- 추가 행들 -->
+	            	<c:forEach var="dto" items="${gradeList}">
+	            		<tr>
+		            		<td>${dto.sb_Name}</td>
+		            		<td><input type="text" class="credit-input" value="${dto.hakscore}"></td>
+		            		<td>
+		            			<select>
+				            		<option value="A+" <c:if test="${dto.grade == 'A+'}">selected</c:if>>A+</option>
+				                    <option value="A0" <c:if test="${dto.grade == 'A0'}">selected</c:if>>A0</option>
+				                    <option value="B+" <c:if test="${dto.grade == 'B+'}">selected</c:if>>B+</option>
+				                    <option value="B0" <c:if test="${dto.grade == 'B0'}">selected</c:if>>B0</option>
+				                    <option value="C+" <c:if test="${dto.grade == 'C+'}">selected</c:if>>C+</option>
+				                    <option value="C0" <c:if test="${dto.grade == 'C0'}">selected</c:if>>C0</option>
+				                    <option value="D+" <c:if test="${dto.grade == 'D+'}">selected</c:if>>D+</option>
+				                    <option value="D0" <c:if test="${dto.grade == 'D0'}">selected</c:if>>D0</option>
+				                    <option value="F" <c:if test="${dto.grade == 'F'}">selected</c:if>>F</option>
+	                			</select>
+		            		</td>
+		            	</tr>
+	            	</c:forEach>
 	            </tbody>
 	        </table>
 	    </div>
