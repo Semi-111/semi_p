@@ -79,7 +79,6 @@ public class GradePointDAO {
         default: return 0.0;
 		}
 	}
-<<<<<<< HEAD
 	
 	public Map<String, Double> calculateGrade(List<GradePointDTO> grades) {
 	    double totalPoints = 0.0;
@@ -98,9 +97,4 @@ public class GradePointDAO {
 	    stats.put("TotalCredits", (double) totalCredits);
 	    return stats;
 	}
-	
-	
-=======
-
->>>>>>> branch 'master' of https://github.com/Semi-111/semi_p.git
 }
