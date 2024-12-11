@@ -6,7 +6,7 @@
 	<div class="header-container">
 		<!-- 로고 -->
 		<div class="logo">
-		
+
 			<a href="${pageContext.request.contextPath}/">
 				<img src="${pageContext.request.contextPath}/resources/images/logo.png">
 			</a>
@@ -19,20 +19,20 @@
 					<li class="nav-item">
 						<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">게시판</a>
 						<ul class="dropdown-menu">
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/infoBoard/list">자유 게시판</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">자유 게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}secretBoard/list">비밀 게시판</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/secretBoard/list">비밀 게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/infoBoard/list">정보게시판</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=info">정보게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
 					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/eventBoard/list">이벤트/공지</a></li>
 					        <li><hr class="dropdown-divider"></li>
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/studentBoard/list">재학생게시판</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=student">재학생게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
 					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}lessonBoard/list">학과별 게시판</a></li>
 					        	<!-- 학과별 게시판 들어가면 6개의 학과가 나오도록. 6개 중 하나 선택시 해당 학과 게시판으로 이동 ..이 나을듯요 -->
 					        <li><hr class="dropdown-divider"></li>
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/studentBoard/list">졸업생 게시판</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=oldbie">졸업생 게시판</a></li>
 				      	</ul>
 					</li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
@@ -44,7 +44,7 @@
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/market/list">장터</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/food/list">맛집</a></li>	
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/food/list">맛집</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 				</ul>
 			</div>
