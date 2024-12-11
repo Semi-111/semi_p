@@ -6,11 +6,11 @@ public class MarketDTO {
 	private String content;
 	private String ca_date;
 	private String fileName;
-	private int mb_num;
+	private long mb_num;
 	private int ct_num; // 카테고리 번호
 	private String ct_name; // 카테고리 이름
 	private String nickName;
-	private int views;
+	private int views; // 조회수
 	
 	
 	public int getViews() {
@@ -55,10 +55,10 @@ public class MarketDTO {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public int getMb_num() {
+	public long getMb_num() {
 		return mb_num;
 	}
-	public void setMb_num(int mb_num) {
+	public void setMb_num(long mb_num) {
 		this.mb_num = mb_num;
 	}
 	public int getCt_num() {

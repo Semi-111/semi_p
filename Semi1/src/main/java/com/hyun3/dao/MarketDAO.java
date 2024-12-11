@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hyun3.domain.sw.MarketDTO;
+import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 
-public class MarketDAO {
-	public Connection conn = com.hyun3.util.DBConn.getConnection();
 
-	public void insertMarket(com.hyun3.domain.sw.MarketDTO dto) throws SQLException {
+public class MarketDAO {
+	public Connection conn = DBConn.getConnection();
+
+	
+	public void insertMarket(MarketDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 
@@ -95,6 +98,7 @@ public class MarketDAO {
 		return list;
 	}
 
+	// 검색이 없는 경우 리스트
 	public List<MarketDTO> listBoard(int offset, int size) throws SQLException {
 		List<MarketDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -216,7 +220,7 @@ public class MarketDAO {
 		}
 	}
 
-	// 게시글 가져오기
+	// 게시글 가져오기 - 게시글 번호로 조회 
 	public MarketDTO findById(long marketNum) throws SQLException {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -240,10 +244,10 @@ public class MarketDAO {
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setViews(rs.getInt("views"));
-				dto.setCa_date(rs.getString("CA_date"));
+				dto.setCa_date(rs.getString("ca_date"));
 				dto.setFileName(rs.getString("fileName"));
-				dto.setMb_num(rs.getInt("MB_num"));
-				dto.setCt_num(rs.getInt("CT_num"));
+				dto.setMb_num(rs.getInt("mb_num"));
+				dto.setCt_num(rs.getInt("ct_num"));
 				dto.setNickName(rs.getString("nickName"));
 			}
 		} finally {

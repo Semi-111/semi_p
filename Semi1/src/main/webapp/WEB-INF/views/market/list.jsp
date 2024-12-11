@@ -344,9 +344,13 @@ footer {
 					alt="트레이니 로고">
 			</div>
 			<div class="nav-links">
-				<a href="#">게시판</a> <a href="#">시간표</a> <a href="#">학점계산기</a> <a
-					href="#">친구</a> <a href="#">공지</a> <a href="#">마이페이지</a> <a
-					href="#">맛집</a>
+				<a href="#">게시판</a> 
+				<a href="#">시간표</a> 
+				<a href="#">학점계산기</a> 
+				<a href="#">친구</a> 
+				<a href="#">공지</a> 
+				<a href="#">마이페이지</a> 
+				<a href="#">맛집</a>
 			</div>
 		</nav>
 	</header>
@@ -357,9 +361,8 @@ footer {
 		<!-- 상단 네비게이션과 글쓰기 버튼 -->
 		<div class="board-header">
 			<div class="board-nav">
-				<a href="${pageContext.request.contextPath}/market/list"
-					class="active">전체</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=1">삽니다</a>
+				<a href="${pageContext.request.contextPath}/market/list" class="active">전체</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=1">삽니다</a>
 				<a href="${pageContext.request.contextPath}/market/list?category=2">팝니다</a>
 				<a href="${pageContext.request.contextPath}/market/list?category=3">룸</a>
 				<a href="${pageContext.request.contextPath}/market/list?category=4">완료</a>
@@ -390,11 +393,11 @@ footer {
 				<c:forEach var="dto" items="${list}">
 					<div class="post-item">
 						<h3 class="post-title">
-						 	<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${page}">${dto.title}</a>
+						 	<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${current_page}">${dto.title}</a>
 						</h3>
 						<div class="post-info">
-							<span>작성자: ${dto.nickName}</span> <span>작성일:
-								${dto.ca_date}</span>
+							<span>작성자: ${dto.nickName}</span> 
+							<span>작성일: ${dto.ca_date}</span>
 						</div>
 					</div>
 				</c:forEach>
@@ -409,8 +412,7 @@ footer {
 
 						<!-- 이전 페이지 -->
 						<c:if test="${current_page > 1}">
-							<a href="${listUrl}?page=${current_page-1}" class="page-link"
-								title="이전">〈</a>
+							<a href="${listUrl}?page=${current_page-1}" class="page-link" title="이전">〈</a>
 						</c:if>
 
 						<!-- 페이지 -->
@@ -446,12 +448,10 @@ footer {
 				<div class="hot-posts">
 					<h3 class="sidebar-title">HOT 게시물</h3>
 					<div class="hot-post-item">
-						<span>운동할 친구를 구하는 원대 솔로♂</span> <span class="post-date">11/29
-							14:23</span>
+						<span>운동할 친구를 구하는 원대 솔로♂</span> <span class="post-date">11/29 14:23</span>
 					</div>
 					<div class="hot-post-item">
-						<span>중고 핸드폰 공동 구매</span> <span class="post-date">11/28
-							15:58</span>
+						<span>중고 핸드폰 공동 구매</span> <span class="post-date">11/28 15:58</span>
 					</div>
 				</div>
 
@@ -474,8 +474,8 @@ footer {
 			<p>서울특별시 광도달북로21 동성빌딩 2층 | 사업자등록번호 : 123456789</p>
 			<div class="footer-links">
 				<a href="#">이용약관</a> <a href="#">개인정보처리방침</a> <a href="#">청소년보호정책</a>
-				<a href="#">커뮤니티이용규칙</a> <a href="#">공지사항</a> <a href="#">문의하기</a> <a
-					href="#">@TRAINNF</a>
+				<a href="#">커뮤니티이용규칙</a> <a href="#">공지사항</a> <a href="#">문의하기</a> 
+				<a href="#">@TRAINNF</a>
 			</div>
 		</div>
 	</footer>

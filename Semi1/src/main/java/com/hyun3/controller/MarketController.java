@@ -7,12 +7,14 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import com.hyun3.dao.MarketDAO;
-import com.hyun3.domain.MemberDTO;
+import com.hyun3.domain.SessionInfo;
 import com.hyun3.domain.sw.MarketDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;
 import com.hyun3.mvc.view.ModelAndView;
+import com.hyun3.util.FileManager;
+import com.hyun3.util.MyMultipartFile;
 import com.hyun3.util.MyUtil;
 import com.hyun3.util.MyUtilBootstrap;
 
@@ -134,64 +136,69 @@ public class MarketController {
 		return mav;
 	}
 
-	// 글 작성
 	@RequestMapping(value = "/market/write", method = RequestMethod.POST)
 	public ModelAndView marketWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		MarketDTO dto = new MarketDTO();
+	        throws ServletException, IOException {
+	    MarketDAO dao = new MarketDAO();
+	    
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    
+	    FileManager fileManager = new FileManager();
+	    
+	    // 파일 저장 경로
+	    String root = session.getServletContext().getRealPath("/");
+	    String pathname = root + "uploads" + File.separator + "photo";
 
-		try {
-			// 파일 업로드 처리를 위한 Part 객체
-			Part filePart = req.getPart("selectFile");
-			String fileName = null;
+	    try {
+	        MarketDTO dto = new MarketDTO();
+	        
+	        // DTO에 데이터 저장
+	        dto.setTitle(req.getParameter("title"));
+	        dto.setContent(req.getParameter("content"));
+	        dto.setCt_num(Integer.parseInt(req.getParameter("category")));
+	        dto.setMb_num(info.getMb_Num());
 
-			if (filePart != null && filePart.getSize() > 0) {
-				// 실제 파일 이름 가져오기
-				fileName = filePart.getSubmittedFileName();
+	        // 파일 업로드 처리
+	        String filename = null;
+	        Part p = req.getPart("selectFile");
+	        
+	        // FileManager를 사용하여 파일 업로드
+	        MyMultipartFile multiPart = fileManager.doFileUpload(p, pathname);
+	        if (multiPart != null) {
+	            // 저장된 파일명
+	            filename = multiPart.getSaveFilename();
+	        }
 
-				// 파일을 서버에 저장
-				String path = req.getServletContext().getRealPath("/uploads");
-				File f = new File(path);
-				if (!f.exists()) {
-					f.mkdirs();
-				}
+	        // 파일명을 DTO에 저장
+	        if (filename != null) {
+	            dto.setFileName(filename);
+	        }
 
-				// 파일 저장
-				filePart.write(path + File.separator + fileName);
+	        // 데이터베이스에 게시물 정보 저장
+	        dao.insertMarket(dto);
 
-			}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-			// DTO에 데이터 저장
-			dto.setTitle(req.getParameter("title"));
-			dto.setContent(req.getParameter("content"));
-			dto.setFileName(fileName);
-			dto.setCt_num(Integer.parseInt(req.getParameter("category")));
-			dto.setMb_num(5); // 5는 임시 / 진짜는 세션에서 가져온다
-
-			MarketDAO dao = new MarketDAO();
-
-			dao.insertMarket(dto);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return new ModelAndView("redirect:/market/list");
+	    return new ModelAndView("redirect:/market/list");
 	}
 
 	@RequestMapping(value = "/market/article", method = RequestMethod.GET)
 	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		MarketDAO dao = new MarketDAO();
-
-		// 세션에서 로그인 정보 가져오기
-		HttpSession session = req.getSession();
-		MemberDTO member = (MemberDTO) session.getAttribute("member");
-
+		MyUtil util = new MyUtilBootstrap();
+		
+		// 현재 로그인 정보 가져오기
+		HttpSession info = req.getSession();
+		
 		String page = req.getParameter("page");
 		String query = "page=" + page;
 
 		try {
+			
 			long marketNum = Long.parseLong(req.getParameter("marketNum"));
 			String schType = req.getParameter("schType");
 			String kwd = req.getParameter("kwd");
@@ -214,6 +221,7 @@ public class MarketController {
 			if (dto == null) {
 				return new ModelAndView("redirect:/market/list?" + query);
 			}
+			dto.setContent(util.htmlSymbols(dto.getContent()));
 
 			// 이전글, 다음글
 			MarketDTO prevDto = dao.findByPrev(marketNum, schType, kwd);
@@ -222,12 +230,13 @@ public class MarketController {
 			// JSP로 전달할 속성
 			ModelAndView mav = new ModelAndView("market/article");
 
-			mav.addObject("member", member);
 			mav.addObject("dto", dto);
-			mav.addObject("prevDto", prevDto);
-			mav.addObject("nextDto", nextDto);
 			mav.addObject("page", page);
 			mav.addObject("query", query);
+			mav.addObject("member", info);
+			 
+			mav.addObject("prevDto", prevDto);
+			mav.addObject("nextDto", nextDto);
 
 			return mav;
 

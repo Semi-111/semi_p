@@ -1,18 +1,18 @@
 package com.hyun3.domain;
 
 public class SessionInfo {
-	private Long mb_Num; // 회원번호
+	private Long mb_num; // 회원번호
 	private String userId;
 	private String name;
 	private int role;
 	private int nickName;
 
 	public Long getMb_Num() {
-		return mb_Num;
+		return mb_num;
 	}
 
 	public void setMb_Num(Long mb_Num) {
-		this.mb_Num = mb_Num;
+		this.mb_num = mb_Num;
 	}
 
 	public String getUserId() {
