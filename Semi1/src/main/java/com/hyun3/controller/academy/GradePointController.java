@@ -64,9 +64,10 @@ public class GradePointController {
 		return mav;
 	}
 	
+	// AJAX - JSON
 	@ResponseBody
 	@RequestMapping(value = "/grade/list", method = RequestMethod.POST) 
-	public Map<String, Object> showGradePage(HttpServletRequest req, HttpServletResponse resp)
+	public Map<String, Object> showGrade(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
@@ -84,7 +85,6 @@ public class GradePointController {
 			// 학점 데이터 가져오기
 			List<GradePointDTO> gradeList = dao.findById(userId, gradeYear, semester);
 			
-			
 			// 취득 학점 계산
 			int credits = 0;
 			double points = 0.0;
@@ -93,12 +93,12 @@ public class GradePointController {
 				credits += dto.getHakscore(); // 학점 누적
 				double gradePoint = dao.convertGradeToPoint(dto.getGrade()); // 성적을 숫자로 변환
 				points += gradePoint * dto.getHakscore(); // 총 점수 누적
+							
 			}
 			
 			// 평점 계산
 			double gpa = (credits > 0) ? points / credits : 0.0;
 			
-			model.put("gradeList", gradeList);
 			
 			model.put("credits", credits);
 			model.put("gpa", Math.round(gpa * 100.0) / 100.0); // GPA 소수점 2자리 반올림
@@ -114,5 +114,41 @@ public class GradePointController {
 			return model;
 		}
 	 
-	
+	// 수강 과목 리스트 - AJAX : Text
+	@RequestMapping(value = "/grade/gradeList", method = RequestMethod.GET)
+	public ModelAndView gradeList(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		
+		GradePointDAO dao = new GradePointDAO();
+		
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			String userId = info.getUserId();
+			
+			String gradeYear = req.getParameter("gradeYear");
+			String semester = req.getParameter("semester");
+			
+			List<GradePointDTO> gradeList = dao.findById(userId, gradeYear, semester);
+			
+			for(GradePointDTO dto : gradeList) {
+				dto.setSb_Name(dto.getSb_Name());
+				dto.setHakscore(dto.getHakscore());
+				dto.setGrade(dto.getGrade());
+			}
+			
+			ModelAndView mav = new ModelAndView("grade/gradeList");
+			
+			mav.addObject("gradeList", gradeList);
+			
+			return mav;
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			resp.sendError(406);
+			throw e;
+		}
+	}
 }

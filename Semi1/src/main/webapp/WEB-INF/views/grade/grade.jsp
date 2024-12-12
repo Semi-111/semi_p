@@ -68,23 +68,7 @@
 	            </thead>
 	            
 	            <tbody id="semester-data">
-   					<tr>
-	            		<td>학과명</td>
-	            		<td><input type="text" class="credit-input" value="4"></td>
-	            		<td>
-		            		<select>
-				            	<option>A+</option>
-	                            <option>A0</option>
-	                            <option>B+</option>
-	                            <option>B0</option>
-	                            <option>C+</option>
-	                            <option>C0</option>
-	                            <option>D+</option>
-	                            <option>D0</option>
-	                            <option>F</option>
-	                		</select>
-	            		</td>
-		            </tr>
+					
 	            </tbody>
 	        </table>
 	    </div>
@@ -141,30 +125,27 @@ $(function () {
 		let gradeYear = $(this).attr('data-year');
         let semester = $(this).attr('data-semester');
 		
-        // 제목 변경
-        $(".grade-title").text(gradeYear + " " + semester);
-		
-        let url = '${pageContext.request.contextPath}/grade/list';
-        let query = 'gradeYear=' + gradeYear + '&semester=' + semester;
+        let jsonUrl = '${pageContext.request.contextPath}/grade/list';
+        let jsonQuery = 'gradeYear=' + gradeYear + '&semester=' + semester;
         
-        const fn = function(data) {
-			let credits = data.credits;
-			let gpa = data.gpa;
-			
-			$('.gpa').text(gpa);
-			$('.credits').text(credits);
-			
-			
-        	
-		};
-		ajaxFun(url, 'post', query, 'json', fn);
+        ajaxFun(jsonUrl, 'POST', jsonQuery, 'json', function (data) {
+            // GPA 및 학점 업데이트
+            $('.gpa').text(data.gpa);
+            $('.credits').text(data.credits);
+        });
+        
+        
+     	// HTML 데이터 요청 (교과목 목록 업데이트)
+     	let htmlUrl = '${pageContext.request.contextPath}/grade/gradeList';
+     	let htmlQuery = 'gradeYear=' + gradeYear + '&semester=' + semester;
+		
+     	ajaxFun(htmlUrl, 'GET', htmlQuery, 'text', function (data) {
+     		let tbody = $("#semester-data");
+     	    tbody.html(data); // 반환된 HTML을 테이블에 삽입
+		});
         
 	});
 });
-
-
-
-
 
 
 // 학기별 학점 데이터
