@@ -5,10 +5,6 @@
     font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
 }
 
-body {
-    background-color: #f5f5f5;
-}
-
 header {
 	top: 0;
     width: 100%;
@@ -81,6 +77,7 @@ nav {
 
 .nav-links .nav-item .nav-link:hover {
     color: #a855f7;
+    font-weight: bold;
 }
 
 .nav-item1{

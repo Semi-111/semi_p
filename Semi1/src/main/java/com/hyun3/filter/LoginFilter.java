@@ -95,7 +95,7 @@ public class LoginFilter implements Filter {
 				"/member/login", "/member/logout",
 				"/member/member", "/member/userIdCheck", "/member/complete",
 				"/notice/list","/map/**","/map" ,
-				"/uploads/photo/**",
+				"/uploads/photo/**","/schedule/**",
 				"/resources/**"
 		};
 

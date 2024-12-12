@@ -4,9 +4,17 @@ public class ReplyDTO {
 	private int co_num; // 댓글번호
 	private String content; // 내용
 	private String reg_date; // 등록일
-	private int mb_num; // 회원번호
+	private long mb_num; // 회원번호
 	private int cm_num; // 게시글 번호
+	private String nickName;
 	
+	
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 	public int getCo_num() {
 		return co_num;
 	}
@@ -25,10 +33,10 @@ public class ReplyDTO {
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
 	}
-	public int getMb_num() {
+	public long getMb_num() {
 		return mb_num;
 	}
-	public void setMb_num(int mb_num) {
+	public void setMb_num(long mb_num) {
 		this.mb_num = mb_num;
 	}
 	public int getCm_num() {
