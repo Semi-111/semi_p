@@ -352,6 +352,8 @@ function deleteBoard() {
            </div>
        </div>
 
+		<jsp:include page="reply.jsp"/>
+
        <!-- 이전글/다음글 추가 -->
        <div class="post-navigation">
            <c:if test="${not empty prevDto}">
@@ -391,4 +393,113 @@ function deleteBoard() {
        </div>
    </footer>
 </body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    // 페이지 로딩 시 댓글 목록 불러오기
+    listReply(1);
+    
+    // 댓글 등록
+    $(".btn-purple").click(function(){
+        let cm_num = "${dto.cm_num}";
+        const $tb = $(this).closest("div").find("textarea");
+        let content = $tb.val().trim();
+        
+        if(! content) {
+            alert("내용을 입력하세요 !");
+            $tb.focus();
+            return false;
+        }
+        
+        let url = "${pageContext.request.contextPath}/lessonBoard/insertReply";
+        let query = "cm_num=" + cm_num + "&content=" + encodeURIComponent(content);
+        
+        const fn = function(data){
+            $tb.val("");
+            listReply(1);
+        };
+        
+        ajaxFun(url, "post", query, "json", fn);
+    });
+});
+
+// Ajax 공통 함수
+function ajaxFun(url, method, query, dataType, fn) {
+    $.ajax({
+        type: method,
+        url: url,
+        data: query,
+        dataType: dataType,
+        success: function(data) {
+            fn(data);
+        },
+        beforeSend: function(jqXHR) {
+            jqXHR.setRequestHeader("AJAX", true);
+        },
+        error: function(jqXHR) {
+            if(jqXHR.status === 400) {
+                alert("요청 처리가 실패했습니다.");
+                return false;
+            }
+            console.log(jqXHR.responseText);
+        }
+    });
+}
+
+// 댓글 리스트 불러오기
+function listReply(page) {
+    let cm_num = "${dto.cm_num}";
+    let url = "${pageContext.request.contextPath}/lessonBoard/listReply";
+    let query = "cm_num=" + cm_num + "&pageNo=" + page;
+    
+    const fn = function(data){
+        printReply(data);
+    };
+    ajaxFun(url, "get", query, "json", fn);
+}
+
+// 댓글 출력하기
+function printReply(data) {
+    let html = "";
+    const list = data.list;
+    
+    for(let item of list) {
+        html += '<div class="comment-item">';
+        html += '    <div class="comment-header">';
+        html += '        <span class="comment-author">' + item.nickName + '</span>';
+        html += '        <span class="comment-date">' + item.reg_date + '</span>';
+        html += '    </div>';
+        html += '    <div class="comment-text">' + item.content + '</div>';
+        html += '    <div class="comment-actions">';
+        
+        if(${sessionScope.member.mb_Num} === item.mb_num) {
+            html += '    <span class="comment-action" onclick="deleteReply(' + item.co_num + ')">삭제</span>';
+        }
+        
+        html += '    </div>';
+        html += '</div>';
+    }
+    
+    $(".comment-list").html(html);
+    
+    // 댓글 갯수 업데이트
+    $(".comments-count").text(data.dataCount);
+}
+
+// 댓글 삭제
+function deleteReply(co_num) {
+    if(! confirm("댓글을 삭제하시겠습니까 ? ")) {
+        return;
+    }
+    
+    let url = "${pageContext.request.contextPath}/lessonBoard/deleteReply";
+    let query = "co_num=" + co_num;
+    
+    const fn = function(data){
+        listReply(1);
+    };
+    
+    ajaxFun(url, "post", query, "json", fn);
+}
+</script>
 </html>

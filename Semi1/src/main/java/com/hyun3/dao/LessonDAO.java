@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hyun3.domain.LessonDTO;
+import com.hyun3.domain.sw.ReplyDTO;
 import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 
@@ -414,4 +415,127 @@ public class LessonDAO {
 
         return dto;
     }
+    
+        // 댓글 추가
+        public void insertReply(ReplyDTO dto) throws SQLException {
+            PreparedStatement pstmt = null;
+            String sql;
+            
+            try {
+                sql = "INSERT INTO lesson_CO(CO_num, content, reg_date, MB_num, CM_num) "
+                    + " VALUES (seq_lesson_CO.NEXTVAL, ?, SYSDATE, ?, ?)";
+                
+                pstmt = conn.prepareStatement(sql);
+                
+                pstmt.setString(1, dto.getContent());
+                pstmt.setLong(2, dto.getMb_num());
+                pstmt.setInt(3, dto.getCm_num());
+                
+                pstmt.executeUpdate();
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+                DBUtil.close(pstmt);
+            }
+        }
+        
+        // 댓글 개수
+        public int dataCount(int cm_num) throws SQLException {
+            int result = 0;
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            String sql;
+            
+            try {
+                sql = "SELECT COUNT(*) FROM lesson_CO WHERE CM_num = ?";
+                
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, cm_num);
+                
+                rs = pstmt.executeQuery();
+                if(rs.next()) {
+                    result = rs.getInt(1);
+                }
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+                DBUtil.close(rs);
+                DBUtil.close(pstmt);
+            }
+            
+            return result;
+        }
+        
+        // 댓글 목록
+        public List<ReplyDTO> listReply(int cm_num, int offset, int size) throws SQLException {
+            List<ReplyDTO> list = new ArrayList<>();
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            StringBuilder sb = new StringBuilder();
+            
+            try {
+                sb.append(" SELECT r.CO_num, r.MB_num, m.nickName, ");
+                sb.append("    r.content, TO_CHAR(r.reg_date, 'YYYY-MM-DD HH24:MI:SS') reg_date ");
+                sb.append(" FROM lesson_CO r ");
+                sb.append(" JOIN Member m ON r.MB_num = m.MB_num ");
+                sb.append(" WHERE r.CM_num = ? ");
+                sb.append(" ORDER BY r.CO_num DESC ");
+                sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+                
+                pstmt = conn.prepareStatement(sb.toString());
+                
+                pstmt.setInt(1, cm_num);
+                pstmt.setInt(2, offset);
+                pstmt.setInt(3, size);
+                
+                rs = pstmt.executeQuery();
+                
+                while(rs.next()) {
+                    ReplyDTO dto = new ReplyDTO();
+                    
+                    dto.setCo_num(rs.getInt("CO_num"));
+                    dto.setMb_num(rs.getInt("MB_num"));
+                    dto.setContent(rs.getString("content"));
+                    dto.setReg_date(rs.getString("reg_date"));
+                    dto.setNickName(rs.getString("nickName"));
+                    
+                    list.add(dto);
+                }
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+                DBUtil.close(rs);
+                DBUtil.close(pstmt);
+            }
+            
+            return list;
+        }
+        
+        // 댓글 삭제
+        public void deleteReply(int co_num, long mb_num) throws SQLException {
+            PreparedStatement pstmt = null;
+            String sql;
+            
+            try {
+                sql = "DELETE FROM lesson_CO WHERE CO_num = ? AND MB_num = ?";
+                
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setInt(1, co_num);
+                pstmt.setLong(2, mb_num);
+                
+                pstmt.executeUpdate();
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+                DBUtil.close(pstmt);
+            }
+        }
 }
