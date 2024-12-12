@@ -26,7 +26,7 @@
 	        <div class="stats-grid">
 	            <div class="stat-item">
 	                <div class="stat-label">전체 평점</div>
-	                <div class="stat-value">${gpa}<span class="stat-max">/4.5</span></div>
+	                <div class="stat-value">${totalGpa}<span class="stat-max">/4.5</span></div>
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
@@ -40,14 +40,14 @@
 	    </div>
 	
 		<div class="semester-nav">
-		    <button class="semester-btn" data-semester="1학년 1학기">1학년 1학기</button>
-		    <button class="semester-btn" data-semester="1학년 2학기">1학년 2학기</button>
-		    <button class="semester-btn" data-semester="2학년 1학기">2학년 1학기</button>
-		    <button class="semester-btn" data-semester="2학년 2학기">2학년 2학기</button>
-		    <button class="semester-btn" data-semester="3학년 1학기">3학년 1학기</button>
-		    <button class="semester-btn" data-semester="3학년 2학기">3학년 2학기</button>
-		    <button class="semester-btn" data-semester="4학년 1학기">4학년 1학기</button>
-		    <button class="semester-btn" data-semester="4학년 2학기">4학년 2학기</button>
+		    <button class="semester-btn" data-year="1학년" data-semester="1학기">1학년 1학기</button>
+		    <button class="semester-btn" data-year="1학년" data-semester="2학기">1학년 2학기</button>
+		    <button class="semester-btn" data-year="2학년" data-semester="1학기">2학년 1학기</button>
+		    <button class="semester-btn" data-year="2학년" data-semester="2학기">2학년 2학기</button>
+		    <button class="semester-btn" data-year="3학년" data-semester="1학기">3학년 1학기</button>
+		    <button class="semester-btn" data-year="3학년" data-semester="2학기">3학년 2학기</button>
+		    <button class="semester-btn" data-year="4학년" data-semester="1학기">4학년 1학기</button>
+		    <button class="semester-btn" data-year="4학년" data-semester="2학기">4학년 2학기</button>
 		</div>
 
 	    <div class="grade-table">
@@ -56,7 +56,7 @@
 	            <button class="submit-btn">시간표 불러오기</button>
 	        </div>
 	        <div class="grade-sub">
-	        	평점<span class="highlight">${gpa}</span> 취득<span class="highlight">${totalCredits}</span>
+	        	평점<span class="gpa highlight">0.0</span> 취득<span class="credits highlight">0</span>
 	        </div>
 	        <table>
 	            <thead>
@@ -97,26 +97,69 @@
 
 <script type="text/javascript">
 
+function ajaxFun(url, method, formData, dataType, fn, file=false) {
+	const settings = {
+			type: method,
+			data: formData,
+			dataType: dataType,
+			success: function(data) {
+				fn(data);
+			},
+			beforeSend: function(jqXHR) {
+				jqXHR.setRequestHeader('AJAX', true);				
+			},
+			complete:function() {
+			},
+			error: function(jqXHR) {
+				if(jqXHR.status === 403) {
+					login();
+					return false;
+				} else if(jqXHR.status === 406) {
+					alert('요청 처리가 실패했습니다.');
+					return false;
+				}
+				
+				console.log(jqXHR.responseText);
+			}
+	};
+	
+	if(file) {
+		settings.processData = false;
+		settings.contentType = false;
+	}
+	
+	$.ajax(url, settings);
+}
+
+
 $(function () {
     $(".semester-btn").click(function () {
         // 모든 버튼에서 'active' 클래스 제거 후, 클릭된 버튼에 추가
         $(".semester-btn").removeClass("active");
         $(this).addClass("active");
-
-        // 버튼의 data-semester 속성에서 학년과 학기 정보를 추출
-        const semesterInfo = $(this).data("semester").split(" ");
-        const gradeYear = semesterInfo[0].replace("학년", ""); // '학년' 제거
-        const semester = semesterInfo[1].replace("학기", "");  // '학기' 제거
-
-        // 제목 변경
-        $(".grade-title").text(gradeYear + "학년 " + semester + "학기");
-        
 		
-
+		let gradeYear = $(this).attr('data-year');
+        let semester = $(this).attr('data-semester');
+		
+        // 제목 변경
+        $(".grade-title").text(gradeYear + " " + semester);
+		
+        let url = '${pageContext.request.contextPath}/grade/list';
+        let query = 'gradeYear=' + gradeYear + '&semester=' + semester;
         
+        const fn = function(data) {
+			let credits = data.credits;
+			let gpa = data.gpa;
+			
+			$('.gpa').text(gpa);
+			$('.credits').text(credits);
+			
+			
+        	
+		};
+		ajaxFun(url, 'post', query, 'json', fn);
         
-        
-    });
+	});
 });
 
 
