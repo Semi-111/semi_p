@@ -65,6 +65,55 @@ public class GradePointDAO {
 		return list;
 	}
 	
+	
+	public List<GradePointDTO> findById(String userId) {
+		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT s.sb_Num, s.sb_Name, ");
+			sb.append(" d.hakscore,  ");
+			sb.append(" grade, grade_year, a.semester, ");
+			sb.append(" m.mb_Num, m.userId ");
+			sb.append(" FROM subject s ");
+			sb.append(" JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
+			sb.append(" JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
+			sb.append(" JOIN member m ON a.mb_Num = m.mb_Num ");
+			sb.append(" WHERE m.userId=? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				GradePointDTO dto = new GradePointDTO();
+				dto.setSb_Num(rs.getLong("sb_Num"));
+				dto.setSb_Name(rs.getString("sb_Name"));
+				dto.setHakscore(rs.getInt("hakscore"));
+	            dto.setGrade(rs.getString("grade"));
+	            dto.setGrade_year(rs.getString("grade_year"));
+	            dto.setSemester(rs.getString("semester"));
+	            dto.setMb_Num(rs.getLong("mb_Num"));
+	            dto.setUserId(rs.getString("userId"));
+	            
+	            list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return list;
+	}
+	
+	
 	public double convertGradeToPoint(String grade) {
 		switch(grade) {
 		case "A+": return 4.5;
