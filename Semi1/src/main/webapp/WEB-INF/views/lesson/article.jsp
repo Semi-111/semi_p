@@ -275,6 +275,8 @@ footer {
     color: #a855f7;
 }
 </style>
+
+<script type="text/javascript">
 <script type="text/javascript">
 function deleteBoard() {
    if(confirm("게시글을 삭제하시겠습니까?")) {
@@ -283,7 +285,55 @@ function deleteBoard() {
        location.href = url;
    }
 }
-</script></head>
+
+function submitReply() {
+    const f = document.replyForm;
+    if(!f.content.value.trim()) {
+        alert('댓글 내용을 입력하세요.');
+        f.content.focus();
+        return false;
+    }
+    
+    $.ajax({
+        url: '${pageContext.request.contextPath}/lessonBoard/insertReply',
+        type: 'POST',
+        data: {
+            cm_num: f.cm_num.value,
+            content: f.content.value
+        },
+        dataType: 'json',
+        success: function(data) {
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+            alert('댓글을 등록하는데 실패했습니다.');
+        }
+    });
+    
+    return false;
+}
+
+function deleteReply(reply_num) {
+    if(confirm('댓글을 삭제하시겠습니까?')) {
+        $.ajax({
+            url: '${pageContext.request.contextPath}/lessonBoard/deleteReply',
+            type: 'POST',
+            data: {
+                reply_num: reply_num
+            },
+            dataType: 'json',
+            success: function(data) {
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                alert('댓글을 삭제하는데 실패했습니다.');
+            }
+        });
+    }
+}
+</script>
+
+</head>
 <body>
    <header>
        <nav>
@@ -351,6 +401,41 @@ function deleteBoard() {
                </button>
            </div>
        </div>
+
+		<div class='reply-info'>
+		    <span class='reply-count'>댓글 ${replyCount}개</span>
+		</div>
+
+		<table class='table table-borderless'>
+		    <c:forEach var="dto" items="${listReply}">
+		        <tr class='reply-row'>
+		            <td width='50%'>
+		                <div class='row reply-writer'>
+		                    <div class='col-1'><i class='bi bi-person-circle text-muted'></i></div>
+		                    <div class='col-auto align-self-center'>
+		                        <div class='name'>${dto.nickName}</div>
+		                        <div class='date'>${dto.reg_date}</div>
+		                    </div>
+		                </div>
+		            </td>
+		            <td width='50%' align='right'>
+		                <span class='reply-dropdown'><i class='bi bi-three-dots-vertical'></i></span>
+		                <div class='reply-menu'>
+		                    <c:if test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role >= 51}">
+		                        <div class='deleteReply' data-replyNum='${dto.reply_num}' data-pageNo='${pageNo}'>삭제</div>
+		                    </c:if>
+		                </div>
+		            </td>
+		        </tr>
+		        <tr>
+		            <td colspan='2' valign='top'>${dto.co_content}</td>
+		        </tr>
+		    </c:forEach>
+		</table>
+		
+		<div class="page-navigation">
+		    ${paging}
+		</div>
 
        <!-- 이전글/다음글 추가 -->
        <div class="post-navigation">

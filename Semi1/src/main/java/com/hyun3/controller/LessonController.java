@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.hyun3.dao.LessonDAO;
 import com.hyun3.domain.LessonDTO;
+import com.hyun3.domain.LessonReplyDTO;
 import com.hyun3.domain.SessionInfo;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
@@ -177,7 +178,7 @@ public class LessonController {
 	    return new ModelAndView("redirect:/lessonBoard/list");
 	}
 	
-	@RequestMapping(value="/lessonBoard/article")
+	@RequestMapping(value="/lessonBoard/article", method = RequestMethod.GET)
 	public ModelAndView article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    ModelAndView mav = new ModelAndView("lesson/article");
 	    
@@ -226,11 +227,176 @@ public class LessonController {
 	    return mav;
 	}
 	
-	@RequestMapping(value="/lessonBoard/delete")
+	@RequestMapping(value="/lessonBoard/delete", method=RequestMethod.GET)
 	public ModelAndView lessonDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("redirect:/lessonBoard/list");
+		LessonDAO dao = new LessonDAO();
 		
-		return mav;
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		FileManager fileManager = new FileManager();
+		
+		String page = req.getParameter("page");
+		
+		// 파일 저장경로
+		String root = session.getServletContext().getRealPath("/");
+	    String pathname = root + "uploads" + File.separator + "photo";
+	    
+	    try {
+	    	long cm_num = Long.parseLong(req.getParameter("cm_num")); // 글번호
+	    	
+	    	// 게시물 정보 가져오기
+	    	LessonDTO dto = dao.findById(cm_num);
+
+	    	// 게시글 정보가 없으면
+	    	if (dto == null) {
+	    		return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
+	    	}
+	    	
+	    	// 게시물을 올린 사용자나 관리자가 아니면
+	    	// mb_num은 long 타입
+	    	if(dto.getMb_num() != info.getMb_Num() && Integer.parseInt(info.getRole()) < 100) {
+	    		fileManager.doFiledelete(pathname, dto.getFileName());
+	    	}
+	    	
+	    	// 테이블 데이터 삭제
+	    	dao.deleteLesson(cm_num);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
+	    return new ModelAndView("redirect:/lessonBoard/list?page" + page);
 	}
 	
+	// 글 수정
+		@RequestMapping(value="/lessonBoard/update", method = RequestMethod.GET)
+		public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			LessonDAO dao = new LessonDAO();
+			
+			String page = req.getParameter("page");
+			long cm_num = Long.parseLong(req.getParameter("cm_num"));
+			
+			ModelAndView mav = new ModelAndView("lesson/write");
+			
+			try {
+				LessonDTO dto = dao.findById(cm_num);
+				if(dto == null) {
+					return new ModelAndView("redirect:/lessonBoard/list?page" + page);
+				}
+				
+				// 게시물을 작성한 사용자가 아니면
+				HttpSession session = req.getSession();
+				SessionInfo info = (SessionInfo)session.getAttribute("member");
+				if(info.getMb_Num() != dto.getMb_num() && Integer.parseInt(info.getRole()) < 51) {
+					return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
+				}
+				
+				mav.addObject("dto", dto);
+				mav.addObject("page", page);
+				mav.addObject("mode", "update");
+				
+				return mav;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
+		}
+		
+		// 수정한 글 전달받기
+		@RequestMapping(value="/lessonBoard/update", method = RequestMethod.POST)
+		public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		    LessonDAO dao = new LessonDAO();
+		    
+		    HttpSession session = req.getSession();
+		    FileManager fileManager = new FileManager();
+		    
+		    String page = req.getParameter("page");
+		    String root = session.getServletContext().getRealPath("/");
+		    String pathname = root + "uploads" + File.separator + "photo";
+
+		    try {
+		        LessonDTO dto = new LessonDTO();
+		        
+		        dto.setCm_num(Long.parseLong(req.getParameter("cm_num")));
+		        dto.setTitle(req.getParameter("title"));
+		        dto.setBoard_content(req.getParameter("content"));
+		        dto.setLessonNum(Integer.parseInt(req.getParameter("category")));
+
+		        // 파일 업로드 처리
+		        String filename = null;
+		        Part p = req.getPart("selectFile");
+
+		        // FileManager를 사용하여 파일 업로드
+		        MyMultipartFile multiPart = fileManager.doFileUpload(p, pathname);
+		        if (multiPart != null) {
+		            // 저장된 파일명
+		            filename = multiPart.getSaveFilename();
+		        }
+
+		        // 파일명을 DTO에 저장
+		        if (filename != null) {
+		            dto.setFileName(filename);
+		        }
+
+		        dao.updateLesson(dto);
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+
+		    return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
+		}
+		
+		// 댓글 추가
+		@RequestMapping(value="/lessonBoard/insertReply", method=RequestMethod.POST)
+		public void insertReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		    LessonDAO dao = new LessonDAO();
+			
+		    HttpSession session = req.getSession();
+		    SessionInfo info = (SessionInfo)session.getAttribute("member");
+		    
+		    String state = "true";
+		    
+		    try {
+		    	LessonReplyDTO dto = new LessonReplyDTO();
+		        
+		        dto.setCm_num(Long.parseLong(req.getParameter("cm_num")));
+		        dto.setCo_content(req.getParameter("content"));
+		        dto.setMb_num(info.getMb_Num());
+		        
+		        dao.insertReply(dto);
+		    } catch (Exception e) {
+		        state = "false";
+		    }
+		    
+		   // JSONObject job = new JSONObject();
+		  //  job.put("state", state);
+		    
+		    resp.setContentType("text/html;charset=utf-8");
+		   // PrintWriter out = resp.getWriter();
+		   // out.print(job.toString());
+		}
+
+		// 댓글 삭제
+		@RequestMapping(value="/lessonBoard/deleteReply", method=RequestMethod.POST)
+		public void deleteReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		    LessonDAO dao = new LessonDAO();
+		    
+		    String state = "true";
+		    
+		    try {
+		        long reply_num = Long.parseLong(req.getParameter("reply_num"));
+		        dao.deleteReply(reply_num);
+		    } catch (Exception e) {
+		        state = "false";
+		    }
+		    
+		   // JSONObject job = new JSONObject();
+		    //job.put("state", state);
+		    
+		    resp.setContentType("text/html;charset=utf-8");
+		   // PrintWriter out = resp.getWriter();
+		   // out.print(job.toString());
+		}
 }

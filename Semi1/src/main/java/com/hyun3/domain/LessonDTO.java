@@ -2,7 +2,7 @@ package com.hyun3.domain;
 
 public class LessonDTO {
 	private long cm_num; // 게시글 번호
-	private String division; // 회원 레벨 구분 : 
+	private String division; // 학과 구분
 	private String title; // 글 제목
 	private String board_content; // 글 내용
 	private String ca_date; // 글 생성일자
@@ -15,13 +15,6 @@ public class LessonDTO {
 	private int lessonNum; // 학과번호
 	private String lessonName; // 학과이름
 	
-	//댓글
-	private long co_num;
-	private String co_content; // 댓글 내용
-	private String reg_date; // 댓글 등록일
-	
-	private String dateTime; // 좋아요한 날짜
-
 	
 	public String getNickName() {
 		return nickName;
@@ -111,36 +104,4 @@ public class LessonDTO {
 		this.lessonName = lessonName;
 	}
 
-	public long getCo_num() {
-		return co_num;
-	}
-
-	public void setCo_num(long co_num) {
-		this.co_num = co_num;
-	}
-
-	public String getCo_content() {
-		return co_content;
-	}
-
-	public void setCo_content(String co_content) {
-		this.co_content = co_content;
-	}
-
-	public String getReg_date() {
-		return reg_date;
-	}
-
-	public void setReg_date(String reg_date) {
-		this.reg_date = reg_date;
-	}
-
-	public String getDateTime() {
-		return dateTime;
-	}
-
-	public void setDateTime(String dateTime) {
-		this.dateTime = dateTime;
-	}
-	
 }
