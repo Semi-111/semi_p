@@ -1,5 +1,71 @@
-@charset "UTF-8";
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕",
+		sans-serif;
+}
 
-.body-container {
-	max-width: 800px;
+#bbs-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#bbs {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.board {
+	border-collapse: collapse;
+	margin-bottom: 30px;
+	width: 300px;
+		
+}
+
+.board th, .board td {
+	border: 1px solid #220000;
+	text-align: center;
+	padding: 8px;
+}
+
+.board th {
+	background-color: #f2f2f2;
+}
+
+/* 슬라이더 설정 */
+.slider {
+	width: 100%;
+	height: 150px;
+}
+
+.slider img {
+	width: 100%;
+	height: auto;
+}
+
+/* 화면 축소 시 중앙화면만 보이게 설정 */
+@media ( max-width : 992px) {
+	#leftSide, #rightSide {
+		display: none;
+	}
+	#mainContent {
+		flex: 1;
+		max-width: 100%;
+	}
+}
+
+/* 메인 페이지 외의 화면에서 오른쪽 사이드 고정 */
+body.page-other #rightSide {
+	display: block !important;
+}
+
+/* 헤더와 푸터를 침범하지 않도록 설정 */
+#rightSide {
+	position: sticky;
+	top: 0;
 }
