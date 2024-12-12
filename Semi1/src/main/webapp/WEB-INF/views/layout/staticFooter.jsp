@@ -3,3 +3,5 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/bootstrap5/js/bootstrap.bundle.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/footer.css">

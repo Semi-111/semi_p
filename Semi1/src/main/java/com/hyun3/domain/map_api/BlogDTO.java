@@ -1,6 +1,6 @@
 package com.hyun3.domain.map_api;
 
-public class BlogDTO {
+public class BlogDTO implements Comparable<BlogDTO>  {
 
     private Long blogNum;
     private String blogTitle;
@@ -65,5 +65,11 @@ public class BlogDTO {
 
     public void setMapDTO(MapDTO mapDTO) {
         this.mapDTO = mapDTO;
+    }
+
+
+    @Override
+    public int compareTo(BlogDTO o) {
+        return this.blogName == null ? -1 : (o.blogName == null ? 1 : this.blogName.compareTo(o.blogName));
     }
 }

@@ -5,10 +5,8 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap5/css/bootstrap.min.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap5/icon/bootstrap-icons.css" type="text/css">
-
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap5/icon/bootstrap-icons.css" type="text/css"> --%>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/core.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/layout.css" type="text/css">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 
@@ -16,3 +14,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/core.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>

@@ -4,8 +4,8 @@ public class SessionInfo {
 	private Long mb_Num; // 회원번호
 	private String userId;
 	private String name;
-	private int role;
-	private int nickName;
+	private String role;
+	private String nickName;
 
 	public Long getMb_Num() {
 		return mb_Num;
@@ -31,19 +31,19 @@ public class SessionInfo {
 		this.name = name;
 	}
 
-	public int getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(int role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 
-	public int getNickName() {
+	public String getNickName() {
 		return nickName;
 	}
 
-	public void setNickName(int nickName) {
+	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
 }

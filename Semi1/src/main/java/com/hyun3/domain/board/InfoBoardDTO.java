@@ -11,6 +11,30 @@ public class InfoBoardDTO {
   private String fileName;  // 이미지 파일 이름
   private Integer views;    // 조회수 (null 허용)
   private long mbNum;        // 회원번호
+
+  private int replyCount;
+  private int LikeCount;
+
+  public void setMbNum(long mbNum) {
+    this.mbNum = mbNum;
+  }
+
+  public int getReplyCount() {
+    return replyCount;
+  }
+
+  public void setReplyCount(int replyCount) {
+    this.replyCount = replyCount;
+  }
+
+  public int getLikeCount() {
+    return LikeCount;
+  }
+
+  public void setLikeCount(int likeCount) {
+    LikeCount = likeCount;
+  }
+
   private MemberDTO member; // 작성자 정보 (MemberDTO)
 
   public MemberDTO getMember() {

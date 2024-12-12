@@ -7,7 +7,7 @@ public class MemberDTO {
   private String name; // 이름
   private String nickName; // 닉네임
   private int block; // 로그인가능 여부
-  private int role; // 회원권한
+  private String role; // 회원권한
   private int hak; // 학번
   private String ca_Day; // 회원 가입일
   private String modifyDay; // 회원 정보 수정날짜
@@ -56,11 +56,11 @@ public class MemberDTO {
     this.nickName = nickName;
   }
 
-  public int getRole() {
+  public String getRole() {
     return role;
   }
 
-  public void setRole(int role) {
+  public void setRole(String role) {
     this.role = role;
   }
 

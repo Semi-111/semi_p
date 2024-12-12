@@ -37,7 +37,7 @@ public class MemberDAO {
         dto.setMb_Num(rs.getLong("mb_Num"));
         dto.setUserId(rs.getString("userId"));
         dto.setName(rs.getString("nickname"));
-        dto.setRole(rs.getInt("role"));
+        dto.setRole(rs.getString("role"));
         dto.setCa_Day(rs.getString("ca_Day"));
         dto.setModifyDay(rs.getString("modifyDay"));
       }
@@ -152,7 +152,7 @@ public class MemberDAO {
         dto.setPwd(rs.getString("pwd"));
         dto.setName(rs.getString("name"));
         dto.setBlock(rs.getInt("block"));
-        dto.setRole(rs.getInt("role"));
+        dto.setRole(rs.getString("role"));
         dto.setCa_Day(rs.getString("ca_Day"));
         dto.setModifyDay(rs.getString("modifyDay"));
         dto.setBirth(rs.getString("birth"));
