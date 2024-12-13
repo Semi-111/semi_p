@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${boardType}게시판</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/article1.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
     <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
     <script>
@@ -58,16 +59,29 @@
                 </div>
             </c:if>
 
+            <div>
+<%--                <!-- 좋아요 버튼 -->--%>
+<%--                <button type="button" class="btn btn-info btnSendBoardLike" title="좋아요">--%>
+<%--                    <i class="bi ${isUserLike ? 'bi-hand-thumbs-up-fill' : 'bi-hand-thumbs-up'}"></i>--%>
+<%--                    &nbsp;&nbsp;<span id="boardLikeCount">${dto.boardLikeCount}</span>--%>
+<%--                </button>--%>
+            </div>
+
             <div class="post-actions">
                 <div class="action-left">
-                    <button class="btn btn-gray">
-                        좋아요 0
+                    <button type="button" class="btn btn-gray btnSendBoardLike" title="좋아요">
+                        <!-- isUserLike가 true면 채워진 하트, 아니면 빈 하트 -->
+                        <i class="${isUserLike ? 'fa-solid fa-heart liked' : 'fa-regular fa-heart'} heart-icon"></i>
+                        &nbsp;&nbsp;<span id="boardLikeCount">${(dto.boardLikeCount != null && dto.boardLikeCount > 0) ? dto.boardLikeCount : 0}</span>
                     </button>
                     <button class="btn btn-gray">
                         공유하기
                     </button>
                 </div>
-                <div class="action-right">
+            </div>
+
+
+            <div class="action-right">
                     <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/update?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'">수정</button>
                     <button class="btn btn-red" onclick = deleteBoard();>삭제</button>
                     <button class="btn btn-red">신고</button>
@@ -119,6 +133,79 @@
         <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
         <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
     </footer>
+
+<script>
+    function ajaxFun(url, method, formData, dataType, fn, file = false) {
+        const settings = {
+            type : method,
+            data : formData,
+            dataType : dataType,
+            success : function (data) {
+                fn(data);
+            },
+            beforeSend : function (jqXHR) {
+                jqXHR.setRequestHeader('AJAX', true);
+            },
+            complete : function () {
+
+            },
+            error : function (jqXHR) {
+                if(jqXHR.status === 403) {
+                    login();
+                    return false;
+                } else if(jqXHR.status === 406) {
+                    alert('요청 처리가 실패했습니다.');
+                    return false;
+                }
+
+                console.log(jqXHR.responseText);
+            }
+        };
+
+        if (file) {
+            settings.processData = false;
+            settings.contentType = false;
+        }
+
+        $.ajax(url, settings);
+    }
+
+    $(function () {
+        $('.btnSendBoardLike').click(function () {
+            const $i = $(this).find('i.heart-icon');
+            let userLiked = $i.hasClass('fa-solid'); // fa-solid fa-heart 라면 좋아요 상태
+
+            let msg = userLiked ? '좋아요를 취소하시겠습니까?' : '좋아요를 하시겠습니까?';
+            if (!confirm(msg)) return false;
+
+            let url = '${pageContext.request.contextPath}/bbs/infoBoard/insertBoardLike';
+            let query = 'cm_Num=${dto.cmNum}&userLiked=' + userLiked; // userLiked는 true/false 문자열로 전달
+
+            const fn = function (data) {
+                let state = data.state;
+                if (state === 'true') {
+                    let count = data.boardLikeCount || 0;
+                    $('#boardLikeCount').text(count);
+
+                    if (userLiked) {
+                        // 좋아요 취소: 채워진 하트 → 빈 하트
+                        $i.removeClass('fa-solid fa-heart').addClass('fa-regular fa-heart').removeClass('liked');
+                    } else {
+                        // 좋아요 추가: 빈 하트 → 채워진 하트
+                        $i.removeClass('fa-regular fa-heart').addClass('fa-solid fa-heart liked');
+                    }
+                } else if (state === 'liked') {
+                    alert('게시글 공감은 한 번만 가능합니다.');
+                } else {
+                    alert('게시글 공감 여부 처리가 실패했습니다.');
+                }
+            };
+
+            ajaxFun(url, 'post', query, 'json', fn);
+        });
+    });
+
+</script>
 
 </body>
 </html>

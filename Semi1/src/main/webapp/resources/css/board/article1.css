@@ -292,9 +292,26 @@ footer {
     color: #a855f7;
 }
 
+.post-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .post-image img {
-    max-width: 100%; /* 부모 요소 너비에 맞게 이미지 크기 조정 */
+    /*max-width: 100%; !* 부모 요소 너비에 맞게 이미지 크기 조정 *!*/
+    width: 600px;
     height: auto;   /* 이미지 비율 유지 */
     max-height: 400px; /* 원하는 최대 높이 제한 */
     object-fit: contain; /* 이미지가 비율에 맞게 표시되도록 조정 */
+}
+
+.heart-icon {
+    font-size: 16px;
+    color: gray; /* 기본 색상 */
+    transition: color 0.3s ease; /* 색상 변화 효과 */
+}
+
+.heart-icon.liked {
+    color: red; /* 좋아요 상태일 때 빨간색 */
 }
