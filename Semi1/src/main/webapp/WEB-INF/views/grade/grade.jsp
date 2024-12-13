@@ -40,14 +40,14 @@
 	    </div>
 	
 		<div class="semester-nav">
-		    <button class="semester-btn" data-year="1학년" data-semester="1학기">1학년 1학기</button>
-		    <button class="semester-btn" data-year="1학년" data-semester="2학기">1학년 2학기</button>
-		    <button class="semester-btn" data-year="2학년" data-semester="1학기">2학년 1학기</button>
-		    <button class="semester-btn" data-year="2학년" data-semester="2학기">2학년 2학기</button>
-		    <button class="semester-btn" data-year="3학년" data-semester="1학기">3학년 1학기</button>
-		    <button class="semester-btn" data-year="3학년" data-semester="2학기">3학년 2학기</button>
-		    <button class="semester-btn" data-year="4학년" data-semester="1학기">4학년 1학기</button>
-		    <button class="semester-btn" data-year="4학년" data-semester="2학기">4학년 2학기</button>
+		    <button class="semester-btn" data-year="1" data-semester="1">1학년 1학기</button>
+		    <button class="semester-btn" data-year="1" data-semester="2">1학년 2학기</button>
+		    <button class="semester-btn" data-year="2" data-semester="1">2학년 1학기</button>
+		    <button class="semester-btn" data-year="2" data-semester="2">2학년 2학기</button>
+		    <button class="semester-btn" data-year="3" data-semester="1">3학년 1학기</button>
+		    <button class="semester-btn" data-year="3" data-semester="2">3학년 2학기</button>
+		    <button class="semester-btn" data-year="4" data-semester="1">4학년 1학기</button>
+		    <button class="semester-btn" data-year="4" data-semester="2">4학년 2학기</button>
 		</div>
 
 	    <div class="grade-table">
@@ -126,7 +126,7 @@ $(function () {
         let semester = $(this).attr('data-semester');
         
      	// 제목 변경
-     	$(".grade-title").text(gradeYear + " " + semester);
+     	$(".grade-title").text(gradeYear + "학년 " + semester + "학기");
 		
         let jsonUrl = '${pageContext.request.contextPath}/grade/list';
         let jsonQuery = 'gradeYear=' + gradeYear + '&semester=' + semester;

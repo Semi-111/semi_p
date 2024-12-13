@@ -79,8 +79,8 @@ public class GradePointController {
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			String userId = info.getUserId();
 			
-			String gradeYear = req.getParameter("gradeYear");
-			String semester = req.getParameter("semester");
+			int gradeYear = Integer.parseInt(req.getParameter("gradeYear"));
+			int semester = Integer.parseInt(req.getParameter("semester"));
 			
 			// 학점 데이터 가져오기
 			List<GradePointDTO> gradeList = dao.findById(userId, gradeYear, semester);
@@ -126,8 +126,8 @@ public class GradePointController {
 			SessionInfo info = (SessionInfo)session.getAttribute("member");
 			String userId = info.getUserId();
 			
-			String gradeYear = req.getParameter("gradeYear");
-			String semester = req.getParameter("semester");
+			int gradeYear = Integer.parseInt(req.getParameter("gradeYear"));
+			int semester = Integer.parseInt(req.getParameter("semester"));
 			
 			List<GradePointDTO> gradeList = dao.findById(userId, gradeYear, semester);
 			

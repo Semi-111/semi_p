@@ -44,8 +44,8 @@ public class GradePointDAO {
 				dto.setSb_Name(rs.getString("sb_Name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 	            dto.setGrade(rs.getString("grade"));
-	            dto.setGrade_year(rs.getString("grade_year"));
-	            dto.setSemester(rs.getString("semester"));
+	            dto.setGrade_year(rs.getInt("grade_year"));
+	            dto.setSemester(rs.getInt("semester"));
 	            dto.setMb_Num(rs.getLong("mb_Num"));
 	            dto.setUserId(rs.getString("userId"));
 	            
@@ -63,7 +63,7 @@ public class GradePointDAO {
 	}
 	
 	
-	public List<GradePointDTO> findById(String userId, String gradeYear, String semester) {
+	public List<GradePointDTO> findById(String userId, int gradeYear, int semester) {
 		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -83,8 +83,8 @@ public class GradePointDAO {
 			pstmt = conn.prepareStatement(sb.toString());
 			
 			pstmt.setString(1, userId);
-			pstmt.setString(2, gradeYear);
-			pstmt.setString(3, semester);
+			pstmt.setInt(2, gradeYear);
+			pstmt.setInt(3, semester);
 			
 			rs = pstmt.executeQuery();
 			
@@ -94,8 +94,8 @@ public class GradePointDAO {
 				dto.setSb_Name(rs.getString("sb_Name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 	            dto.setGrade(rs.getString("grade"));
-	            dto.setGrade_year(rs.getString("grade_year"));
-	            dto.setSemester(rs.getString("semester"));
+	            dto.setGrade_year(rs.getInt("grade_year"));
+	            dto.setSemester(rs.getInt("semester"));
 	            dto.setMb_Num(rs.getLong("mb_Num"));
 	            dto.setUserId(rs.getString("userId"));
 	            
