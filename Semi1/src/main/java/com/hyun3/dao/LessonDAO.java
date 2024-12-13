@@ -456,30 +456,6 @@ public class LessonDAO {
 		}
 	}
 
-	// 댓글
-	public void insertReply(LessonReplyDTO dto) throws SQLException {
-		PreparedStatement pstmt = null;
-		String sql;
-
-		try {
-			sql = "INSERT INTO reply(reply_num, cm_num, mb_num, co_content, reg_date) "
-					+ " VALUES (reply_seq.NEXTVAL, ?, ?, ?, SYSDATE)";
-
-			pstmt = conn.prepareStatement(sql);
-
-			pstmt.setLong(1, dto.getCm_num());
-			pstmt.setLong(2, dto.getMb_num());
-			pstmt.setString(3, dto.getCo_content());
-
-			pstmt.executeUpdate();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			DBUtil.close(pstmt);
-		}
-	}
 
 	// 게시글의 댓글 리스트
 	public List<LessonReplyDTO> listReply(long cm_num) throws SQLException {

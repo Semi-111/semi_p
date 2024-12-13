@@ -133,8 +133,6 @@
     </div>
 </div>
 </body>
-<script type="text/javascript"></script>
-<script type="text/javascript">
 <script type="text/javascript">
 $(function(){
     // 페이지 로딩 시 댓글 목록 불러오기
