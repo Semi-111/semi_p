@@ -35,6 +35,13 @@ public class InfoBoardController {
 
     return new ModelAndView("board/test");
   }
+  
+  @RequestMapping(value = "/lectureReview/list")
+  public ModelAndView list1(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    return new ModelAndView("lectureReview/list");
+  }
+
 
   @RequestMapping("/bbs/infoBoard/list")
   // http://localhost:9090/bbs/infoBoard/list?type=free - 자유게시판
