@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.hyun3.dao.LessonDAO;
 import com.hyun3.domain.LessonDTO;
-import com.hyun3.domain.LessonReplyDTO;
 import com.hyun3.domain.SessionInfo;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
@@ -346,57 +345,5 @@ public class LessonController {
 		    }
 
 		    return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
-		}
-		
-		// 댓글 추가
-		@RequestMapping(value="/lessonBoard/insertReply", method=RequestMethod.POST)
-		public void insertReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		    LessonDAO dao = new LessonDAO();
-			
-		    HttpSession session = req.getSession();
-		    SessionInfo info = (SessionInfo)session.getAttribute("member");
-		    
-		    String state = "true";
-		    
-		    try {
-		    	LessonReplyDTO dto = new LessonReplyDTO();
-		        
-		        dto.setCm_num(Long.parseLong(req.getParameter("cm_num")));
-		        dto.setCo_content(req.getParameter("content"));
-		        dto.setMb_num(info.getMb_Num());
-		        
-		        dao.insertReply(dto);
-		    } catch (Exception e) {
-		        state = "false";
-		    }
-		    
-		   // JSONObject job = new JSONObject();
-		  //  job.put("state", state);
-		    
-		    resp.setContentType("text/html;charset=utf-8");
-		   // PrintWriter out = resp.getWriter();
-		   // out.print(job.toString());
-		}
-
-		// 댓글 삭제
-		@RequestMapping(value="/lessonBoard/deleteReply", method=RequestMethod.POST)
-		public void deleteReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		    LessonDAO dao = new LessonDAO();
-		    
-		    String state = "true";
-		    
-		    try {
-		        long reply_num = Long.parseLong(req.getParameter("reply_num"));
-		        dao.deleteReply(reply_num);
-		    } catch (Exception e) {
-		        state = "false";
-		    }
-		    
-		   // JSONObject job = new JSONObject();
-		    //job.put("state", state);
-		    
-		    resp.setContentType("text/html;charset=utf-8");
-		   // PrintWriter out = resp.getWriter();
-		   // out.print(job.toString());
 		}
 }
