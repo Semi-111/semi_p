@@ -1,32 +1,32 @@
 	
 
 document.addEventListener('DOMContentLoaded', function () {
-    // 수업 검색 모달 관련 변수
     var modal = document.getElementById("searchModal");
-    var btn = document.getElementById("searchModalBtn"); // 수업 검색 버튼
-    var span = document.getElementsByClassName("close")[0]; // 모달 닫기 버튼
+    var btn = document.getElementById("searchModalBtn");
+    var span = document.getElementsByClassName("close")[0];
     var searchBtnContainer = document.querySelector('.search-btn-container'); // 버튼 컨테이너
-    
+
     // 수업 검색 버튼 클릭 시 모달 열기
     btn.onclick = function() {
-        modal.style.display = "block"; // 모달 표시
+        modal.classList.add('show'); // show 클래스를 추가하여 모달을 표시
         searchBtnContainer.classList.add('modal-open'); // 버튼도 모달과 함께 이동
     }
 
     // 모달 닫기 버튼 클릭 시 모달 닫기
     span.onclick = function() {
-        modal.style.display = "none"; // 모달 숨기기
-        searchBtnContainer.classList.remove('modal-open'); // 버튼 위치 원상복구
+        modal.classList.remove('show'); // show 클래스를 제거하여 모달 숨기기
+        searchBtnContainer.classList.remove('modal-open'); // 버튼 원위치
     }
 
     // 모달 외부 클릭 시 닫기
     window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none"; // 모달 숨기기
-            searchBtnContainer.classList.remove('modal-open'); // 버튼 위치 원상복구
+        if (event.target === modal) {
+            modal.classList.remove('show'); // 모달 숨기기
+            searchBtnContainer.classList.remove('modal-open'); // 버튼 원위치
         }
     }
 });
+
 	document.addEventListener('DOMContentLoaded', function () {
 	    const tableBody = document.querySelector('#timetable tbody');
 	    

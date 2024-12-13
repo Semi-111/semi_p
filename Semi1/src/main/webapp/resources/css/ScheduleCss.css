@@ -1,64 +1,4 @@
 @charset "UTF-8";
-/* 기본 리셋 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* body 스타일 */
-body {
-    font-family: Arial, sans-serif;
-}
-
-/* 헤더 */
-header {
-    background-color: white;
-    border-bottom: 2px solid #D1B2FF;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-}
-
-header .logo img {
-    width: 180px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-nav a {
-    color: graytext;
-    text-decoration: none;
-}
-
-nav li {
-    position: relative;
-}
-
-nav li:hover {
-    border-bottom: 2px solid #fff;
-}
-
-nav .submenu {
-    display: none;
-    position: absolute;
-    top: 30px;
-    left: 0;
-    background-color: #444;
-    list-style: none;
-    padding: 10px;
-}
-
-nav li:hover .submenu {
-    display: block;
-}
-
 /* 시간표 영역 */
 .time-table-selector {
     margin-top: 20px;
@@ -293,6 +233,7 @@ nav li:hover .submenu {
     bottom: 41%; /* 버튼이 모달과 함께 위로 올라가게 조정 */
     transition: bottom 0.5s ease-out; /* 애니메이션 효과 추가 */
 }
+
 
         /* 시간표 버튼을 담을 박스 */
         .timetable-btn-container {

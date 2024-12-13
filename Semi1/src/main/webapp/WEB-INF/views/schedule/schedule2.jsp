@@ -5,28 +5,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Insert title here</title>
 
-<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/core.css" type="text/css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/core.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
 
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ScheduleCss.css" type="text/css">
 <script src="${pageContext.request.contextPath}/resources/js/Schedule.js"></script>
-
-<head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시간표 페이지</title>
 </head>
 <body>
 
-    <!-- 헤더 -->
-    <header>
-		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
-    </header>
-
-    <!-- 시간표 영역 -->
+	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+	
     <main>
         <div class="time-table-selector">
             <div class="select-box-container">
@@ -41,11 +38,11 @@
             </div>
 		</div>
 		
-		<div class="timetable-btn-container" id="timetableBtnContainer">
+		<nav class="timetable-btn-container" id="timetableBtnContainer">
 		    <button class="timetable-btn">시간표 1</button>
 		    <button class="timetable-btn">시간표 2</button>
 		    <button class="add-timetable-btn">새 시간표 만들기</button>
-		</div>
+		</nav>
 			
 			  
         <!-- 시간표 그리드 -->
