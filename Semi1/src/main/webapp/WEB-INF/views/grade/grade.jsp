@@ -124,6 +124,9 @@ $(function () {
 		
 		let gradeYear = $(this).attr('data-year');
         let semester = $(this).attr('data-semester');
+        
+     	// 제목 변경
+     	$(".grade-title").text(gradeYear + " " + semester);
 		
         let jsonUrl = '${pageContext.request.contextPath}/grade/list';
         let jsonQuery = 'gradeYear=' + gradeYear + '&semester=' + semester;
@@ -134,7 +137,7 @@ $(function () {
             $('.credits').text(data.credits);
         });
         
-        
+           
      	// HTML 데이터 요청 (교과목 목록 업데이트)
      	let htmlUrl = '${pageContext.request.contextPath}/grade/gradeList';
      	let htmlQuery = 'gradeYear=' + gradeYear + '&semester=' + semester;
