@@ -10,6 +10,12 @@
   <title><c:out value="${boardType == 'free' ? '자유게시판' : '정보게시판'}"/></title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/list.css">
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+  <script>
+    function searchList() {
+      const f = document.searchForm;
+      f.submit();
+    }
+  </script>
 </head>
 <body>
 
@@ -22,27 +28,30 @@
     <c:out value="${boardType == 'free' ? '자유게시판' : '정보게시판'}"/>
   </h1>
 
-  <div class="board-controls">
-    <div class="search-box">
-      <select>
-        <option value="all" ${schType == "all" ? 'selected' : ''}>전체</option>
-        <option value="title" ${schType == "title" ? 'selected' : ''}>제목</option>
-        <option value="content" ${schType == "content" ? 'selected' : ''}>내용</option>
-        <option value="name" ${schType == "name" ? 'selected' : ''}>작성자</option>
-      </select>
-      <div class="search-input">
-        <input type="text" placeholder="검색어를 입력하세요">
-        <button type="button">검색</button>
+  <form name="searchForm" action="${pageContext.request.contextPath}/bbs/infoBoard/list">
+    <input type="hidden" name="type" value="${boardType}">
+    <div class="board-controls">
+      <div class="search-box">
+        <select name="schType">
+          <option value="all" ${schType == "all" ? 'selected' : ''}>전체</option>
+          <option value="title" ${schType == "title" ? 'selected' : ''}>제목</option>
+          <option value="content" ${schType == "content" ? 'selected' : ''}>내용</option>
+          <option value="name" ${schType == "name" ? 'selected' : ''}>작성자</option>
+        </select>
+        <div class="search-input">
+          <input type="text" name="kwd" value="${kwd}" placeholder="검색어를 입력하세요">
+          <button type="button" onclick="searchList();">검색</button>
+        </div>
       </div>
+      <button class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/write?type=${boardType}'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        글쓰기
+      </button>
     </div>
-    <button class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/write?type=${boardType}'">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 5v14M5 12h14"/>
-      </svg>
-      글쓰기
-    </button>
-  </div>
+    </form>
 
   <div class="main-content">
     <!-- 게시글 목록 -->
@@ -59,7 +68,7 @@
             <div class="post-meta">
               <span>${dto.member.nickName}</span>
               <span>조회수: ${dto.views}</span>
-              <span>좋아요: 3</span>
+              <span>좋아요: ${dto.boardLikeCount}</span>
               <span>${dto.caDate}</span>
             </div>
           </div>

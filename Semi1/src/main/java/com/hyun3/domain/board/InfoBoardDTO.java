@@ -13,7 +13,7 @@ public class InfoBoardDTO {
   private long mbNum;        // 회원번호
 
   private int replyCount;
-  private int LikeCount;
+  private int boardLikeCount;
 
   public void setMbNum(long mbNum) {
     this.mbNum = mbNum;
@@ -27,12 +27,12 @@ public class InfoBoardDTO {
     this.replyCount = replyCount;
   }
 
-  public int getLikeCount() {
-    return LikeCount;
+  public int getBoardLikeCount() {
+    return boardLikeCount;
   }
 
-  public void setLikeCount(int likeCount) {
-    LikeCount = likeCount;
+  public void setBoardLikeCount(int likeCount) {
+    boardLikeCount = likeCount;
   }
 
   private MemberDTO member; // 작성자 정보 (MemberDTO)

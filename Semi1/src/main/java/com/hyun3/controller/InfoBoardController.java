@@ -5,6 +5,7 @@ import com.hyun3.domain.SessionInfo;
 import com.hyun3.domain.board.InfoBoardDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.ResponseBody;
 import com.hyun3.mvc.view.ModelAndView;
 import com.hyun3.util.FileManager;
 import com.hyun3.util.MyMultipartFile;
@@ -21,7 +22,10 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.hyun3.mvc.annotation.RequestMethod.*;
 import static jakarta.servlet.http.HttpServletResponse.*;
@@ -115,12 +119,9 @@ public class InfoBoardController {
       String articleUrl = cp + "/bbs/infoBoard/article?type=" + boardType + "&page=" + current_page;
 
       if(!query.isEmpty()) {
-        listUrl += "?" + query;
+        listUrl += "&" + query;
         articleUrl += "&" + query;
       }
-
-      // /infoBoard/board/list?schType=subject&kwd=Java
-      // /infoBoard/board/article?page=1&schType=subject&kwd=Java
 
       String paging = util.paging(current_page, total_page, listUrl);
 
@@ -222,6 +223,19 @@ public class InfoBoardController {
       InfoBoardDTO prevDto = dao.findByPrev(boardType, dto.getCmNum(), schType, kwd);
       InfoBoardDTO nextDto = dao.findByNext(boardType, dto.getCmNum(), schType, kwd);
 
+      HttpSession session = req.getSession();
+      SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+      // 좋아요 여부, 좋아요 개수 가져오기
+      boolean isUserLike = false;
+      int boardLikeCount = dao.countBoardLike(cmNum);
+
+      if (info != null) {
+        isUserLike = dao.isUserLiked(cmNum, info.getMb_Num());
+      }
+
+      dto.setBoardLikeCount(boardLikeCount);
+
       ModelAndView mav = new ModelAndView("board/article");
 
       mav.addObject("dto", dto);
@@ -231,6 +245,8 @@ public class InfoBoardController {
       mav.addObject("prevDto", prevDto);
       mav.addObject("nextDto", nextDto);
       mav.addObject("boardType", boardType);
+      mav.addObject("isUserLike", isUserLike);
+
 
       // 포워딩
       return mav;
@@ -345,6 +361,47 @@ public class InfoBoardController {
     }
 
     return new ModelAndView("redirect:/bbs/infoBoard/list?type=" + boardType + "&" + query);
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/bbs/infoBoard/insertBoardLike")
+  public Map<String, Object> insertBoardLike(HttpServletRequest req, HttpServletResponse resp) throws SQLException, IOException {
+    Map<String, Object> model = new HashMap<>();
+
+    InfoBoardDAO dao = new InfoBoardDAO();
+//    HttpSession session = req.getSession();
+//    SessionInfo info = (SessionInfo) session.getAttribute("member");
+    SessionInfo info = getMember(req); // member
+
+    String state = "false";
+    int boardLikeCount = 0;
+
+    try {
+      long cmNum = Long.parseLong(req.getParameter("cm_Num"));
+      String userLiked = req.getParameter("userLiked");
+      Long mbNum = info.getMb_Num();
+
+      if (userLiked.equals("true")) {
+        dao.deleteBoardLike(cmNum, mbNum);
+      } else {
+        dao.insertBoardLike(cmNum, mbNum);
+      }
+
+      boardLikeCount = dao.countBoardLike(cmNum);
+
+
+      state = "true";
+
+    } catch (SQLException e) {
+      state = "liked";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    model.put("state", state);
+    model.put("boardLikeCount", boardLikeCount);
+
+    return model;
   }
 
   private static void handleFileUpload(HttpServletRequest req, HttpSession session, InfoBoardDTO dto) throws IOException, ServletException {

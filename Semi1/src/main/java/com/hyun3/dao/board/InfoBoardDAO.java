@@ -81,17 +81,20 @@ public class InfoBoardDAO {
     }
   }
 
-  // 게시글 리스트 가져오기 (게시판 구분 포함)
+  // 게시글 리스트 가져오기
   public List<InfoBoardDTO> listBoard(String division, int offset, int size) {
     List<InfoBoardDTO> list = new ArrayList<>();
-    String sql = " SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, " +
-        " TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, " +
-        " m.USERID, m.NICKNAME " +
-        " FROM INFOBOARD i " +
-        " JOIN member m ON i.MB_NUM = m.MB_NUM " +
-        " WHERE i.DIVISION = ? " +
-        " ORDER BY i.CM_NUM DESC " +
-        " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+    String sql = "SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, " +
+        "TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, " +
+        "m.USERID, m.NICKNAME, " +
+        "COUNT(l.CM_NUM) AS likeCount " +
+        "FROM INFOBOARD i " +
+        "JOIN member m ON i.MB_NUM = m.MB_NUM " +
+        "LEFT JOIN INFO_LK l ON i.CM_NUM = l.CM_NUM " +
+        "WHERE i.DIVISION = ? " +
+        "GROUP BY i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, i.CA_DATE, i.FILENAME, m.USERID, m.NICKNAME " +
+        "ORDER BY i.CM_NUM DESC " +
+        "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
       ps.setString(1, division);
@@ -107,6 +110,7 @@ public class InfoBoardDAO {
           dto.setViews(rs.getInt("VIEWS"));
           dto.setCaDate(rs.getString("CA_DATE"));
           dto.setFileName(rs.getString("FILENAME"));
+          dto.setBoardLikeCount(rs.getInt("likeCount"));
 
           MemberDTO member = new MemberDTO();
           member.setUserId(rs.getString("USERID"));
@@ -128,24 +132,32 @@ public class InfoBoardDAO {
     List<InfoBoardDTO> list = new ArrayList<>();
     StringBuilder sql = new StringBuilder();
 
-    sql.append(" SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, ")
-        .append(" TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, ")
-        .append(" m.USERID, m.NICKNAME ")
-        .append(" FROM INFOBOARD i ")
-        .append(" JOIN member m ON i.MB_NUM = m.MB_NUM ")
-        .append(" WHERE i.DIVISION = ? ");
+    sql.append("SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, ")
+        .append("TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, ")
+        .append("m.USERID, m.NICKNAME, ")
+        .append("COUNT(l.CM_NUM) AS likeCount ")
+        .append("FROM INFOBOARD i ")
+        .append("JOIN member m ON i.MB_NUM = m.MB_NUM ")
+        .append("LEFT JOIN INFO_LK l ON i.CM_NUM = l.CM_NUM ")
+        .append("WHERE i.DIVISION = ? ");
 
+    // 검색 조건 추가
     if ("all".equals(schType)) {
-      sql.append(" AND (INSTR(i.TITLE, ?) >= 1 OR INSTR(i.CONTENT, ?) >= 1) ");
-    } else {
-      sql.append(" AND INSTR(").append(schType).append(", ?) >= 1 ");
+      sql.append(" AND (INSTR(i.TITLE, ?) > 0 OR INSTR(i.CONTENT, ?) > 0) ");
+    } else if ("title".equals(schType)) {
+      sql.append(" AND INSTR(i.TITLE, ?) > 0 ");
+    } else if ("content".equals(schType)) {
+      sql.append(" AND INSTR(i.CONTENT, ?) > 0 ");
+    } else if ("name".equals(schType)) {
+      sql.append(" AND INSTR(m.NICKNAME, ?) > 0 ");
     }
 
-    sql.append(" ORDER BY i.CM_NUM DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
+    sql.append("GROUP BY i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, i.CA_DATE, i.FILENAME, m.USERID, m.NICKNAME ")
+        .append("ORDER BY i.CM_NUM DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
 
     try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-      ps.setString(1, division);
-      int paramIndex = 2;
+      int paramIndex = 1;
+      ps.setString(paramIndex++, division);
 
       if ("all".equals(schType)) {
         ps.setString(paramIndex++, kwd);
@@ -166,6 +178,7 @@ public class InfoBoardDAO {
           dto.setViews(rs.getInt("VIEWS"));
           dto.setCaDate(rs.getString("CA_DATE"));
           dto.setFileName(rs.getString("FILENAME"));
+          dto.setBoardLikeCount(rs.getInt("likeCount"));
 
           MemberDTO member = new MemberDTO();
           member.setUserId(rs.getString("USERID"));
@@ -181,6 +194,7 @@ public class InfoBoardDAO {
 
     return list;
   }
+
 
   // 조회수 증가
   public void updateViews(long cmNum) throws SQLException {
@@ -213,18 +227,27 @@ public class InfoBoardDAO {
   // 검색 포함 데이터 개수
   public int dataCount(String division, String schType, String kwd) {
     StringBuilder sql = new StringBuilder();
-    sql.append("SELECT COUNT(*) AS cnt FROM INFOBOARD WHERE DIVISION = ? ");
+    sql.append("SELECT COUNT(*) AS cnt FROM INFOBOARD i ");
+
+    // 작성자 검색 시 MEMBER 테이블과 JOIN 추가
+    if ("name".equals(schType)) {
+      sql.append("JOIN MEMBER m ON i.MB_NUM = m.MB_NUM ");
+    }
+
+    sql.append("WHERE i.DIVISION = ? ");
 
     if ("all".equals(schType)) {
-      sql.append(" AND (INSTR(TITLE, ?) >= 1 OR INSTR(CONTENT, ?) >= 1)");
+      sql.append("AND (INSTR(i.TITLE, ?) >= 1 OR INSTR(i.CONTENT, ?) >= 1)");
+    } else if ("name".equals(schType)) {
+      sql.append("AND INSTR(m.NICKNAME, ?) >= 1 "); // 작성자 검색
     } else {
-      sql.append(" AND INSTR(").append(schType).append(", ?) >= 1");
+      sql.append("AND INSTR(i.").append(schType).append(", ?) >= 1");
     }
 
     try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
       ps.setString(1, division);
-      int paramIndex = 2;
 
+      int paramIndex = 2;
       if ("all".equals(schType)) {
         ps.setString(paramIndex++, kwd);
         ps.setString(paramIndex, kwd);
@@ -243,6 +266,7 @@ public class InfoBoardDAO {
 
     return 0;
   }
+
 
   // 특정 게시글 가져오기
   public InfoBoardDTO findByNum(long cmNum) {
@@ -265,6 +289,9 @@ public class InfoBoardDAO {
           dto.setCaDate(rs.getString("CA_DATE"));
           dto.setFileName(rs.getString("FILENAME"));
           dto.setMbNum(rs.getLong("MB_NUM"));
+
+          int boardLikeCount = countBoardLike(cmNum);
+          dto.setBoardLikeCount(boardLikeCount);
 
           MemberDTO member = new MemberDTO();
           member.setUserId(rs.getString("USERID"));
@@ -414,5 +441,108 @@ public class InfoBoardDAO {
 
     return dto;
   }
+
+  // 좋아요 여부 확인
+  public boolean isUserLiked(long cmNum, long mbNum) throws SQLException {
+    boolean result = false;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql;
+
+    try {
+      sql = "SELECT COUNT(*) FROM INFO_LK WHERE CM_NUM = ? AND MB_NUM = ?";
+      ps = conn.prepareStatement(sql);
+      ps.setLong(1, cmNum);
+      ps.setLong(2, mbNum);
+      rs = ps.executeQuery();
+
+      if (rs.next()) {
+        result = rs.getInt(1) > 0;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(rs);
+      DBUtil.close(ps);
+    }
+    return result;
+  }
+
+
+  // 게시글의 좋아요 추가
+  public void insertBoardLike(long num, long mb_Num) throws SQLException {
+    PreparedStatement ps = null;
+    String sql;
+
+    try {
+      sql = "INSERT INTO INFO_LK (CM_NUM, MB_NUM, DATETIME) VALUES (?, ?, SYSDATE)";
+      // cm_num : 게시글 mb_num : 회원번호
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setLong(1, num);
+      ps.setLong(2, mb_Num);
+
+      ps.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(ps);
+    }
+  }
+
+  // 게시글의 좋아요 삭제
+  public void deleteBoardLike(long num, long mb_Num) throws SQLException {
+    PreparedStatement ps = null;
+    String sql;
+
+    try {
+      sql = "DELETE FROM INFO_LK WHERE CM_NUM = ? AND MB_NUM = ?";
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setLong(1, num);
+      ps.setLong(2, mb_Num);
+
+      ps.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(ps);
+    }
+  }
+
+  // 게시글 좋아요 데이터 개수
+  public int countBoardLike(long num) {
+    int result = 0;
+
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql;
+
+    try {
+      sql = "SELECT COUNT(*) cnt FROM INFO_LK WHERE CM_NUM = ?";
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setLong(1, num);
+
+      rs = ps.executeQuery();
+
+      if(rs.next()) {
+        result = rs.getInt("cnt");
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(rs);
+      DBUtil.close(ps);
+    }
+    return result;
+  }
+
+
+
 
 }
