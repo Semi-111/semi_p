@@ -63,7 +63,7 @@
               <span>${dto.caDate}</span>
             </div>
           </div>
-          <c:if test="${dto.fileName != null}">
+          <c:if test="${dto.fileName != null && !empty dto.fileName}">
             <div class="post-image">
               <img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="게시글 이미지">
             </div>
@@ -117,10 +117,14 @@
 
   <div class="pagination">
     <ul>
-      ${paging}
+<%--      ${paging}--%>
+  ${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
     </ul>
   </div>
 </div>
+
+
+
 
 <footer>
   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />

@@ -6,9 +6,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2024학년도 1학기 수강신청 안내 - Trainee</title>
+    <title>${boardType}게시판</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/article1.css">
     <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+
+    <script>
+        function deleteBoard() {
+            if(! confirm('게시글을 삭제하시겠습니까?')) {
+                return false;
+            }
+            location.href = '${pageContext.request.contextPath}/bbs/infoBoard/delete?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
+        }
+
+    </script>
 </head>
 <body>
 
@@ -39,9 +49,14 @@
                 <span>${dto.content}</span>
             </div>
 
+<%--                <div class="post-image">--%>
+<%--                    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="게시글 이미지">--%>
+<%--                </div>--%>
+            <c:if test="${dto.fileName != null && !empty dto.fileName}">
                 <div class="post-image">
                     <img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="게시글 이미지">
                 </div>
+            </c:if>
 
             <div class="post-actions">
                 <div class="action-left">
@@ -53,8 +68,8 @@
                     </button>
                 </div>
                 <div class="action-right">
-                    <button class="btn btn-purple">수정</button>
-                    <button class="btn btn-red">삭제</button>
+                    <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/update?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'">수정</button>
+                    <button class="btn btn-red" onclick = deleteBoard();>삭제</button>
                     <button class="btn btn-red">신고</button>
                 </div>
             </div>
