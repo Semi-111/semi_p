@@ -6,25 +6,135 @@
 		sans-serif;
 }
 
-#bbs-container {
+.container-fluid {
+	max-width: 1200px; /* 원하는 최대 너비 설정 */
+	margin: 0 auto; /* 중앙 정렬 */
+	padding: 0 20px; /* 양옆에 패딩(여백) 추가 */
+	margin: 30px 0;
+}
+
+/* 왼쪽 사이드 화면 */
+/* 프로필 컨테이너 스타일 */
+.profile-container, .login-prompt {
+	background-color: #f9f9f9;
+	text-align: center;
+	margin-bottom: 20px;
+	height: 200px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 프로필 정보 스타일 */
+.profile-info h6 {
+	margin: 5px 0;
+	font-size: 14px;
+	color: #333;
+}
+
+/* 버튼 섹션 스타일 */
+.profile-buttons, .login-buttons {
+	display: flex; /* 버튼을 가로로 정렬 */
+	justify-content: center; /* 중앙 정렬 */
+	gap: 10px;
+	margin-top: 15px;
+}
+
+/* 버튼 스타일 */
+.profile-buttons button, .login-buttons button {
+	padding: 8px 15px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background-color: #fff;
+	color: #333;
+	font-size: 14px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.profile-buttons button:hover, .login-buttons button:hover {
+	background-color: #f0f0f0;
+}
+
+.MyPicture img {
+    width: 50px; /* 원하는 크기로 조정 */
+    height: 50px; /* 원하는 크기로 조정 */
+    border-radius: 50%; /* 원형으로 만들기 */
+    object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
+}
+
+/* 날씨 */
+.weather {
+	border:2px dotted purple;
+	height: 150px;
+	margin-bottom: 30px;
+}
+
+
+/* 슬라이더 설정 */
+.slider-container {
+    margin-bottom: 20px;
+}
+
+.slider {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.slider:hover img {
+    transform: scale(1.05); /* 호버 시 이미지 확대 */
+}
+
+
+/* 센터 화면 */
+#mainContent {
+	border: 2px solid #ccc;
+	border-radius: 10px;
+	padding: 20px; /* 내부 여백 추가 */
+}
+
+.survey {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.survey-image {
+	width: 100%;
+	height: 100px;
+	/* border-radius: 15px; */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+
+.survey-image:hover {
+	transform: scale(1.03);
+}
+
+#bbs-container {
+	width: 100px;
+	margin: auto;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 #bbs {
 	display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 5px;
+	justify-content: center;
+	align-items: center;
 }
 
 .board {
 	border-collapse: collapse;
 	margin-bottom: 30px;
 	width: 300px;
-		
+	border-radius: 50px;
 }
 
 .board th, .board td {
@@ -34,19 +144,12 @@
 }
 
 .board th {
-	background-color: #f2f2f2;
+	background-color: #F6F2F7;
 }
 
-/* 슬라이더 설정 */
-.slider {
-	width: 100%;
-	height: 150px;
-}
+/* 오른쪽 사이드바 */
 
-.slider img {
-	width: 100%;
-	height: auto;
-}
+
 
 /* 화면 축소 시 중앙화면만 보이게 설정 */
 @media ( max-width : 992px) {
@@ -63,6 +166,25 @@
 body.page-other #rightSide {
 	display: block !important;
 }
+
+/* if) 오른쪽 사이드바가 고정이 안된다면 이거 실행해보기....... */
+/*
+#rightSide {
+    position: sticky;
+    top: 0;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#rightSide h4 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+*/
 
 /* 헤더와 푸터를 침범하지 않도록 설정 */
 #rightSide {

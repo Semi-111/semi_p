@@ -38,7 +38,9 @@ public class LoginFilter implements Filter {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 
 		if(info == null && isExcludeUri(req) == false) {
+			// 로그인이 필요한 메뉴를 로그인 하지 않은 유저가 접속한 경우
 			if(isAjaxRequest(req)) {
+				// AJAX 접속인 경우
 				resp.sendError(403);
 			} else {
 				// 로그인 전 주소가 존재하는 경우 로그인 전 주소로 가기 위해 세션에 로그인 전주소 저장
