@@ -1,0 +1,141 @@
+@charset "UTF-8";
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    padding: 20px;
+}
+
+/* 왼쪽 사이드바 */
+.sidebar {
+    width: 30%;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.lecture-info {
+    margin-bottom: 20px;
+}
+
+.lecture-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.lecture-detail {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.badge {
+    background: #4caf50;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.points {
+    margin-bottom: 20px;
+}
+
+.current-points {
+    font-size: 14px;
+    color: #888;
+}
+
+.points-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #e53935;
+}
+
+.review-prompt {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.review-prompt strong {
+    color: #333;
+}
+
+.register-btn {
+    margin-top: 10px;
+    padding: 10px;
+    background: #ff5722;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.register-btn:hover {
+    background: #e64a19;
+}
+
+/* 오른쪽 메인 콘텐츠 */
+.main-content {
+    width: 70%;
+    margin-left: 20px;
+}
+
+.review {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lecture-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.professor {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.star-rate {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.star-rate i {
+    font-size: 16px;
+    color: #ddd;
+    margin-right: 5px;
+}
+
+.star-rate i.active {
+    color: #ffd700;
+}
+
+.review-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444;
+}
