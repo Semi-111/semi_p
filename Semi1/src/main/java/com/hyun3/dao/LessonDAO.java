@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hyun3.domain.LessonDTO;
+import com.hyun3.domain.LessonLikeDTO;
 import com.hyun3.domain.LessonReplyDTO;
 import com.hyun3.domain.sw.ReplyDTO;
 import com.hyun3.util.DBConn;
@@ -456,7 +457,6 @@ public class LessonDAO {
 		}
 	}
 
-
 	// 게시글의 댓글 리스트
 	public List<LessonReplyDTO> listReply(long cm_num) throws SQLException {
 		List<LessonReplyDTO> list = new ArrayList<>();
@@ -637,5 +637,131 @@ public class LessonDAO {
 		} finally {
 			DBUtil.close(pstmt);
 		}
+	}
+
+	// 댓글 수정
+	// 댓글 수정
+	public void updateReply(ReplyDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE lesson_CO SET content = ? WHERE CO_num = ? AND MB_num = ?";
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getContent());
+			pstmt.setInt(2, dto.getCo_num());
+			pstmt.setLong(3, dto.getMb_num());
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+	}
+
+	// 좋아요 추가
+	public void insertLike(LessonLikeDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "INSERT INTO lesson_LK(MB_num, CM_num, dateTime) VALUES (?, ?, SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, dto.getMb_num());
+			pstmt.setLong(2, dto.getCm_num());
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+	}
+
+	// 좋아요 삭제
+	public void deleteLike(LessonLikeDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "DELETE FROM lesson_LK WHERE MB_num = ? AND CM_num = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, dto.getMb_num());
+			pstmt.setLong(2, dto.getCm_num());
+
+			pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+	}
+
+	// 좋아요 개수
+	public int countLikes(long cm_num) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		int result = 0;
+
+		try {
+			sql = "SELECT COUNT(*) FROM lesson_LK WHERE CM_num = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, cm_num);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return result;
+	}
+
+	// 사용자 좋아요 여부 확인
+	public boolean getUserLike(long mb_num, long cm_num) throws SQLException {
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		boolean result = false;
+
+		try {
+			sql = "SELECT COUNT(*) FROM lesson_LK WHERE MB_num = ? AND CM_num = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, mb_num);
+			pstmt.setLong(2, cm_num);
+
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = rs.getInt(1) > 0;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return result;
 	}
 }

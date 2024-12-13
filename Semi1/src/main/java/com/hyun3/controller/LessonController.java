@@ -6,9 +6,11 @@ import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.json.JSONObject;
 
 import com.hyun3.dao.LessonDAO;
 import com.hyun3.domain.LessonDTO;
+import com.hyun3.domain.LessonLikeDTO;
 import com.hyun3.domain.SessionInfo;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
@@ -178,51 +180,57 @@ public class LessonController {
 
 	@RequestMapping(value = "/lessonBoard/article", method = RequestMethod.GET)
 	public ModelAndView article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("lesson/article");
+	    ModelAndView mav = new ModelAndView("lesson/article");
+	    HttpSession session = req.getSession();
+	    
+	    String page = req.getParameter("page");
+	    String query = "page=" + page;
 
-		String page = req.getParameter("page");
-		String query = "page=" + page;
+	    String schType = req.getParameter("schType");
+	    String kwd = req.getParameter("kwd");
+	    if (schType == null) {
+	        schType = "all";
+	        kwd = "";
+	    }
 
-		String schType = req.getParameter("schType");
-		String kwd = req.getParameter("kwd");
-		if (schType == null) {
-			schType = "all";
-			kwd = "";
-		}
+	    if (kwd != null && kwd.length() != 0) {
+	        query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+	    }
 
-		if (kwd != null && kwd.length() != 0) {
-			query += "&schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
-		}
+	    LessonDAO dao = new LessonDAO();
 
-		LessonDAO dao = new LessonDAO();
+	    try {
+	        long num = Long.parseLong(req.getParameter("cm_num"));
+	        SessionInfo info = (SessionInfo)session.getAttribute("member");
 
-		try {
-			long num = Long.parseLong(req.getParameter("cm_num"));
+	        // 조회수 증가
+	        dao.updateHitCount(num);
 
-			// 조회수 증가
-			dao.updateHitCount(num);
+	        // 게시물 가져오기
+	        LessonDTO dto = dao.findById(num);
+	        if (dto == null) {
+	            return new ModelAndView("redirect:/lessonBoard/list?" + query);
+	        }
 
-			// 게시물 가져오기
-			LessonDTO dto = dao.findById(num);
-			if (dto == null) {
-				return new ModelAndView("redirect:/lessonBoard/list?" + query);
-			}
+	        // 좋아요 정보 설정
+	        dto.setUserLiked(dao.getUserLike(info.getMb_Num(), num));
+	        dto.setLikeCount(dao.countLikes(num));
 
-			// 이전글, 다음글
-			LessonDTO prevDto = dao.findByPrev(num, schType, kwd);
-			LessonDTO nextDto = dao.findByNext(num, schType, kwd);
+	        // 이전글, 다음글
+	        LessonDTO prevDto = dao.findByPrev(num, schType, kwd);
+	        LessonDTO nextDto = dao.findByNext(num, schType, kwd);
 
-			mav.addObject("dto", dto);
-			mav.addObject("page", page);
-			mav.addObject("query", query);
-			mav.addObject("prevDto", prevDto);
-			mav.addObject("nextDto", nextDto);
+	        mav.addObject("dto", dto);
+	        mav.addObject("page", page);
+	        mav.addObject("query", query);
+	        mav.addObject("prevDto", prevDto);
+	        mav.addObject("nextDto", nextDto);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 
-		return mav;
+	    return mav;
 	}
 
 	@RequestMapping(value = "/lessonBoard/delete", method = RequestMethod.GET)
@@ -347,5 +355,45 @@ public class LessonController {
 		}
 
 		return new ModelAndView("redirect:/lessonBoard/list?page=" + page);
+	}
+
+	// 좋아요
+	@RequestMapping(value = "/lessonBoard/like")
+	public void like(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		LessonDAO dao = new LessonDAO();
+
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		String state = "true";
+		int likeCount = 0;
+
+		try {
+			long cm_num = Long.parseLong(req.getParameter("cm_num"));
+			LessonLikeDTO dto = new LessonLikeDTO();
+			dto.setCm_num(cm_num);
+			dto.setMb_num(info.getMb_Num());
+
+			boolean liked = dao.getUserLike(info.getMb_Num(), cm_num);
+
+			if (liked) {
+				dao.deleteLike(dto);
+			} else {
+				dao.insertLike(dto);
+			}
+
+			// 좋아요 개수 가져오기
+			likeCount = dao.countLikes(cm_num);
+
+		} catch (Exception e) {
+			state = "false";
+		}
+
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		job.put("likeCount", likeCount);
+
+		resp.setContentType("application/json; charset=utf-8");
+		resp.getWriter().write(job.toString());
 	}
 }

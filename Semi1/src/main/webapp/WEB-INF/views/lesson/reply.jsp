@@ -5,6 +5,25 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
+
+/* 댓글 css */
+.comment-edit {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f9fafb;
+    border-radius: 4px;
+}
+
+.comment-edit .comment-textarea {
+    min-height: 70px;
+    margin-bottom: 10px;
+}
+
+.comment-edit .comment-actions {
+    display: flex;
+    gap: 10px;
+}
+
 .comments-section {
     background: white;
     border-radius: 8px;
@@ -214,27 +233,68 @@ function printReply(data) {
         html += "<div class='comment-item'>등록된 댓글이 없습니다.</div>";
     } else {
         for(let item of list) {
-            html += '<div class="comment-item">';
+            html += '<div class="comment-item" data-num="' + item.co_num + '">';
             html += '    <div class="comment-header">';
             html += '        <span class="comment-author">' + item.nickName + '</span>';
             html += '        <span class="comment-date">' + item.reg_date + '</span>';
             html += '    </div>';
             html += '    <div class="comment-text">' + item.content + '</div>';
-            html += '    <div class="comment-actions">';
             
             if(parseInt(memberNum) === item.mb_num) {
-                html += '    <span class="comment-action" onclick="deleteReply(' + item.co_num + ')">삭제</span>';
+                html += '    <div class="comment-actions">';
+                html += '        <span class="comment-action" onclick="updateReplyForm(' + item.co_num + ', \'' + item.content + '\')">수정</span>';
+                html += '        <span class="comment-action" onclick="deleteReply(' + item.co_num + ')">삭제</span>';
+                html += '    </div>';
             }
             
-            html += '    </div>';
             html += '</div>';
         }
     }
     
     $(".comment-list").html(html);
-    
     // 댓글 갯수 업데이트
     $(".comments-count").text(data.dataCount);
+}
+
+//수정 폼으로 변경하는 함수
+function updateReplyForm(co_num, content) {
+    const $item = $(".comment-item[data-num='" + co_num + "']");
+    
+    let html = '<div class="comment-edit">';
+    html += '  <textarea class="comment-textarea">' + content + '</textarea>';
+    html += '  <div class="comment-actions">';
+    html += '    <button class="btn btn-purple" onclick="updateReplySubmit(' + co_num + ')">수정완료</button>';
+    html += '    <button class="btn btn-gray" onclick="listReply(1)">취소</button>';
+    html += '  </div>';
+    html += '</div>';
+    
+    $item.find(".comment-text, .comment-actions").hide();
+    $item.append(html);
+}
+
+// 댓글 수정
+function updateReplySubmit(co_num) {
+    const $item = $(".comment-item[data-num='" + co_num + "']");
+    const content = $item.find(".comment-textarea").val().trim();
+    
+    if(! content) {
+        alert("내용을 입력하세요.");
+        $item.find(".comment-textarea").focus();
+        return false;
+    }
+    
+    let url = "${pageContext.request.contextPath}/lessonBoard/updateReply";
+    let query = "co_num=" + co_num + "&content=" + encodeURIComponent(content);
+    
+    const fn = function(data) {
+        if(data.state === "true") {
+            listReply(1);
+        } else {
+            alert("댓글을 수정하지 못했습니다.");
+        }
+    };
+    
+    ajaxFun(url, "post", query, "json", fn);
 }
 
 // 댓글 삭제

@@ -9,13 +9,31 @@ public class LessonDTO {
 	private String fileName;
 	private long views;
 	private long mb_num; 
-	
 	private String nickName;
 	
 	private int lessonNum; // 학과번호
 	private String lessonName; // 학과이름
 	
+	private boolean userLiked; // 현재 사용자가 좋아요 했는지 여부
+    private int likeCount; // 총 좋아요 수
 	
+    
+	public boolean isUserLiked() {
+		return userLiked;
+	}
+
+	public void setUserLiked(boolean userLiked) {
+		this.userLiked = userLiked;
+	}
+
+	public int getLikeCount() {
+		return likeCount;
+	}
+
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
+
 	public String getNickName() {
 		return nickName;
 	}

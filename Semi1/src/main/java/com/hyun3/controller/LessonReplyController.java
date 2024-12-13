@@ -131,4 +131,36 @@ public class LessonReplyController {
         job.put("state", state);
         resp.getWriter().write(job.toString());
     }
+    
+    // 댓글 수정
+ // 댓글 수정
+    @RequestMapping(value = "/lessonBoard/updateReply")
+    public void updateReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        LessonDAO dao = new LessonDAO();
+        
+        HttpSession session = req.getSession();
+        SessionInfo info = (SessionInfo) session.getAttribute("member");
+        
+        String state = "false";
+        
+        try {
+            ReplyDTO dto = new ReplyDTO();
+            
+            dto.setCo_num(Integer.parseInt(req.getParameter("co_num")));
+            dto.setContent(req.getParameter("content"));
+            dto.setMb_num(info.getMb_Num());
+            
+            dao.updateReply(dto);
+            
+            state = "true";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        resp.setContentType("application/json; charset=utf-8");
+        JSONObject job = new JSONObject();
+        job.put("state", state);
+        
+        resp.getWriter().write(job.toString());
+    }
 }
