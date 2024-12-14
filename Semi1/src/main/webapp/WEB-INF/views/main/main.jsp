@@ -39,23 +39,29 @@
 									<h5>나의 정보</h5>
 									<div class="profile-info">
 										<div class="MyPicture">
-											<img src="${pageContext.request.contextPath}/resources/images/mainTest/profile.png">
+											<img
+												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
 											<!-- 사진 바뀔 수 있도록 -->
 										</div>
-										<h6>닉네임: ${sessionScope.member.name}</h6> <!-- 의문. 왜 닉네임인데 이름이 나옴...? -->
+										<h6>닉네임: ${sessionScope.member.name}</h6>
+										<!-- 의문. 왜 닉네임인데 이름이 나옴...? -->
 									</div>
 									<div class="profile-buttons">
-										<button type="button" onclick="location.href='${pageContext.request.contextPath}/mypage'">내정보</button>
-										<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/mypage'">내정보</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
 									</div>
 								</div>
 							</c:when>
 							<c:otherwise>
 								<div class="login-prompt">
-									<h5>커뮤티니 이용을 위해 로그인이 필요합니다!</h5>
+									<h6>커뮤티니 이용을 위해<br>로그인이 필요합니다!</h6>
 									<div class="login-buttons">
-										<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</button>
-										<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/member'">회원가입</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/member'">회원가입</button>
 									</div>
 								</div>
 							</c:otherwise>
@@ -70,11 +76,9 @@
 						<div class="col">
 							<div class="slider">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/1.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad1.jpg">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/2.jpg">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/3.png">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
 							</div>
 						</div>
 					</div>
@@ -82,11 +86,9 @@
 						<div class="col">
 							<div class="slider">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/4.png">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad3.jpg">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/5.png">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/6.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad4.jpg">
 							</div>
 						</div>
 					</div>
@@ -96,7 +98,7 @@
 				<div class="col-7 col-lg-7" id="mainContent">
 					<div class="survey">
 						<a href="/survey-page-url" target="_blank"> <img
-							src="${pageContext.request.contextPath}/resources/images/mainTest/survey.png"
+							src="${pageContext.request.contextPath}/resources/images/indexUI/survey1.png"
 							alt="설문조사 이미지" class="survey-image">
 						</a>
 					</div>
