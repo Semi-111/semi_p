@@ -1,9 +1,12 @@
 package com.hyun3.controller.academy;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import com.hyun3.dao.academy.GradePointDAO;
 import com.hyun3.domain.SessionInfo;
@@ -64,9 +67,66 @@ public class GradePointController {
 		return mav;
 	}
 	
+	// 그래프
 	// AJAX - JSON
 	@ResponseBody
-	@RequestMapping(value = "/grade/list", method = RequestMethod.POST) 
+	@RequestMapping(value = "/grade/list", method = RequestMethod.POST)
+	public Map<String, Object> graphGrade(HttpServletRequest req, HttpServletResponse resp)
+	        throws ServletException, IOException {
+
+	    Map<String, Object> model = new HashMap<>();
+	    GradePointDAO dao = new GradePointDAO();
+
+	    try {
+	        HttpSession session = req.getSession();
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        String userId = info.getUserId();
+
+	        // 전체 학년/학기 데이터를 가져오기
+	        List<GradePointDTO> gradeList = dao.findById(userId);
+
+	        // 학기와 성적 데이터를 저장할 리스트
+	        List<String> semesterLabels = new ArrayList<>();
+	        List<Double> gpaList = new ArrayList<>();
+
+	     // 학기별 GPA 계산
+	        Map<String, List<GradePointDTO>> groupedData = gradeList.stream()
+	            .collect(Collectors.groupingBy(dto -> dto.getGrade_year() + "학년 " + dto.getSemester() + "학기",
+	            		TreeMap::new, Collectors.toList())); // 트리맵 사용하여 자동 정렬
+
+	        for (String semester : groupedData.keySet()) {
+	            List<GradePointDTO> semesterGrades = groupedData.get(semester);
+
+	            int credits = 0;
+	            double points = 0.0;
+
+	            for (GradePointDTO dto : semesterGrades) {
+	                credits += dto.getHakscore();
+	                points += dao.convertGradeToPoint(dto.getGrade()) * dto.getHakscore();
+	            }
+
+	            double gpa = (credits > 0) ? points / credits : 0.0;
+
+	            semesterLabels.add(semester); // 학기 이름 추가
+	            gpaList.add(Math.round(gpa * 100.0) / 100.0); // GPA 계산
+	        }
+
+
+	        // 데이터를 모델에 추가
+	        model.put("semesters", semesterLabels); // 학기 정보
+	        model.put("overallGrades", gpaList);    // GPA 데이터
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return model;
+	}
+	
+	
+	// AJAX - JSON
+	@ResponseBody
+	@RequestMapping(value = "/grade/gradeList", method = RequestMethod.POST) 
 	public Map<String, Object> showGrade(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		
@@ -151,4 +211,41 @@ public class GradePointController {
 			throw e;
 		}
 	}
+	
+	// AJAX - JSON
+	@ResponseBody
+	@RequestMapping(value = "/grade/distribution", method = RequestMethod.GET)	
+	public Map<String, Object> getGradeDistribution(HttpServletRequest req, HttpServletResponse resp) {
+	    Map<String, Object> result = new HashMap<>();
+
+	    try {
+	        HttpSession session = req.getSession();
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        String userId = info.getUserId();
+
+	        // DAO를 사용해 성적 데이터를 가져옴
+	        GradePointDAO dao = new GradePointDAO();
+	        Map<String, Integer> gradeDistribution = dao.getGradeDistribution(userId);
+
+	        // 총 성적 개수 계산
+	        int totalGrades = gradeDistribution.values().stream().mapToInt(Integer::intValue).sum();
+	        
+	        // 각 성적의 비율 계산
+	        Map<String, Double> gradePercentages = new HashMap<>();
+	        for (Map.Entry<String, Integer> entry : gradeDistribution.entrySet()) {
+	            double percentage = (double) entry.getValue() / totalGrades * 100;
+	            gradePercentages.put(entry.getKey(), Math.round(percentage * 100.0) / 100.0); // 소수점 2자리 반올림
+	        }
+
+	        // 결과를 JSON 형식으로 반환
+	        result.put("totalGrades", totalGrades); // 총 성적 수
+	        result.put("gradePercentages", gradePercentages); // 성적별 비율
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return result;
+	}
+
+	
 }

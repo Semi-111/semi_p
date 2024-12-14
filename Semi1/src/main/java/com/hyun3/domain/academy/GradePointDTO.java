@@ -16,8 +16,15 @@ public class GradePointDTO {
 	
 	private String grade; // 성적(A+, A, B)
 	private double gradePoint; // 평균학점(4.5)
+	private int gradeCount; // 성적별 갯수
 	
 	
+	public int getGradeCount() {
+		return gradeCount;
+	}
+	public void setGradeCount(int gradeCount) {
+		this.gradeCount = gradeCount;
+	}
 	public long getMb_Num() {
 		return mb_Num;
 	}
