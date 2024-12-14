@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/lectureReview/write.css" type="text/css">
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 
 </head>
 <body>
@@ -27,17 +28,17 @@
 			<form name="review-form">
 				<div class="form-group">
 					<label for="title">과목명</label>
-					<div>프로그래밍언어</div>
+					<div>${sbName}</div>
 				</div>
 				
 				<div class="form-group">
-		    		<div class="star-rating">
-				        <i class="fa-regular fa-star rate" data-value="1"></i>
-				        <i class="fa-regular fa-star rate" data-value="2"></i>
-				        <i class="fa-regular fa-star rate" data-value="3"></i>
-				        <i class="fa-regular fa-star rate" data-value="4"></i>
-				        <i class="fa-regular fa-star rate" data-value="5"></i>
-				        <span class="rating-text">0 / 5</span>
+		    		<div class="star-rate">
+					    <i class="fa-solid fa-star rate" data-value="1"></i>
+				        <i class="fa-solid fa-star rate" data-value="2"></i>
+				        <i class="fa-solid fa-star rate" data-value="3"></i>
+				        <i class="fa-solid fa-star rate" data-value="4"></i>
+				        <i class="fa-solid fa-star rate" data-value="5"></i>
+				        <span class="rating-text"> 0 / 5 </span>
 			    	</div>
 				</div>
 				
@@ -59,11 +60,9 @@
 
 </main>
 
-</body>
-</html>
-
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 
 </body>
 </html>
+

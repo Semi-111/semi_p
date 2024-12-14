@@ -21,26 +21,23 @@
     <div class="container">
         <!-- 왼쪽 메뉴 -->
         <div class="sidebar">
-            <div class="search-bar">
-                <input type="text" placeholder="과목명, 교수명으로 검색">
-            </div>
             <div class="lecture-info">
-                <div class="lecture-name">내 강의</div>
+                <div class="lecture-my">내 강의</div>
+                
+                
                 <div class="lecture-detail">
-                    <span class="badge">X2</span>
-                    진로와상담<br>
-                    <span class="professor">장종익</span>
+                	<c:forEach var="dto" items="${list}">
+                		<div class="lecture-list">
+		                    <span class="lecture-title">
+		                    	<a href="${pageContext.request.contextPath}/lectureReview/write?sbNum=${dto.sb_Num}">${dto.sb_Name}</a>
+		                    </span>
+		                    <br>
+		                    <span class="professor">${dto.pf_Name}</span>
+	                    </div>
+                    </c:forEach>
                 </div>
-            </div>
-            <div class="points">
-                <div class="current-points">내 포인트 현황</div>
-                <div class="points-value">6 포인트</div>
-            </div>
-            <div class="review-prompt">
-                지난 학기에 수강하신<br>
-                <strong>진로와상담</strong> 강의는 어땠나요?<br>
-                다른 학우들을 위해 강의평을 남겨주세요!
-                <button class="register-btn">강의평 등록하고 10 포인트 적립하기</button>
+                
+                
             </div>
         </div>
 
@@ -50,10 +47,10 @@
                 <div class="lecture-title">재미있는정신분석이야기</div>
                 <div class="professor">종연영</div>
                 <div class="star-rate">
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star-half-alt"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
                     <i class="fa fa-star"></i>
                 </div>
                 <div class="review-text">진짜 개인적으로 1점도 아까웠던 수업이었음...</div>

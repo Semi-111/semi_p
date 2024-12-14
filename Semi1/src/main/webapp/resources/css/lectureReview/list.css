@@ -22,6 +22,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* 과목명, 교수명 검색 */
 .search-bar input {
     width: 100%;
     padding: 10px;
@@ -35,7 +36,7 @@ body {
     margin-bottom: 20px;
 }
 
-.lecture-name {
+.lecture-my {
     font-size: 20px;
     font-weight: bold;
 }
@@ -45,6 +46,14 @@ body {
     margin-top: 10px;
 }
 
+.lecture-list {
+	margin-bottom: 5px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	padding: 5px;
+}
+
+/* X2 배지 */
 .badge {
     background: #4caf50;
     color: #fff;
@@ -54,6 +63,7 @@ body {
     font-size: 12px;
 }
 
+/* 포인트 */
 .points {
     margin-bottom: 20px;
 }
@@ -69,6 +79,7 @@ body {
     color: #e53935;
 }
 
+/* 버튼 */
 .review-prompt {
     font-size: 14px;
     margin-top: 20px;
@@ -124,12 +135,14 @@ body {
     margin-bottom: 10px;
 }
 
+/* 별 회색 */
 .star-rate i {
     font-size: 16px;
     color: #ddd;
     margin-right: 5px;
 }
 
+/* 별 노란색 */
 .star-rate i.active {
     color: #ffd700;
 }
