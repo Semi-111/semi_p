@@ -18,47 +18,102 @@
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
-
 <main class="write-main">
 
 	<div class="container">
 		<h1 class="board-title">강의평가</h1>
 		
 		<div class="write-form">
-			<form name="review-form">
+			<form name="reviewForm" method="post">
 				<div class="form-group">
 					<label for="title">과목명</label>
-					<div>${sbName}</div>
+					<div class="sbTitle">${sbName}</div>
 				</div>
 				
 				<div class="form-group">
 		    		<div class="star-rate">
-					    <i class="fa-solid fa-star rate" data-value="1"></i>
-				        <i class="fa-solid fa-star rate" data-value="2"></i>
-				        <i class="fa-solid fa-star rate" data-value="3"></i>
-				        <i class="fa-solid fa-star rate" data-value="4"></i>
-				        <i class="fa-solid fa-star rate" data-value="5"></i>
-				        <span class="rating-text"> 0 / 5 </span>
+					    <i class="fa-solid fa-star star" data-value="1"></i>
+				        <i class="fa-solid fa-star star" data-value="2"></i>
+				        <i class="fa-solid fa-star star" data-value="3"></i>
+				        <i class="fa-solid fa-star star" data-value="4"></i>
+				        <i class="fa-solid fa-star star" data-value="5"></i>
+				        <span class="rate-value"> 0 / 5 </span>
 			    	</div>
+			    	<input type="hidden" name="rating" id="ratingInput" value="0">
+					<input type="hidden" name="sbNum" value="${sbNum}">
 				</div>
 				
 				<div class="form-group">
 					<label for="content">강의평</label>
-					<textarea id="content" name="content" required>${dto.content}</textarea>
+					<textarea id="content" name="content" required placeholder="이 강의에 대한 총평을 작성해주세요.">${dto.content}</textarea>
 				</div>
 				
 				<div class="button-group">
-	                   <button type="button" class="submit-button" onclick="submitForm();">
-	                       등록하기
-	                   </button>
-	                   <a href="${pageContext.request.contextPath}/lectureReview/list" class="cancel-button">취소</a>
-	               </div>
-			
+	            	<button type="button" class="submit-button" onclick="submitForm();">
+                       ${mode=='update'?'수정완료':'등록하기'}
+                   </button>
+                   <button type="button" class="cancel-button" onclick="location.href='${pageContext.request.contextPath}/lectureReview/list'">
+                   		취소
+                   	</button>      
+               </div>
+               
 			</form>
 		</div>
 	</div>
 
 </main>
+
+<script type="text/javascript">
+
+function login() {
+	location.href = '${pageContext.request.contextPath}/member/login';
+}
+
+let rateValue = 0; // 초기 별점 값 (0)
+
+$(function() {
+	$('.star').click(function() {
+		rateValue = $(this).attr('data-value');	
+		
+		$('.rate-value').text(rateValue + " / 5 ");
+		
+		// 모든 별의 active 클래스 초기화
+        $('.star').removeClass('active');
+		
+		// 클릭된 별까지 active 클래스 추가
+        for (let i = 1; i <= rateValue; i++) {
+            $('.star[data-value="' + i + '"]').addClass('active');
+        }
+
+		// hidden 필드 값 업데이트
+        $('#ratingInput').val(rateValue);
+	});
+});
+
+function submitForm() {
+	if(rateValue === 0) {
+		// 별점을 선택하지 않았을 때 경고 메시지
+        alert('별점을 선택해주세요.');
+        return;
+	}
+	
+	const f = document.reviewForm;
+	let str;
+	
+	str = f.content.value.trim();
+	if(!str) {
+		alert('내용을 입력하세요. ');
+        f.content.focus();
+        return;
+	}
+	
+	f.action = '${pageContext.request.contextPath}/lectureReview/${mode}';
+	f.submit();
+}
+
+
+</script>
+
 
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />

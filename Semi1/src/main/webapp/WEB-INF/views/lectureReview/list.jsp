@@ -22,14 +22,31 @@
         <!-- 왼쪽 메뉴 -->
         <div class="sidebar">
             <div class="lecture-info">
+            	<!-- 검색 바 -->
+
                 <div class="lecture-my">내 강의</div>
                 
                 
                 <div class="lecture-detail">
-                	<c:forEach var="dto" items="${list}">
+                	<c:forEach var="dto" items="${myLlist}">
                 		<div class="lecture-list">
 		                    <span class="lecture-title">
-		                    	<a href="${pageContext.request.contextPath}/lectureReview/write?sbNum=${dto.sb_Num}">${dto.sb_Name}</a>
+		                    	
+		                    		<!-- 강의평가가 등록된 경우 -->
+		                    		<!-- 
+		                    			<a href="${pageContext.request.contextPath}/lectureReview/article?">
+		                    				${dto.sb_Name} (수정/확인)
+		                    			</a>
+		                    		
+		                    		 -->
+		                    		
+		                    		
+		                    		<!-- 강의평가가 등록되지 않은 경우 -->
+		                    		
+				                    	<a href="${pageContext.request.contextPath}/lectureReview/write?sbNum=${dto.sb_Num}">
+				                    		${dto.sb_Name} (평가하기)
+				                    	</a>
+		                    		
 		                    </span>
 		                    <br>
 		                    <span class="professor">${dto.pf_Name}</span>
@@ -43,47 +60,39 @@
 
         <!-- 오른쪽 강의 평가 리스트 -->
         <div class="main-content">
-            <div class="review">
-                <div class="lecture-title">재미있는정신분석이야기</div>
-                <div class="professor">종연영</div>
-                <div class="star-rate">
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="review-text">진짜 개인적으로 1점도 아까웠던 수업이었음...</div>
-            </div>
+        	
+            <c:forEach var="dto" items="${reviewList}">
+            	<div class="review-list">
+	                <div class="lecture-title">
+	                	<a href="${pageContext.request.contextPath}/lectureReview/article"></a>
+	                	${dto.sb_Name}
+	                </div>
+	                <div class="professor">${dto.pf_Name}</div>
+	                <div class="star-rate">
+	                	<!-- 별 평가점수 -->
+	                	<c:forEach begin="1" end="5" var="i">          	                		
+	                    	<i class="fa fa-star star ${i <= dto.rating ? 'active' : ''}" data-value="${i}"></i>
+	                    </c:forEach>              	
+	                </div>
+	                <div class="nickName">${dto.nickName}</div>
+	                <div class="review-text">${dto.content}</div>
+            	</div>
+            </c:forEach>
 
-            <div class="review">
-                <div class="lecture-title">심리통계</div>
-                <div class="professor">황창주</div>
-                <div class="star-rate">
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="review-text">교수 수업태도 너무 불량하고...</div>
-            </div>
-            
-            <div class="review">
-                <div class="lecture-title">고급영어회화실습</div>
-                <div class="professor">LUCIER PETER</div>
-                <div class="star-rate">
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star active"></i>
-                    <i class="fa fa-star"></i>
-                    <i class="fa fa-star"></i>
-                </div>
-                <div class="review-text">나르시즘이 있는... 영어로 말도 많이 할 수 있어서 좋음.</div>
-            </div>
         </div>
     </div>
 </main>
+
+<script type="text/javascript">
+
+function login() {
+	location.href = '${pageContext.request.contextPath}/member/login';
+}
+
+
+
+
+</script>
 
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 <jsp:include page="/WEB-INF/views/layout/footer.jsp" />

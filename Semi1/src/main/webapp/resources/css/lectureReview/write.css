@@ -18,10 +18,12 @@ body {
 }
 
 .board-title {
-    font-size: 25px;
+    font-size: 27px;
     margin-bottom: 20px;
     color: #333;
+    font-weight: bold;
 }
+
 
 /* 별점 영역 */
 .star-rate {
@@ -48,7 +50,7 @@ body {
 	scale: 108%;
 }
 
-.rating-text {
+.rate-value {
     font-size: 16px;
     color: #555;
     margin-left: 10px;
@@ -71,9 +73,14 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
+    font-weight: 600;
     color: #333;
-    font-size: 14px;
+    font-size: 15px;
+}
+
+.sbTitle { 
+	font-size: 22px; 
+	font-weight: bold;
 }
 
 .form-group input[type="text"],
@@ -126,6 +133,10 @@ body {
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
+}
+
+.cancel-button a:hover {
+	text-decoration: none;
 }
 
 .submit-button:hover,

@@ -11,11 +11,12 @@ body {
 .container {
     display: flex;
     padding: 20px;
+    max-width: 900px !important;
 }
 
 /* 왼쪽 사이드바 */
 .sidebar {
-    width: 30%;
+    width: 35%;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -48,9 +49,19 @@ body {
 
 .lecture-list {
 	margin-bottom: 5px;
-	border: 1px solid #ddd;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);	
 	border-radius: 8px;
 	padding: 5px;
+}
+
+.lecture-list:hover {
+	background-color: #f8f9fa;
+}
+
+.lectureName {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
 }
 
 /* X2 배지 */
@@ -106,40 +117,50 @@ body {
 
 /* 오른쪽 메인 콘텐츠 */
 .main-content {
-    width: 70%;
+    width: 65%;
     margin-left: 20px;
 }
 
-.review {
+.review-list {
     background: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 15px;
+    margin-bottom: 5px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .lecture-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 0px;
+}
+
+.lecture-title a:hover {
+	color: #a855f7;
 }
 
 .professor {
-    font-size: 14px;
+    font-size: 13px;
     color: #555;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
+}
+
+.nickName { 
+	font-size: 12px;
+	color: #A6A6A6;
+	margin-bottom: 0px;
 }
 
 .star-rate {
     display: flex;
-    margin-bottom: 10px;
+    margin: 2px 0px;
 }
 
 /* 별 회색 */
 .star-rate i {
-    font-size: 16px;
+    font-size: 13px;
     color: #ddd;
-    margin-right: 5px;
+    margin-right: 2px;
 }
 
 /* 별 노란색 */

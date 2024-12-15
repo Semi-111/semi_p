@@ -10,6 +10,8 @@ public class LectureReviewDTO {
     private String pf_Name;     // 교수 이름
     
     private String semester;    // 학기
+
+	private long review_Num;    // 리뷰번호
     private String content;		// 리뷰 내용 
     private String reg_date;	// 작성일
     private int rating;			// 평가 점수
@@ -57,6 +59,14 @@ public class LectureReviewDTO {
 	public void setSemester(String semester) {
 		this.semester = semester;
 	}
+    
+    public long getReview_Num() {
+		return review_Num;
+	}
+	public void setReview_Num(long review_Num) {
+		this.review_Num = review_Num;
+	}
+	
 	public String getContent() {
 		return content;
 	}
