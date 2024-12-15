@@ -315,3 +315,109 @@ footer {
 .heart-icon.liked {
     color: red; /* 좋아요 상태일 때 빨간색 */
 }
+
+.navigation-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #ffffff; /* 깔끔한 흰색 배경 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 효과 */
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.navigation-links:hover {
+    transform: translateY(-2px); /* 약간의 상승 효과 */
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4a5568; /* 좀 더 세련된 회색 */
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #6b46c1; /* 강조된 보라색 */
+}
+
+.previous-link i, .next-link i {
+    font-size: 1.5em; /* 아이콘 크기 증가 */
+    margin: 0 10px;
+}
+
+/* 댓글 영역 - 깔끔한 디자인 업데이트 */
+.comments-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    padding: 20px;
+}
+
+.comments-header {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: bold;
+    font-size: 18px; /* 좀 더 큰 글씨 */
+    color: #4a5568;
+}
+
+.comments-count {
+    color: #6b46c1;
+    font-size: 14px; /* 강조된 색상과 작은 크기 */
+}
+
+.comment-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #f1f1f1;
+    transition: background-color 0.3s ease;
+}
+
+.comment-item:hover {
+    background-color: #f9f9f9;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #2d3748;
+    font-size: 15px;
+}
+
+.comment-text {
+    color: #4a5568;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.comment-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.comment-action {
+    color: #a0aec0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.comment-action:hover {
+    color: #6b46c1;
+}
+
+@media (max-width: 768px) {
+    .navigation-links {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-link {
+        margin: 10px 0;
+    }
+}

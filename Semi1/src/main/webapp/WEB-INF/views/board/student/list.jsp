@@ -7,11 +7,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><c:out value="${boardType == 'free' ? '자유게시판' : '정보게시판'}"/></title>
+  <title><c:out value="${boardType == 'student' ? '새내기게시판' : '졸업생게시판'}"/></title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/list.css">
-  <script src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
 
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+<%--  <script>--%>
+<%--    function searchList() {--%>
+<%--      const f = document.searchForm;--%>
+<%--      f.submit();--%>
+<%--    }--%>
+<%--  </script>--%>
 </head>
 <body>
 
@@ -21,10 +27,24 @@
 
 <div class="container">
   <h1 class="board-title">
-    <c:out value="${boardType == 'free' ? '자유게시판' : '정보게시판'}"/>
+    <c:out value="${boardType == 'student' ? '새내기게시판' : '졸업생게시판'}"/>
   </h1>
 
-  <form name="searchForm" action="${pageContext.request.contextPath}/bbs/infoBoard/list">
+  <!-- 카테고리 탭 -->
+  <div class="category-tabs">
+    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=all"
+       class="${category == 'all' ? 'active' : ''}">전체</a>
+    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=7"
+       class="${category == '7' ? 'active' : ''}">25학번</a>
+    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=8"
+       class="${category == '8' ? 'active' : ''}">24학번</a>
+    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=9"
+       class="${category == '9' ? 'active' : ''}">23학번</a>
+    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=10"
+       class="${category == '10' ? 'active' : ''}">22학번 이전</a>
+  </div>
+
+  <form name="searchForm" action="${pageContext.request.contextPath}/bbs/studentBoard/list">
     <input type="hidden" name="type" value="${boardType}">
     <div class="board-controls">
       <div class="search-box">
@@ -39,7 +59,7 @@
           <button type="button" onclick="searchList();">검색</button>
         </div>
       </div>
-      <button type="button" class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/write?type=${boardType}'">
+      <button type="button" class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/studentBoard/write?type=${boardType}'">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14M5 12h14"/>
@@ -47,7 +67,7 @@
         글쓰기
       </button>
     </div>
-    </form>
+  </form>
 
   <div class="main-content">
     <!-- 게시글 목록 -->
@@ -56,7 +76,7 @@
         <div class="post-item">
           <div class="post-content">
             <h3 class="post-title">
-              <a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}">
+              <a href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}">
                   ${dto.title}
               </a>
             </h3>
@@ -122,8 +142,7 @@
 
   <div class="pagination">
     <ul>
-<%--      ${paging}--%>
-  ${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
+      ${dataCount == 0 ? "등록된 게시글이 없습니다" : paging}
     </ul>
   </div>
 </div>

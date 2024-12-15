@@ -40,16 +40,13 @@ public class InfoBoardController {
     return new ModelAndView("board/test");
   }
 
-
   @RequestMapping("/bbs/infoBoard/list")
   // http://localhost:9090/bbs/infoBoard/list?type=free - 자유게시판
   // http://localhost:9090/bbs/infoBoard/list?type=info - 정보게시판
   // 일반유저 - 40 최종관리자 - 60
   public ModelAndView handleBoardList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    // 게시글 리스트 : 파라미터 : [page], [schType, kwd]
     String boardType = req.getParameter("type");
 
-    // ModelAndView 객체 생성
     ModelAndView mav = new ModelAndView("board/list"); // 폴더명 / 파일명
 
     InfoBoardDAO dao = new InfoBoardDAO();
@@ -241,7 +238,6 @@ public class InfoBoardController {
       mav.addObject("boardType", boardType);
       mav.addObject("isUserLike", isUserLike);
 
-
       // 포워딩
       return mav;
 
@@ -262,6 +258,7 @@ public class InfoBoardController {
     ModelAndView mav = new ModelAndView("board/write");
     InfoBoardDAO dao = new InfoBoardDAO();
 
+
     try {
       long cmNum = Long.parseLong(req.getParameter("cmNum"));
 
@@ -271,7 +268,9 @@ public class InfoBoardController {
         return new ModelAndView("redirect:/bbs/infoBoard/list?&type=" + boardType + "&page=" + page);
       }
 
-      if (dto.getMbNum() != info.getMb_Num()) { // 작성한 사용자가 아니라면
+
+
+      if (dto.getMbNum() != info.getMb_Num()) {
         return new ModelAndView("redirect:/bbs/infoBoard/list?&type=" + boardType + "&page=" + page);
       }
 
@@ -363,8 +362,6 @@ public class InfoBoardController {
     Map<String, Object> model = new HashMap<>();
 
     InfoBoardDAO dao = new InfoBoardDAO();
-//    HttpSession session = req.getSession();
-//    SessionInfo info = (SessionInfo) session.getAttribute("member");
     SessionInfo info = getMember(req); // member
 
     String state = "false";
@@ -429,9 +426,6 @@ public class InfoBoardController {
     } else {
       dto.setFileName(null); // 파일이 없으면 null로 설정
     }
-
-    System.out.println("Uploaded file name: " + dto.getFileName());
-
   }
 
 

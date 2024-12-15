@@ -196,3 +196,22 @@ footer {
 .footer-links a:hover {
     color: #a855f7;
 }
+
+.categories a {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.categories a.active {
+    background-color: #a855f7;
+    color: white;
+}
+
+.categories a:hover {
+    background-color: #ddd;
+}
