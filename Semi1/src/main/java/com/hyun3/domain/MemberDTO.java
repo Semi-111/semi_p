@@ -14,9 +14,18 @@ public class MemberDTO {
   private String email; // 이메일
   private String tel; // 전화번호
   private String birth; // 생일
+  
+  private int lessonNum; // 이 부분 추가
 
+  public int getLessonNum() {
+	return lessonNum;
+}
 
-  public Long getMb_Num() {
+public void setLessonNum(int lessonNum) {
+	this.lessonNum = lessonNum;
+}
+
+public Long getMb_Num() {
     return mb_Num;
   }
 

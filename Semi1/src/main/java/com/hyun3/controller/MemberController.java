@@ -55,6 +55,7 @@ public class MemberController {
       info.setUserId(dto.getUserId());
       info.setName(dto.getName());
       info.setRole(dto.getRole());
+      info.setLessonNum(dto.getLessonNum());  // 이 부분 추가 - 선웅
 
       // 세션에 member 라는 이름으로 로그인 정보를 저장
       session.setAttribute("member", info);

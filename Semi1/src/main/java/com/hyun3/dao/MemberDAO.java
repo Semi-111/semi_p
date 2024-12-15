@@ -20,7 +20,7 @@ public class MemberDAO {
 
     try {
       sql = "SELECT mb_Num, userId, nickname, "
-          + " role, ca_Day, modifyDay "
+          + " role, ca_Day, modifyDay, lessonNum "
           + " FROM member "
           + " WHERE userId = ? AND pwd = ? AND block = 0";
 
@@ -40,6 +40,7 @@ public class MemberDAO {
         dto.setRole(rs.getString("role"));
         dto.setCa_Day(rs.getString("ca_Day"));
         dto.setModifyDay(rs.getString("modifyDay"));
+        dto.setLessonNum(rs.getInt("lessonNum"));  // lessonNum 설정 추가
       }
 
     } catch (Exception e) {
