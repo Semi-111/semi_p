@@ -220,42 +220,41 @@ footer {
 	color: #a855f7;
 }
 </style>
-
 <script type="text/javascript">
-	function check() {
-		const f = document.boardForm;
-		const userLessonNum = $ { userLessonNum }
-		; // 컨트롤러에서 전달받은 사용자의 학과 번호
-		const selectedCategory = parseInt(f.category.value);
+function check() {
+    const f = document.boardForm;
+    const userLessonNum = ${userLessonNum};
+    const userRole = ${sessionScope.member.role};
+    const selectedCategory = parseInt(f.category.value);
 
-		if (!f.category.value) {
-			alert("카테고리를 선택하세요.");
-			f.category.focus();
-			return false;
-		}
+    if (!f.category.value) {
+        alert("카테고리를 선택하세요.");
+        f.category.focus();
+        return false;
+    }
 
-		// 선택한 카테고리가 자신의 학과가 아닐 경우
-		if (selectedCategory !== userLessonNum) {
-			alert("본인 학과의 게시판에만 글을 작성할 수 있습니다.");
-			f.category.focus();
-			return false;
-		}
+    // 관리자가 아닌 경우에만 학과 체크
+    if (userRole != 99 && selectedCategory !== userLessonNum) {
+        alert("본인 학과의 게시판에만 글을 작성할 수 있습니다.");
+        f.category.focus();
+        return false;
+    }
 
-		if (!f.title.value.trim()) {
-			alert("제목을 입력하세요.");
-			f.title.focus();
-			return false;
-		}
+    if (!f.title.value.trim()) {
+        alert("제목을 입력하세요.");
+        f.title.focus();
+        return false;
+    }
 
-		if (!f.content.value.trim()) {
-			alert("내용을 입력하세요.");
-			f.content.focus();
-			return false;
-		}
+    if (!f.content.value.trim()) {
+        alert("내용을 입력하세요.");
+        f.content.focus();
+        return false;
+    }
 
-		f.action = "${pageContext.request.contextPath}/lessonBoard/${mode=='update'?'update':'writeForm'}";
-		return true;
-	}
+    f.action = "${pageContext.request.contextPath}/lessonBoard/${mode=='update'?'update':'writeForm'}";
+    return true;
+}
 </script>
 </head>
 <body>
@@ -285,22 +284,33 @@ footer {
 				<table class="write-form">
 					<tr>
 						<td>학과</td>
-						<td><select name="category" class="form-select">
-								<option value="">:: 학과 선택 ::</option>
-								<option value="51" ${userLessonNum==51 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==51 ? "selected":""}>경영학과</option>
-								<option value="52" ${userLessonNum==52 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==52 ? "selected":""}>경찰행정과</option>
-								<option value="53" ${userLessonNum==53 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==53 ? "selected":""}>디자인학과</option>
-								<option value="54" ${userLessonNum==54 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==54 ? "selected":""}>화학공학과</option>
-								<option value="55" ${userLessonNum==55 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==55 ? "selected":""}>컴퓨터응용전자과</option>
-								<option value="56" ${userLessonNum==56 ? "" : "disabled"}
-									${mode=="update" && dto.lessonNum==56 ? "selected":""}>정보통신학부</option>
-						</select></td>
+						<td><c:if test="${mode=='update'}">
+								<input type="hidden" name="category" value="${dto.lessonNum}">
+					            ${dto.lessonName} <!-- 수정 모드일 때는 학과명만 보여줌 -->
+							</c:if> <c:if test="${mode!='update'}">
+								<select name="category" class="form-select">
+									<option value="51"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==51 ? "" : "disabled")}
+										${dto.lessonNum==51 ? "selected":""}>경영학과</option>
+									<option value="52"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==52 ? "" : "disabled")}
+										${dto.lessonNum==52 ? "selected":""}>경찰행정과</option>
+									<option value="53"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==53 ? "" : "disabled")}
+										${dto.lessonNum==53 ? "selected":""}>디자인학과</option>
+									<option value="54"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==54 ? "" : "disabled")}
+										${dto.lessonNum==54 ? "selected":""}>화학공학과</option>
+									<option value="55"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==55 ? "" : "disabled")}
+										${dto.lessonNum==55 ? "selected":""}>컴퓨터응용전자과</option>
+									<option value="56"
+										${sessionScope.member.role == 99 ? "" : (userLessonNum==56 ? "" : "disabled")}
+										${dto.lessonNum==56 ? "selected":""}>정보통신학부</option>
+								</select>
+							</c:if></td>
 					</tr>
+
 					<tr>
 						<td>제목</td>
 						<td><input type="text" name="title" maxlength="100"

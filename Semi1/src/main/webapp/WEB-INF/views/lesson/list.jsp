@@ -355,24 +355,25 @@ footer {
 </style>
 
 <script type="text/javascript">
-	function searchList() {
-		const f = document.searchForm;
-		f.submit();
-	}
+function checkDepartmentAccess(category) {
+    const userLessonNum = ${userLessonNum};
+    const userRole = ${sessionScope.member.role};
+    
+    // 관리자(ROLE=99)이거나 lessonNum이 0이면 모든 게시판 접근 가능
+    if(userRole == 99 || userLessonNum == 0) {
+        return true;
+    }
+    
+    // 일반 학생은 자기 학과만 접근 가능
+    if (category !== 0 && category !== userLessonNum) {
+        alert("타 학과 학생은 이용이 불가능합니다.");
+        return false;
+    }
+    return true;
+}
 </script>
 
-<script type="text/javascript">
-	function checkDepartmentAccess(category) {
-		const userLessonNum = ${userLessonNum}
-		; // 컨트롤러에서 전달받은 사용자의 학과 번호
 
-		if (category !== 0 && category !== userLessonNum) {
-			alert("타 학과 학생은 이용이 불가능합니다.");
-			return false;
-		}
-		return true;
-	}
-</script>
 
 </head>
 <body>

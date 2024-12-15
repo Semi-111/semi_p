@@ -10,7 +10,6 @@ public class SessionInfo {
 	
 
 	public int getLessonNum() {
-		System.out.println("getLessonNum 호출됨: " + lessonNum);
 		return lessonNum;
 	}
 

@@ -4,6 +4,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trainee</title>
@@ -114,22 +116,27 @@ nav {
 
 .board-header {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;  /* 수직 중앙 정렬 명시 */
+    margin-bottom: 20px;
+    padding: 10px 0;  /* 상하 패딩 추가 */
+    
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 15px;
 }
 
 .board-nav {
 	display: flex;
 	gap: 1rem;
-	border-bottom: 1px solid #e1e1e1;
 	padding: 10px 0;
 }
 
 .board-nav a {
 	text-decoration: none;
-	color: #666;
-	padding: 5px 10px;
+    color: #666;
+    padding: 8px 15px;  /* 패딩 조정 */
+    border-radius: 4px;  /* 모서리 둥글게 */
+    transition: all 0.2s;
 }
 
 .board-nav a.active {
@@ -143,12 +150,17 @@ nav {
 
 .write-button {
 	background-color: #a855f7;
-	color: white;
-	padding: 8px 20px;
-	border-radius: 6px;
-	text-decoration: none;
-	font-size: 14px;
-	transition: background-color 0.2s;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    height: fit-content;  /* 버튼 높이 조정 */
+    margin-left: 20px;    /* 왼쪽 여백 추가 */
+    white-space: nowrap;  /* 텍스트 줄바꿈 방지 */
+    display: inline-flex; /* 인라인 플렉스로 변경 */
+    align-items: center;  /* 버튼 내부 텍스트 수직 중앙 정렬 */
 }
 
 .write-button:hover {
@@ -336,23 +348,22 @@ footer {
 </script>
 </head>
 <body>
-	<header>
-		<nav>
-			<div class="logo">
-				<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 로고">
-			</div>
-			<div class="nav-links">
-				<a href="#">게시판</a>
-				 <a href="#">시간표</a> 
-				 <a href="#">학점계산기</a> 
-				 <a href="#">친구</a> 
-				 <a href="#">공지</a> 
-				 <a href="#">마이페이지</a> 
-				 <a href="#">맛집</a>
-			</div>
-		</nav>
-	</header>
-
+		<header>
+				<nav>
+					<div class="logo">
+						<img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 로고">
+					</div>
+					<div class="nav-links">
+						<a href="#">게시판</a>
+						 <a href="#">시간표</a> 
+						 <a href="#">학점계산기</a> 
+						 <a href="#">친구</a> 
+						 <a href="#">공지</a> 
+						 <a href="#">마이페이지</a> 
+						 <a href="#">맛집</a>
+					</div>
+				</nav>
+			</header>
 	<div class="container">
 		<h1 class="board-title">장터게시판</h1>
 
