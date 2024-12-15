@@ -230,41 +230,47 @@ public class LessonDAO {
 		ResultSet rs = null;
 		String sql;
 
-		try {
-			sql = "SELECT b.CM_num, b.division, b.title, b.content, " + " b.views, b.CA_date, b.fileName, "
-					+ " b.MB_num, m.nickName, " + " b.lessonNum, l.lessonName " + " FROM lessonBoard b "
-					+ " JOIN Member m ON b.MB_num = m.MB_num " + " JOIN lesson l ON b.lessonNum = l.lessonNum "
-					+ " WHERE b.CM_num = ?";
+	    try {
+	        sql = "SELECT b.CM_num, b.division, b.title, b.content, "
+	            + " b.views, b.CA_date, b.fileName, "
+	            + " b.MB_num, m.nickName, "
+	            + " b.lessonNum, l.lessonName, "
+	            + " (SELECT COUNT(*) FROM lesson_LK WHERE CM_num = b.CM_num) likeCount "  // 좋아요 개수 추가
+	            + " FROM lessonBoard b "
+	            + " JOIN Member m ON b.MB_num = m.MB_num "
+	            + " JOIN lesson l ON b.lessonNum = l.lessonNum "
+	            + " WHERE b.CM_num = ?";
 
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, num);
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, num);
 
-			rs = pstmt.executeQuery();
+	        rs = pstmt.executeQuery();
 
-			if (rs.next()) {
-				dto = new LessonDTO();
+	        if (rs.next()) {
+	            dto = new LessonDTO();
+	            
+	            dto.setCm_num(rs.getLong("CM_num"));
+	            dto.setDivision(rs.getString("division"));
+	            dto.setTitle(rs.getString("title"));
+	            dto.setBoard_content(rs.getString("content"));
+	            dto.setViews(rs.getLong("views"));
+	            dto.setCa_date(rs.getString("CA_date"));
+	            dto.setFileName(rs.getString("fileName"));
+	            dto.setMb_num(rs.getLong("MB_num"));
+	            dto.setNickName(rs.getString("nickName"));
+	            dto.setLessonNum(rs.getInt("lessonNum"));
+	            dto.setLessonName(rs.getString("lessonName"));
+	            dto.setLikeCount(rs.getInt("likeCount"));  // 좋아요 개수 설정
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
 
-				dto.setCm_num(rs.getLong("CM_num"));
-				dto.setDivision(rs.getString("division"));
-				dto.setTitle(rs.getString("title"));
-				dto.setBoard_content(rs.getString("content"));
-				dto.setViews(rs.getLong("views"));
-				dto.setCa_date(rs.getString("CA_date"));
-				dto.setFileName(rs.getString("fileName"));
-				dto.setMb_num(rs.getLong("MB_num"));
-				dto.setNickName(rs.getString("nickName"));
-				dto.setLessonNum(rs.getInt("lessonNum"));
-				dto.setLessonName(rs.getString("lessonName"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			DBUtil.close(rs);
-			DBUtil.close(pstmt);
-		}
-
-		return dto;
+	    return dto;
 	}
 
 	// 조회수 증가
@@ -763,5 +769,85 @@ public class LessonDAO {
 		}
 
 		return result;
+	}
+	
+	// 카테고리별 게시글 개수
+	public int dataCountByCategory(int category) throws SQLException {
+	    int result = 0;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    String sql;
+
+	    try {
+	        sql = "SELECT COUNT(*) FROM lessonBoard WHERE lessonNum = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setInt(1, category);
+	        
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return result;
+	}
+
+	// 카테고리별 게시글 리스트
+	public List<LessonDTO> listBoardByCategory(int offset, int size, int category) throws SQLException {
+	    List<LessonDTO> list = new ArrayList<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    StringBuilder sb = new StringBuilder();
+
+	    try {
+	        sb.append(" SELECT CM_num, division, title, content, ");
+	        sb.append("    TO_CHAR(CA_date, 'YYYY-MM-DD') CA_date, fileName, views, ");
+	        sb.append("    m.nickName, l.lessonName ");
+	        sb.append(" FROM lessonBoard b ");
+	        sb.append(" JOIN Member m ON b.MB_num = m.MB_num ");
+	        sb.append(" JOIN lesson l ON b.lessonNum = l.lessonNum ");
+	        sb.append(" WHERE b.lessonNum = ? ");
+	        sb.append(" ORDER BY CM_num DESC ");
+	        sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        
+	        pstmt.setInt(1, category);
+	        pstmt.setInt(2, offset);
+	        pstmt.setInt(3, size);
+
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            LessonDTO dto = new LessonDTO();
+	            
+	            dto.setCm_num(rs.getLong("CM_num"));
+	            dto.setDivision(rs.getString("division"));
+	            dto.setTitle(rs.getString("title"));
+	            dto.setBoard_content(rs.getString("content"));
+	            dto.setCa_date(rs.getString("CA_date"));
+	            dto.setFileName(rs.getString("fileName"));
+	            dto.setViews(rs.getLong("views"));
+	            dto.setNickName(rs.getString("nickName"));
+	            dto.setLessonName(rs.getString("lessonName"));
+
+	            list.add(dto);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return list;
 	}
 }

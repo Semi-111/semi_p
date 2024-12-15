@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${dto.title}- Trainee</title>
+<title>${dto.title}-Trainee</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/css/base.css">
 <link rel="stylesheet"
@@ -221,6 +221,20 @@ body {
 .back-link:hover {
 	color: #a855f7;
 }
+
+.like-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.post-actions {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
 </style>
 
 <script type="text/javascript">
@@ -270,26 +284,30 @@ body {
 				</c:if>
 			</div>
 
+			<!-- 좋아요 버튼 영역 -->
+			<div class="like-container">
+			    <button 
+			        class="btn ${dto.userLiked ? 'btn-purple' : 'btn-gray'} like-button"
+			        onclick="toggleLike();" 
+			        data-liked="${dto.userLiked}" 
+			        data-num="${dto.cm_num}">
+			        <i class="bi ${dto.userLiked ? 'bi-heart-fill' : 'bi-heart'}"></i> 좋아요
+			        <span class="like-count">${dto.likeCount}</span>
+			    </button>
+			</div>
 
+			<!-- 수정/삭제/목록 버튼 영역 -->
 			<div class="post-actions">
-				<div class="post-actions">
-					<button
-						class="btn ${userLiked ? 'btn-purple' : 'btn-gray'} like-button"
-						onclick="toggleLike();" data-liked="${userLiked}">
-						<i class="bi ${userLiked ? 'bi-heart-fill' : 'bi-heart'}"></i> 좋아요
-						<span class="like-count">${likeCount}</span>
-					</button>
-					<c:if
-						test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role >= 51}">
-						<button class="btn btn-purple"
-							onclick="location.href='${pageContext.request.contextPath}/lessonBoard/update?cm_num=${dto.cm_num}&page=${page}';">
-							수정</button>
-						<button class="btn btn-red" onclick="deleteBoard();">삭제</button>
-					</c:if>
-					<button class="btn btn-gray"
-						onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">
-						목록</button>
-				</div>
+				<c:if
+					test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role >= 51}">
+					<button class="btn btn-purple"
+						onclick="location.href='${pageContext.request.contextPath}/lessonBoard/update?cm_num=${dto.cm_num}&page=${page}';">
+						수정</button>
+					<button class="btn btn-red" onclick="deleteBoard();">삭제</button>
+				</c:if>
+				<button class="btn btn-gray"
+					onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">
+					목록</button>
 			</div>
 
 			<!-- 댓글 영역 include -->
@@ -315,37 +333,39 @@ body {
 				</c:if>
 			</div>
 		</div>
+		</div>
 </body>
 
 <script type="text/javascript">
-function toggleLike() {
-    let url = "${pageContext.request.contextPath}/lessonBoard/like";
-    let query = "cm_num=${dto.cm_num}";
-    
-    const fn = function(data) {
-        let state = data.state;
-        if(state === "true") {
-            let $btn = $(".like-button");
-            let $icon = $btn.find("i");
-            let $count = $btn.find(".like-count");
-            let liked = $btn.data("liked") === true;
-            
-            if(liked) {
-                $btn.removeClass("btn-purple").addClass("btn-gray");
-                $icon.removeClass("bi-heart-fill").addClass("bi-heart");
-            } else {
-                $btn.removeClass("btn-gray").addClass("btn-purple");
-                $icon.removeClass("bi-heart").addClass("bi-heart-fill");
-            }
-            
-            $btn.data("liked", !liked);
-            $count.text(data.likeCount);
-        } else {
-            alert("좋아요 처리가 실패했습니다.");
-        }
-    };
-    
-    ajaxFun(url, "post", query, "json", fn);
-}
+	function toggleLike() {
+		let url = "${pageContext.request.contextPath}/lessonBoard/like";
+		let query = "cm_num=${dto.cm_num}";
+
+		const fn = function(data) {
+			let state = data.state;
+			if (state === "true") {
+				let $btn = $(".like-button");
+				let $icon = $btn.find("i");
+				let $count = $btn.find(".like-count");
+				let liked = $btn.data("liked") === true;
+
+				if (liked) {
+					$btn.removeClass("btn-purple").addClass("btn-gray");
+					$icon.removeClass("bi-heart-fill").addClass("bi-heart");
+				} else {
+					$btn.removeClass("btn-gray").addClass("btn-purple");
+					$icon.removeClass("bi-heart").addClass("bi-heart-fill");
+				}
+
+				$btn.data("liked", !liked);
+				$count.text(data.likeCount);
+				$btn.data("count", data.likeCount);
+			} else {
+				alert("좋아요 처리가 실패했습니다.");
+			}
+		};
+
+		ajaxFun(url, "post", query, "json", fn);
+	}
 </script>
 </html>
