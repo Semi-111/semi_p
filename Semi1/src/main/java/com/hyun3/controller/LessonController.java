@@ -36,47 +36,39 @@ public class LessonController {
 	   ModelAndView mav = new ModelAndView("lesson/list");
 	   
 	   // 세션에서 사용자 정보 가져오기
-	   HttpSession session = req.getSession();
-	   SessionInfo info = (SessionInfo)session.getAttribute("member");
-	   
-	   // 디버깅용 출력
-	    System.out.println("===== 세션 디버깅 =====");
-	    System.out.println("세션 ID: " + session.getId());
-	    System.out.println("로그인 사용자 정보: " + info);
-	    if(info != null) {
-	        System.out.println("사용자 학과 번호: " + info.getLessonNum());
-	    } else {
-	        System.out.println("로그인 정보가 없습니다.");
+	    HttpSession session = req.getSession();
+	    SessionInfo info = (SessionInfo)session.getAttribute("member");
+	    
+	    LessonDAO dao = new LessonDAO();
+	    MyUtil util = new MyUtilBootstrap();
+	    
+	    String page = req.getParameter("page");
+	    String categoryParam = req.getParameter("category");
+	    
+	    int current_page = 1;
+	    if (page != null) {
+	        current_page = Integer.parseInt(page);
 	    }
-	    System.out.println("===================");
-	   
-	   LessonDAO dao = new LessonDAO();
-	   MyUtil util = new MyUtilBootstrap();
-	   
-	   String page = req.getParameter("page");
-	   String categoryParam = req.getParameter("category");
-	   
-	   int current_page = 1;
-	   if (page != null) {
-	       current_page = Integer.parseInt(page);
-	   }
-	   
-	   // 카테고리 파라미터 처리
-	   int category = 0;
-	   if (categoryParam != null && !categoryParam.isEmpty()) {
-	       category = Integer.parseInt(categoryParam);
-	       
-	       // 선택된 카테고리가 있고, 그것이 자신의 학과가 아닌 경우
-	       if (category != 0 && category != info.getLessonNum()) {
-	           resp.setContentType("text/html;charset=utf-8");
-	           PrintWriter out = resp.getWriter();
-	           out.println("<script>");
-	           out.println("alert('타 학과 학생은 이용이 불가능합니다.');");
-	           out.println("location.href='" + req.getContextPath() + "/lessonBoard/list';");
-	           out.println("</script>");
-	           return null;
-	       }
-	   }
+	    
+	    // 카테고리 파라미터 처리
+	    int category = 0;
+	    if (categoryParam != null && !categoryParam.isEmpty()) {
+	        category = Integer.parseInt(categoryParam);
+	        
+	        // 관리자 권한 체크 추가
+	        int userRole = Integer.parseInt(info.getRole());
+	        
+	        // 관리자나 lessonNum이 0이 아니고, 자신의 학과가 아닌 경우
+	        if (!(userRole == 99 || info.getLessonNum() == 0) && category != 0 && category != info.getLessonNum()) {
+	            resp.setContentType("text/html;charset=utf-8");
+	            PrintWriter out = resp.getWriter();
+	            out.println("<script>");
+	            out.println("alert('타 학과 학생은 이용이 불가능합니다.');");
+	            out.println("location.href='" + req.getContextPath() + "/lessonBoard/list';");
+	            out.println("</script>");
+	            return null;
+	        }
+	    }
 
 	   String schType = req.getParameter("schType");
 	   String kwd = req.getParameter("kwd");
@@ -172,8 +164,8 @@ public class LessonController {
 	    SessionInfo info = (SessionInfo)session.getAttribute("member");
 	    
 	    // 사용자의 학과 번호를 뷰로 전달
-	    mav.addObject("userLessonNum", info.getLessonNum());
 	    
+	    mav.addObject("userLessonNum", info.getLessonNum());
 	    return mav;
 	}
 
@@ -355,6 +347,7 @@ public class LessonController {
 			mav.addObject("dto", dto);
 			mav.addObject("page", page);
 			mav.addObject("mode", "update");
+			mav.addObject("category", dto.getLessonNum());
 
 			return mav;
 		} catch (Exception e) {

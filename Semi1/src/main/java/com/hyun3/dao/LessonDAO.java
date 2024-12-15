@@ -419,24 +419,38 @@ public class LessonDAO {
 		return dto;
 	}
 
-	// 게시글 삭제
+	// LessonDAO의 deleteLesson 메소드 수정
 	public void deleteLesson(long cm_num) throws SQLException {
-		PreparedStatement pstmt = null;
-		String sql;
+	    PreparedStatement pstmt = null;
+	    String sql;
 
-		try {
-			sql = "DELETE FROM lessonBoard WHERE cm_num = ?";
-			pstmt = conn.prepareStatement(sql);
+	    try {
+	        // 1. 먼저 댓글 삭제
+	        sql = "DELETE FROM lesson_CO WHERE cm_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, cm_num);
+	        pstmt.executeUpdate();
+	        pstmt.close();
+	        
+	        // 2. 좋아요 삭제
+	        sql = "DELETE FROM lesson_LK WHERE cm_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, cm_num);
+	        pstmt.executeUpdate();
+	        pstmt.close();
 
-			pstmt.setLong(1, cm_num);
-			pstmt.executeUpdate();
+	        // 3. 마지막으로 게시글 삭제
+	        sql = "DELETE FROM lessonBoard WHERE cm_num = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setLong(1, cm_num);
+	        pstmt.executeUpdate();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw e;
-		} finally {
-			DBUtil.close(pstmt);
-		}
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
 	}
 
 	// 글수정

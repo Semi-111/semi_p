@@ -73,7 +73,7 @@
 				<c:if test="${sessionScope.member.role >= 51}">
 					<!-- 관리자 버튼 -->
 					<i class="bi bi-person-gear" title="관리자 페이지"
-						onclick="location.href='${pageContext.request.contextPath}/admin'"></i>
+						onclick="location.href='${pageContext.request.contextPath}/admin/home/main'"></i>
 				</c:if>
 			</c:if>
 		</div>
