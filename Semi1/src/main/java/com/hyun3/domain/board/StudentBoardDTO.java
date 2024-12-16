@@ -11,6 +11,8 @@ public class StudentBoardDTO {
   private String caDate;          // 생성일
   private String fileName;        // 이미지 파일 이름
   private int views;          // 조회수
+  private String formattedCaDate;
+
 
   private int replyCount;
   private int boardLikeCount;
@@ -18,7 +20,7 @@ public class StudentBoardDTO {
   private String categoryName;    // 카테고리명 (학번)
   private int categoryNum;        // 카테고리 번호
 
-  private MemberDTO member;
+  private MemberDTO member;       // 작성자 정보 (MemberDTO)
 
   public long getCmNum() {
     return cmNum;
@@ -122,5 +124,13 @@ public class StudentBoardDTO {
 
   public void setMember(MemberDTO member) {
     this.member = member;
+  }
+
+  public String getFormattedCaDate() {
+    return formattedCaDate;
+  }
+
+  public void setFormattedCaDate(String formattedCaDate) {
+    this.formattedCaDate = formattedCaDate;
   }
 }

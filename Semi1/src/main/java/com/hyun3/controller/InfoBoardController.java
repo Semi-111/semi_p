@@ -23,6 +23,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +122,8 @@ public class InfoBoardController {
 
       String paging = util.paging(current_page, total_page, listUrl);
 
+      formatPostDate(list);
+
       // 포워딩할 JSP에 전달할 속성
       mav.addObject("list", list);
       mav.addObject("page", current_page);
@@ -132,6 +140,8 @@ public class InfoBoardController {
     }
     return mav;
   }
+
+
 
   @RequestMapping(value = "/bbs/infoBoard/write", method = GET)
   public ModelAndView writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -432,5 +442,36 @@ public class InfoBoardController {
   private static SessionInfo getMember(HttpServletRequest req) {
     HttpSession session = req.getSession();
     return (SessionInfo) session.getAttribute("member");
+  }
+
+  private static void formatPostDate(List<InfoBoardDTO> list) {
+    LocalDateTime now = LocalDateTime.now(); // 현재 시간
+
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    for (InfoBoardDTO dto : list) {
+      try {
+        LocalDateTime postDate;
+
+        if (dto.getCaDate().length() == 10) {
+          LocalDate date = LocalDate.parse(dto.getCaDate(), dateFormatter);
+          postDate = date.atTime(now.getHour(), now.getMinute());
+        } else {
+          postDate = LocalDateTime.parse(dto.getCaDate(), dateTimeFormatter);
+        }
+
+        Duration duration = Duration.between(postDate, now);
+
+        if (duration.toHours() < 24) {
+          dto.setFormattedCaDate(postDate.format(timeFormatter)); // HH:mm
+        } else {
+          dto.setFormattedCaDate(postDate.format(dateFormatter)); // yyyy-MM-dd
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

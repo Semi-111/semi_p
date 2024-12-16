@@ -2,6 +2,7 @@ package com.hyun3.controller;
 
 import com.hyun3.dao.board.StudentBoardDAO;
 import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.board.InfoBoardDTO;
 import com.hyun3.domain.board.StudentBoardDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
@@ -21,6 +22,10 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +90,8 @@ public class StudentController {
 
       List<StudentBoardDTO> list = dao.listBoard(boardType, offset, size, category, schType, kwd);
 
+
+
       String query = "";
       if (!kwd.isEmpty()) {
         query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, UTF_8);
@@ -113,6 +120,10 @@ public class StudentController {
         categories = dao.listCategories();
         mav.addObject("categories", categories);
       }
+
+      formatPostDate(list);
+
+
 
       // 포워딩할 JSP에 전달할 속성
       mav.addObject("list", list);
@@ -479,5 +490,36 @@ public class StudentController {
   private static SessionInfo getMember(HttpServletRequest req) {
     HttpSession session = req.getSession();
     return (SessionInfo) session.getAttribute("member");
+  }
+
+  private static void formatPostDate(List<StudentBoardDTO> list) {
+    LocalDateTime now = LocalDateTime.now(); // 현재 시간
+
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    for (StudentBoardDTO dto : list) {
+      try {
+        LocalDateTime postDate;
+
+        if (dto.getCaDate().length() == 10) {
+          LocalDate date = LocalDate.parse(dto.getCaDate(), dateFormatter);
+          postDate = date.atTime(now.getHour(), now.getMinute());
+        } else {
+          postDate = LocalDateTime.parse(dto.getCaDate(), dateTimeFormatter);
+        }
+
+        Duration duration = Duration.between(postDate, now);
+
+        if (duration.toHours() < 24) {
+          dto.setFormattedCaDate(postDate.format(timeFormatter)); // HH:mm
+        } else {
+          dto.setFormattedCaDate(postDate.format(dateFormatter)); // yyyy-MM-dd
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

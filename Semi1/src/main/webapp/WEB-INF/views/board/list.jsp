@@ -65,7 +65,7 @@
               <span>${dto.member.nickName}</span>
               <span>조회수: ${dto.views}</span>
               <span>좋아요: ${dto.boardLikeCount}</span>
-              <span>${dto.caDate}</span>
+              <span>${dto.formattedCaDate}</span>
             </div>
           </div>
           <c:if test="${dto.fileName != null && !empty dto.fileName}">
