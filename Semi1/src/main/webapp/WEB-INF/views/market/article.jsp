@@ -356,8 +356,6 @@ footer {
 					</div>
 					<div class="post-info">
 						<span> | 조회 ${dto.views}</span>
-						<!-- <span>댓글 5</span> -->
-						<!-- 댓글 기능 구현 시 추가 -->
 					</div>
 				</div>
 			</div>

@@ -5,8 +5,11 @@
 <html lang="ko">
 <head>
    <meta charset="UTF-8">
-   <title></title>
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>${mode=='update' ? '글수정' : '글쓰기'}</title>
+   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/base.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+   
    <style>
        * {
            margin: 0;
@@ -42,7 +45,7 @@
        }
 
        .logo img {
-           height: 100px;
+           height: 45px;
            width: auto;
            padding: 5px 0;
        }
@@ -62,120 +65,126 @@
            color: #a855f7;
        }
 
-       .board-title {
-           font-size: 24px;
-           margin-bottom: 20px;
-           color: #333;
+       .nav-links a.active {
+           color: #a855f7;
+           font-weight: bold;
        }
 
        /* 글쓰기 폼 스타일 */
-       .write-form {
+       .write-container {
+           max-width: 800px;
+           margin: 0 auto;
            background: white;
            border-radius: 8px;
            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
            padding: 30px;
-           max-width: 800px;
-           margin: 0 auto;
        }
 
-       .form-group {
+       .write-title {
            margin-bottom: 20px;
+           padding-bottom: 20px;
+           border-bottom: 1px solid #e5e7eb;
        }
 
-       .form-group label {
-           display: block;
-           margin-bottom: 8px;
-           font-weight: bold;
+       .write-title h3 {
+           font-size: 24px;
            color: #333;
-           font-size: 14px;
        }
 
-       .form-group input[type="text"],
-       .form-group select,
-       .form-group textarea {
+       .write-form {
            width: 100%;
-           padding: 10px;
-           border: 1px solid #ddd;
+           border-collapse: collapse;
+       }
+
+       .write-form tr {
+           border-bottom: 1px solid #e5e7eb;
+       }
+
+       .write-form td {
+           padding: 15px 10px;
+       }
+
+       .write-form td:first-child {
+           width: 100px;
+           color: #666;
+           font-weight: 500;
+       }
+
+       .form-select {
+           width: 100%;
+           padding: 8px 12px;
+           border: 1px solid #d1d5db;
            border-radius: 4px;
            font-size: 14px;
-           background-color: #fff;
        }
 
-       .form-group input[type="text"]:focus,
-       .form-group select:focus,
-       .form-group textarea:focus {
-           outline: none;
-           border-color: #a855f7;
+       .form-input {
+           width: 100%;
+           padding: 8px 12px;
+           border: 1px solid #d1d5db;
+           border-radius: 4px;
+           font-size: 14px;
        }
 
-       .form-group textarea {
-           height: 300px;
+       .form-textarea {
+           width: 100%;
+           padding: 12px;
+           border: 1px solid #d1d5db;
+           border-radius: 4px;
+           min-height: 300px;
            resize: vertical;
+           font-size: 14px;
            line-height: 1.6;
        }
 
-       /* 파일 업로드 스타일 */
-       .file-upload {
-           margin-bottom: 20px;
+       .form-file {
+           padding: 8px 0;
        }
 
-       .file-upload label {
-           display: inline-block;
-           padding: 10px 20px;
-           background-color: #f0f0f0;
-           border-radius: 4px;
-           cursor: pointer;
-           margin-right: 10px;
-       }
-
-       .file-upload input[type="file"] {
-           display: none;
-       }
-
-       .file-name {
-           display: inline-block;
-           font-size: 14px;
-           color: #666;
-       }
-
-       .preview-image {
-           max-width: 200px;
+       .img-box {
            margin-top: 10px;
        }
 
-       .button-group {
-           display: flex;
-           gap: 10px;
-           justify-content: center;
-           margin-top: 30px;
+       .img-box img {
+           max-width: 200px;
+           border-radius: 4px;
        }
 
-       .submit-button {
+       .button-container {
+           display: flex;
+           justify-content: center;
+           gap: 10px;
+           margin-top: 30px;
+           padding-top: 20px;
+           border-top: 1px solid #e5e7eb;
+       }
+
+       .btn {
+           padding: 8px 20px;
+           border-radius: 4px;
+           font-size: 14px;
+           font-weight: 500;
+           cursor: pointer;
+           border: 1px solid transparent;
+       }
+
+       .btn-primary {
            background-color: #a855f7;
            color: white;
-           padding: 12px 30px;
-           border: none;
-           border-radius: 6px;
-           cursor: pointer;
-           font-size: 14px;
-           font-weight: bold;
        }
 
-       .cancel-button {
-           background-color: #666;
-           color: white;
-           padding: 12px 30px;
-           border: none;
-           border-radius: 6px;
-           cursor: pointer;
-           text-decoration: none;
-           font-size: 14px;
-           font-weight: bold;
+       .btn-primary:hover {
+           background-color: #9333ea;
        }
 
-       .submit-button:hover,
-       .cancel-button:hover {
-           opacity: 0.9;
+       .btn-light {
+           background-color: #f3f4f6;
+           color: #666;
+           border-color: #d1d5db;
+       }
+
+       .btn-light:hover {
+           background-color: #e5e7eb;
        }
 
        /* 푸터 스타일 */
@@ -208,54 +217,31 @@
            color: #a855f7;
        }
    </style>
-   <script>
-       function previewImage(input) {
-           if (input.files && input.files[0]) {
-               var reader = new FileReader();
-               reader.onload = function(e) {
-                   var preview = document.getElementById('preview');
-                   preview.src = e.target.result;
-                   preview.style.display = 'block';
-                   
-                   var fileName = document.getElementById('fileName');
-                   fileName.textContent = input.files[0].name;
-               }
-               reader.readAsDataURL(input.files[0]);
-           }
-       }
 
-       function submitForm() {
-           const f = document.writeForm;
+   <script type="text/javascript">
+       function check() {
+           const f = document.boardForm;
            
            if (!f.category.value) {
                alert("카테고리를 선택하세요.");
                f.category.focus();
-               return;
+               return false;
            }
            
            if (!f.title.value.trim()) {
                alert("제목을 입력하세요.");
                f.title.focus();
-               return;
+               return false;
            }
            
            if (!f.content.value.trim()) {
                alert("내용을 입력하세요.");
                f.content.focus();
-               return;
+               return false;
            }
            
-        	// mode가 update면 수정, 아니면 write로 설정
-        	/*
-           let mode = '${mode}';
-           if(mode === 'update') {
-               f.action = "${pageContext.request.contextPath}/lesson/update";
-           } else {
-               f.action = "${pageContext.request.contextPath}/lesson/write";
-           }
-           */
-           f.action = "${pageContext.request.contextPath}/lessonBoard/writeForm";
-           f.submit();
+           f.action = "${pageContext.request.contextPath}/lessonBoard/${mode=='update'?'update':'writeForm'}";
+           return true;
        }
    </script>
 </head>
@@ -263,7 +249,7 @@
     <header>
         <nav>
             <div class="logo">
-                <img src="#" alt="트레이니 로고">
+                <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 로고">
             </div>
             <div class="nav-links">
                 <a href="#" class="active">게시판</a>
@@ -278,50 +264,84 @@
     </header>
 
     <div class="container">
-    <h1 class="board-title">게시글 작성</h1>
-    
-    <div class="write-form">
-        <form name="writeForm" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="category">학과 선택</label>
-                <select id="category" name="category">
-                    <option value="">학과 선택</option>
-                    <option value="51">경영학</option>
-                    <option value="52">경찰행정</option>
-                    <option value="53">디자인</option>
-                    <option value="54">화학공학</option>
-                    <option value="55">컴퓨터응용전자</option>
-                    <option value="56">정보통신</option>
-                </select>
+        <div class="write-container">
+            <div class="write-title">
+                <h3>${mode=='update' ? '글수정' : '새 글 쓰기'}</h3>
             </div>
-
-            <div class="form-group">
-                <label for="title">제목</label>
-                <input type="text" id="title" name="title">
-            </div>
-
-            <div class="form-group">
-                <label for="image">첨부 파일</label>
-                <div class="file-upload">
-                    <label for="image">파일 선택</label>
-                    <input type="file" id="image" name="selectFile" accept="image/*" onchange="previewImage(this);">
-                    <span id="fileName" class="file-name">선택된 파일 없음</span>
+            
+            <form name="boardForm" method="post" enctype="multipart/form-data" onsubmit="return check();">
+                <table class="write-form">
+                    <tr>
+                        <td>학과</td>
+                        <td>
+                            <select name="category" class="form-select">
+                                <option value="">:: 학과 선택 ::</option>
+                                <option value="51" ${mode=="update" && dto.lessonNum==51 ? "selected":""}>경영학과</option>
+                                <option value="52" ${mode=="update" && dto.lessonNum==52 ? "selected":""}>경창행정과</option>
+                                <option value="53" ${mode=="update" && dto.lessonNum==53 ? "selected":""}>디자인학과</option>
+                                <option value="54" ${mode=="update" && dto.lessonNum==54 ? "selected":""}>화학공학과</option>
+                                <option value="55" ${mode=="update" && dto.lessonNum==55 ? "selected":""}>컴퓨터응용전자과</option>
+                                <option value="56" ${mode=="update" && dto.lessonNum==56 ? "selected":""}>정보통신학부</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>제목</td>
+                        <td>
+                            <input type="text" name="title" maxlength="100" class="form-input"
+                                   value="${mode=='update' ? dto.title : ''}" placeholder="제목을 입력하세요">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>작성자</td>
+                        <td>
+                            <p>${sessionScope.member.nickName}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>내용</td>
+                        <td>
+                            <textarea name="content" class="form-textarea" 
+                                      rows="12">${mode=='update' ? dto.board_content : ''}</textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>첨부</td>
+                        <td>
+                            <input type="file" name="selectFile" accept="image/*" class="form-file">
+                        </td>
+                    </tr>
+                    <c:if test="${mode=='update'}">
+                        <tr>
+                            <td>첨부된 파일</td>
+                            <td>
+                                <c:if test="${not empty dto.fileName}">
+                                    <div class="img-box">
+                                        <img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}"
+                                             alt="첨부된 이미지">
+                                    </div>
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:if>
+                </table>
+                
+                <div class="button-container">
+                    <button type="submit" class="btn btn-primary">
+                        ${mode=='update' ? '수정완료' : '등록하기'}
+                    </button>
+                    
+                    <button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list';">
+                        ${mode=='update' ? '수정취소' : '등록취소'}
+                    </button>
+                    <c:if test="${mode=='update'}">
+                        <input type="hidden" name="cm_num" value="${dto.cm_num}">
+                        <input type="hidden" name="page" value="${page}">
+                    </c:if>
                 </div>
-                <img id="preview" class="preview-image" src="#" style="display: none;">
-            </div>
-
-            <div class="form-group">
-                <label for="content">내용</label>
-                <textarea id="content" name="content"></textarea>
-            </div>
-
-            <div class="button-group">
-                <button type="button" class="submit-button" onclick="submitForm();">등록하기</button>
-                <a href="#" class="cancel-button">취소</a>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
     <footer>
         <div class="footer-content">

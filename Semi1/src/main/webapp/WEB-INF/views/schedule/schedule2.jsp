@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,12 +51,12 @@
             <table id="timetable">
                 <thead>
                     <tr>
-                        <th style="background: #E8D9FF">월</th>
-                        <th style="background: #E8D9FF">화</th>
-                        <th style="background: #E8D9FF">수</th>
-                        <th style="background: #E8D9FF">목</th>
-                        <th style="background: #E8D9FF">금</th>
-                        <th width="30px" style="background: #E8D9FF">시간</th>
+                        <th class="time-slot" id="monday" style="background: #E8D9FF">월</th>
+                        <th class="time-slot" id="tuesday" style="background: #E8D9FF">화</th>
+                        <th class="time-slot" id="wednesday" style="background: #E8D9FF">수</th>
+                        <th class="time-slot" id="thursday" style="background: #E8D9FF">목</th>
+                        <th class="time-slot" id="friday" style="background: #E8D9FF">금</th>
+                        <th class="time-slot" width="30px" style="background: #E8D9FF">시간</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,15 +92,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="vo" items="${viewSubject}">
-                    	<tr>
-	                        <td>${vo.stGrade}</td>
-	                        <td>${vo.sbNum}</td>
-	                        <td>${vo.sbName}</td>
-	                        <td>${vo.hakscore}</td>
-	                        <td>${vo.studytime}</td>
-                  	 	</tr>
-                	</c:forEach>                       
+                
+				<c:forEach var="vo" items="${viewSubject}">
+				    <tr class="modal-line" data-day="${vo.studyDay}" data-start="${vo.studytime}" data-color="${vo.color}" data-sbname="${vo.sbName}">
+				        <td>${vo.stGrade}</td>
+				        <td>${vo.sbNum}</td>
+				        <td>${vo.sbName}</td>
+				        <td>${vo.hakscore}</td>
+				        <td>${vo.studytime}</td> <!-- studyTime은 이미 String -->
+				    </tr>
+				</c:forEach>
+                	
+                	<c:if test="${empty viewSubject}">
+    					<p>수업 정보가 없습니다.</p>
+					</c:if>
+                	                   
                 </tbody>
             </table>
         </div>
