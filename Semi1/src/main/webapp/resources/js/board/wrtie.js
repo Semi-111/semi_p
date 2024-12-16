@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (fileInput) {
         fileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
-            const fileName = file?.name || '';
+            const fileName = file.name || '';
 
             const existingFileName = fileInput.parentNode.querySelector('.file-name');
             if (existingFileName) {
