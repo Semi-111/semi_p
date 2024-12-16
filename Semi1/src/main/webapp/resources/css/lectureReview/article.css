@@ -18,76 +18,24 @@ body {
 	padding: 20px;
 }
 
-/* 헤더 스타일 */
-header {
-	background: white;
-	border-bottom: 1px solid #e1e1e1;
+.star-rate {
+    display: flex;
+    margin: 2px 0px;
 }
 
-nav {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 8px 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+/* 별 회색 */
+.star-rate i {
+    font-size: 15px;
+    color: #ddd;
+    margin-right: 2px;
+    margin-top: 4px;
 }
 
-.logo img {
-	height: 45px;
-	width: auto;
-	padding: 5px 0;
+/* 별 노란색 */
+.star-rate i.active {
+    color: #ffd700;
 }
 
-.nav-links {
-	display: flex;
-	gap: 2rem;
-}
-
-.nav-links a {
-	text-decoration: none;
-	color: #666;
-	font-size: 14px;
-}
-
-.nav-links a:hover {
-	color: #a855f7;
-}
-
-.nav-links a.active {
-	color: #a855f7;
-	font-weight: bold;
-}
-
-/* 푸터 스타일 */
-footer {
-	background-color: #f9fafb;
-	padding: 2rem 1rem;
-	margin-top: 40px;
-	border-top: 1px solid #eee;
-}
-
-.footer-content {
-	max-width: 1200px;
-	margin: 0 auto;
-	font-size: 12px;
-	color: #666;
-}
-
-.footer-links {
-	margin-top: 1rem;
-	display: flex;
-	gap: 1rem;
-}
-
-.footer-links a {
-	text-decoration: none;
-	color: #666;
-}
-
-.footer-links a:hover {
-	color: #a855f7;
-}
 
 /* 게시글 상세 스타일 */
 .post-container {
