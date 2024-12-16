@@ -1,131 +1,133 @@
 package com.hyun3.domain;
 
 public class MemberDTO {
-  private Long mb_Num; // 회원번호
-  private String userId; // 아이디
-  private String pwd; // 비밀번호
-  private String name; // 이름
-  private String nickName; // 닉네임
-  private int block; // 로그인가능 여부
-  private String role; // 회원권한
-  private int hak; // 학번
-  private String ca_Day; // 회원 가입일
-  private String modifyDay; // 회원 정보 수정날짜
-  private String email; // 이메일
-  private String tel; // 전화번호
-  private String birth; // 생일
-  
-  private int lessonNum; // 이 부분 추가
+	private Long mb_Num; // 회원번호
+	private String userId; // 아이디
+	private String pwd; // 비밀번호
+	private String name; // 이름
+	private String nickName; // 닉네임
+	private int block; // 로그인가능 여부
+	private String role; // 회원권한
+	private String ca_Day; // 회원 가입일
+	private String modifyDay; // 회원 정보 수정날짜
+	private String email; // 이메일
+	private String tel; // 전화번호
+	private String birth; // 생일
 
-  public int getLessonNum() {
-	return lessonNum;
-}
+	private int studentNum; // 학번(수정)
 
-public void setLessonNum(int lessonNum) {
-	this.lessonNum = lessonNum;
-}
+	private int lessonNum; // 이 부분 추가
 
-public Long getMb_Num() {
-    return mb_Num;
-  }
+	public Long getMb_Num() {
+		return mb_Num;
+	}
 
-  public void setMb_Num(Long mb_Num) {
-    this.mb_Num = mb_Num;
-  }
+	public void setMb_Num(Long mb_Num) {
+		this.mb_Num = mb_Num;
+	}
 
-  public String getUserId() {
-    return userId;
-  }
+	public String getUserId() {
+		return userId;
+	}
 
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
 
-  public String getPwd() {
-    return pwd;
-  }
+	public String getPwd() {
+		return pwd;
+	}
 
-  public void setPwd(String pwd) {
-    this.pwd = pwd;
-  }
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
-  public String getName() {
-    return name;
-  }
+	public String getName() {
+		return name;
+	}
 
-  public void setName(String name) {
-    this.name = name;
-  }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-  public String getNickName() {
-    return nickName;
-  }
+	public String getNickName() {
+		return nickName;
+	}
 
-  public void setNickName(String nickName) {
-    this.nickName = nickName;
-  }
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
 
-  public String getRole() {
-    return role;
-  }
+	public int getBlock() {
+		return block;
+	}
 
-  public void setRole(String role) {
-    this.role = role;
-  }
+	public void setBlock(int block) {
+		this.block = block;
+	}
 
-  public int getBlock() {
-    return block;
-  }
+	public String getRole() {
+		return role;
+	}
 
-  public void setBlock(int block) {
-    this.block = block;
-  }
+	public void setRole(String role) {
+		this.role = role;
+	}
 
-  public int getHak() {
-    return hak;
-  }
+	public String getCa_Day() {
+		return ca_Day;
+	}
 
-  public void setHak(int hak) {
-    this.hak = hak;
-  }
+	public void setCa_Day(String ca_Day) {
+		this.ca_Day = ca_Day;
+	}
 
-  public String getCa_Day() {
-    return ca_Day;
-  }
+	public String getModifyDay() {
+		return modifyDay;
+	}
 
-  public void setCa_Day(String ca_Day) {
-    this.ca_Day = ca_Day;
-  }
+	public void setModifyDay(String modifyDay) {
+		this.modifyDay = modifyDay;
+	}
 
-  public String getModifyDay() {
-    return modifyDay;
-  }
+	public String getEmail() {
+		return email;
+	}
 
-  public void setModifyDay(String modifyDay) {
-    this.modifyDay = modifyDay;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public String getEmail() {
-    return email;
-  }
+	public String getTel() {
+		return tel;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
 
-  public String getTel() {
-    return tel;
-  }
+	public String getBirth() {
+		return birth;
+	}
 
-  public void setTel(String tel) {
-    this.tel = tel;
-  }
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
 
-  public String getBirth() {
-    return birth;
-  }
+	public int getStudentNum() {
+		return studentNum;
+	}
 
-  public void setBirth(String birth) {
-    this.birth = birth;
-  }
+	public void setStudentNum(int studentNum) {
+		this.studentNum = studentNum;
+	}
+
+	public int getLessonNum() {
+		return lessonNum;
+	}
+
+	public void setLessonNum(int lessonNum) {
+		this.lessonNum = lessonNum;
+	}
+
 }

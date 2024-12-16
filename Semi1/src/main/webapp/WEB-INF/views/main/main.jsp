@@ -41,14 +41,13 @@
 										<div class="MyPicture">
 											<img
 												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
-											<!-- 사진 바뀔 수 있도록 -->
+											<!-- 사진 바뀔 수 있도록.. 못해... -->
 										</div>
 										<h6>닉네임: ${sessionScope.member.name}</h6>
-										<!-- 의문. 왜 닉네임인데 이름이 나옴...? -->
 									</div>
 									<div class="profile-buttons">
 										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/mypage'">내정보</button>
+											onclick="location.href='${pageContext.request.contextPath}/member/myPage'">내정보</button>
 										<button type="button"
 											onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
 									</div>
