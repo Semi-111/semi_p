@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import com.hyun3.dao.ReportDAO;
 import com.hyun3.domain.ReportDTO;
+import com.hyun3.domain.SessionInfo;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;
@@ -19,6 +20,7 @@ import com.hyun3.mvc.view.ModelAndView;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainManageController {
@@ -30,87 +32,62 @@ public class MainManageController {
 		return mav;
 	}
 
-	// 신고페이지로 이동
-	@RequestMapping(value = "/admin/home/report", method = RequestMethod.POST)
-	public ModelAndView reportWrite(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("admin/home/report");
-
-		// 이곳에서 누가 신고당했는지 목록이 떠야함.(article.jsp 에서 신고 가능)
-		
-		return mav;
+	// 기존의 두 메소드를 하나로 합침
+	@RequestMapping(value = "/admin/home/report")
+	public ModelAndView report(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+	    ModelAndView mav = new ModelAndView("admin/home/report");
+	    
+	    try {
+	        ReportDAO dao = new ReportDAO();
+	        List<ReportDTO> list = dao.listReport();
+	        
+	        // 목록을 모델에 추가
+	        mav.addObject("list", list);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return mav;
 	}
 	
-	    // 신고 대시보드
-	    @RequestMapping(value = "/admin/report/list")
-	    public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) 
-	            throws ServletException, IOException {
+	@RequestMapping(value = "/admin/home/reportInsert", method = RequestMethod.POST)
+	public ModelAndView reportInsert(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		// 신고하기 버튼을 누르면 이곳에서 report 테이블에 데이터를 인서트. 
+		// 넘겨받는 파라미터 : 어디게시판인지(lessonNum) ? page, cm_num(게시물번호), 신고사유?, 신고내용?
+		ReportDTO dto = new ReportDTO();
+		ReportDAO dao = new ReportDAO();
+		
+		HttpSession session = req.getSession(); // 누가 신고했는지 알기위해서 세션에 저장
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		String state = "false";
+		try {
+			 // 신고 데이터 설정
+	        dto.setRP_title(req.getParameter("rpTable") + " 게시판 신고");
+	        dto.setRP_content(req.getParameter("rpContent"));
+	        dto.setRP_reason(req.getParameter("rpReason"));
+	        dto.setRP_table(req.getParameter("rpTable"));
+	        dto.setRP_url(req.getParameter("rpUrl"));
+	        dto.setMb_num(info.getMb_Num());
 	        
-	        ReportDAO dao = new ReportDAO();
-	        ModelAndView mav = new ModelAndView("admin/report/list");
-	        
-	        try {
-	            List<ReportDTO> list = dao.listReport();
-	            
-	            // 통계 데이터 계산
-	            int pendingCount = 0;
-	            int todayCount = 0;
-	            int completedCount = 0;
-	            
-	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	            String today = sdf.format(new Date());
-	            
-	            for(ReportDTO dto : list) {
-	                if("대기".equals(dto.getStatus())) {
-	                    pendingCount++;
-	                } else if("완료".equals(dto.getStatus())) {
-	                    completedCount++;
-	                }
-	                if(today.equals(dto.getReportDate())) {
-	                    todayCount++;
-	                }
-	            }
-	            
-	            // 처리율 계산
-	            double processRate = list.isEmpty() ? 0 : 
-	                (completedCount * 100.0) / list.size();
-	            
-	            mav.addObject("list", list);
-	            mav.addObject("pendingCount", pendingCount);
-	            mav.addObject("todayCount", todayCount);
-	            mav.addObject("completedCount", completedCount);
-	            mav.addObject("processRate", String.format("%.1f", processRate));
-	            
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        
-	        return mav;
-	    }
+	        dao.insertReport(dto);
+	        state = "true";
+			
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		JSONObject job = new JSONObject();
+		job.put("state", state);
+		
+		resp.setContentType("appliaction/json");
+		resp.setCharacterEncoding("uth-8");
+		PrintWriter out = resp.getWriter();
+		out.print(job.toString());
 
-	    // 신고 처리 상태 업데이트 (AJAX)
-	    @RequestMapping(value = "/admin/report/updateStatus", method = RequestMethod.POST)
-	    public void updateStatus(HttpServletRequest req, HttpServletResponse resp) 
-	            throws ServletException, IOException {
-	        
-	        ReportDAO dao = new ReportDAO();
-	        String state = "false";
-	        
-	        try {
-	            long rpNum = Long.parseLong(req.getParameter("rpNum"));
-	            String status = req.getParameter("status");
-	            
-	            //dao.updateReportStatus(rpNum, status);
-	            state = "true";
-	            
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        
-	        JSONObject job = new JSONObject();
-	        job.put("state", state);
-	        
-	        resp.setContentType("text/html;charset=utf-8");
-	        PrintWriter out = resp.getWriter();
-	        out.print(job.toString());
-	    }
+		return new ModelAndView("redirect:admin/home/main");
 	}
+
+}

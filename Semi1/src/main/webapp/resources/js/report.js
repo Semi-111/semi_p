@@ -66,7 +66,12 @@ $(function(){
             return;
         }
         
-        let url = "/report/submit";
+		let title = $(f).find("#rpTable").val() + " - " + f.rpReason.value + " 신고";
+		    
+	    const formData = new FormData(f);
+		formData.append("rpTitle", title);
+		
+        let url = "/admin/home/reportInsert"; // 이곳 주소가 정확한가?
         let query = $(f).serialize();
         
         const fn = function(data){

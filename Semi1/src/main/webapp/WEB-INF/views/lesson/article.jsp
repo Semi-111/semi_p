@@ -296,12 +296,12 @@ body {
                     <button class="btn btn-red" onclick="deleteBoard();">삭제</button>
                 </c:if>
                 <!-- 신고 버튼 수정 -->
-                <button type="button" class="btn btn-red btnReport" 
-                    data-table="lessonBoard" 
-                    data-url="${dto.cm_num}" 
-                    data-title="${dto.title}">
-                    <i class="bi bi-exclamation-triangle"></i> 신고
-                </button>
+               	 <button type="button" class="btn btn-red btnReport" 
+					    data-table="학과게시판" 
+					    data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}" 
+					    data-title="${dto.title}">
+					    <i class="bi bi-exclamation-triangle"></i> 신고
+					</button>
                 <button class="btn btn-gray" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">목록</button>
             </div>
 

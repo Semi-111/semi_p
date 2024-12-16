@@ -368,24 +368,33 @@ tr:hover {
         </div>
     </div>
 
-    <!-- 신고 상세보기 모달 -->
-    <div id="reportModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>신고 상세 내용</h2>
-            <div id="reportDetail">
-                <p><strong>신고 제목:</strong> <span id="modalTitle"></span></p>
-                <p><strong>신고 내용:</strong> <span id="modalContent"></span></p>
-                <p><strong>신고 사유:</strong> <span id="modalReason"></span></p>
-                <p><strong>게시판 분류:</strong> <span id="modalTable"></span></p>
-                <p><strong>신고자:</strong> <span id="modalReporter"></span></p>
-                <p><strong>게시글 URL:</strong> <a id="modalUrl" href="#" target="_blank"></a></p>
-            </div>
-            <div class="modal-buttons">
-                <button onclick="closeModal()" class="btn">닫기</button>
-                <button onclick="deleteReport()" class="btn btn-danger">삭제</button>
-            </div>
-        </div>
-    </div>
+		    <!-- 모달 스타일 수정 -->
+		<div id="reportModal" class="modal">
+		    <div class="modal-content">
+		        <!-- 모달 닫기 버튼 추가 -->
+		        <div class="modal-header">
+		            <h2 class="modal-title">신고 상세 내용</h2>
+		            <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+		        </div>
+		        
+		        <div id="reportDetail">
+		            <!-- 상세 내용의 레이아웃 개선 -->
+		            <div class="report-info">
+		                <p><strong>신고 제목:</strong> <span id="modalTitle"></span></p>
+		                <p><strong>신고 내용:</strong> <span id="modalContent"></span></p>
+		                <p><strong>신고 사유:</strong> <span id="modalReason"></span></p>
+		                <p><strong>게시판 분류:</strong> <span id="modalTable"></span></p>
+		                <p><strong>신고자:</strong> <span id="modalReporter"></span></p>
+		                <p><strong>게시글:</strong> <a id="modalUrl" href="#" target="_blank"></a></p>
+		            </div>
+		        </div>
+		        
+		        <div class="report-actions">
+		            <button onclick="closeModal()" class="btn btn-gray">닫기</button>
+		            <button onclick="deleteReport()" class="btn btn-danger">삭제</button>
+		        </div>
+		    </div>
+		</div>
 
     <script>
         let currentReportId = null;
