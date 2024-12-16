@@ -23,6 +23,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,23 +45,14 @@ public class InfoBoardController {
 
     return new ModelAndView("board/test");
   }
-  
-  @RequestMapping(value = "/lectureReview/list")
-  public ModelAndView list1(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    return new ModelAndView("lectureReview/list");
-  }
-
 
   @RequestMapping("/bbs/infoBoard/list")
   // http://localhost:9090/bbs/infoBoard/list?type=free - 자유게시판
   // http://localhost:9090/bbs/infoBoard/list?type=info - 정보게시판
   // 일반유저 - 40 최종관리자 - 60
   public ModelAndView handleBoardList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    // 게시글 리스트 : 파라미터 : [page], [schType, kwd]
     String boardType = req.getParameter("type");
 
-    // ModelAndView 객체 생성
     ModelAndView mav = new ModelAndView("board/list"); // 폴더명 / 파일명
 
     InfoBoardDAO dao = new InfoBoardDAO();
@@ -125,6 +122,8 @@ public class InfoBoardController {
 
       String paging = util.paging(current_page, total_page, listUrl);
 
+      formatPostDate(list);
+
       // 포워딩할 JSP에 전달할 속성
       mav.addObject("list", list);
       mav.addObject("page", current_page);
@@ -141,6 +140,8 @@ public class InfoBoardController {
     }
     return mav;
   }
+
+
 
   @RequestMapping(value = "/bbs/infoBoard/write", method = GET)
   public ModelAndView writeForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -247,7 +248,6 @@ public class InfoBoardController {
       mav.addObject("boardType", boardType);
       mav.addObject("isUserLike", isUserLike);
 
-
       // 포워딩
       return mav;
 
@@ -268,6 +268,7 @@ public class InfoBoardController {
     ModelAndView mav = new ModelAndView("board/write");
     InfoBoardDAO dao = new InfoBoardDAO();
 
+
     try {
       long cmNum = Long.parseLong(req.getParameter("cmNum"));
 
@@ -277,7 +278,9 @@ public class InfoBoardController {
         return new ModelAndView("redirect:/bbs/infoBoard/list?&type=" + boardType + "&page=" + page);
       }
 
-      if (dto.getMbNum() != info.getMb_Num()) { // 작성한 사용자가 아니라면
+
+
+      if (dto.getMbNum() != info.getMb_Num()) {
         return new ModelAndView("redirect:/bbs/infoBoard/list?&type=" + boardType + "&page=" + page);
       }
 
@@ -369,8 +372,6 @@ public class InfoBoardController {
     Map<String, Object> model = new HashMap<>();
 
     InfoBoardDAO dao = new InfoBoardDAO();
-//    HttpSession session = req.getSession();
-//    SessionInfo info = (SessionInfo) session.getAttribute("member");
     SessionInfo info = getMember(req); // member
 
     String state = "false";
@@ -435,14 +436,42 @@ public class InfoBoardController {
     } else {
       dto.setFileName(null); // 파일이 없으면 null로 설정
     }
-
-    System.out.println("Uploaded file name: " + dto.getFileName());
-
   }
 
 
   private static SessionInfo getMember(HttpServletRequest req) {
     HttpSession session = req.getSession();
     return (SessionInfo) session.getAttribute("member");
+  }
+
+  private static void formatPostDate(List<InfoBoardDTO> list) {
+    LocalDateTime now = LocalDateTime.now(); // 현재 시간
+
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+    for (InfoBoardDTO dto : list) {
+      try {
+        LocalDateTime postDate;
+
+        if (dto.getCaDate().length() == 10) {
+          LocalDate date = LocalDate.parse(dto.getCaDate(), dateFormatter);
+          postDate = date.atTime(now.getHour(), now.getMinute());
+        } else {
+          postDate = LocalDateTime.parse(dto.getCaDate(), dateTimeFormatter);
+        }
+
+        Duration duration = Duration.between(postDate, now);
+
+        if (duration.toHours() < 24) {
+          dto.setFormattedCaDate(postDate.format(timeFormatter)); // HH:mm
+        } else {
+          dto.setFormattedCaDate(postDate.format(dateFormatter)); // yyyy-MM-dd
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

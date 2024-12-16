@@ -6,6 +6,16 @@ public class SessionInfo {
 	private String name;
 	private String role;
 	private String nickName;
+	private int lessonNum;
+	
+
+	public int getLessonNum() {
+		return lessonNum;
+	}
+
+	public void setLessonNum(int lessonNum) {
+		this.lessonNum = lessonNum;
+	}
 
 	public Long getMb_Num() {
 		return mb_Num;

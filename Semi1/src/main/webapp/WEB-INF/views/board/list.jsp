@@ -9,13 +9,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><c:out value="${boardType == 'free' ? '자유게시판' : '정보게시판'}"/></title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/list.css">
+  <script src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
+
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
-  <script>
-    function searchList() {
-      const f = document.searchForm;
-      f.submit();
-    }
-  </script>
 </head>
 <body>
 
@@ -43,7 +39,7 @@
           <button type="button" onclick="searchList();">검색</button>
         </div>
       </div>
-      <button class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/write?type=${boardType}'">
+      <button type="button" class="write-button" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/write?type=${boardType}'">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 5v14M5 12h14"/>
@@ -69,7 +65,7 @@
               <span>${dto.member.nickName}</span>
               <span>조회수: ${dto.views}</span>
               <span>좋아요: ${dto.boardLikeCount}</span>
-              <span>${dto.caDate}</span>
+              <span>${dto.formattedCaDate}</span>
             </div>
           </div>
           <c:if test="${dto.fileName != null && !empty dto.fileName}">
@@ -131,9 +127,6 @@
     </ul>
   </div>
 </div>
-
-
-
 
 <footer>
   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />

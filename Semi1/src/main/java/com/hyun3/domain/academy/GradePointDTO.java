@@ -10,14 +10,21 @@ public class GradePointDTO {
 	private String sb_Name; // 과목명
 	// private String pf_Name; // 교수 이름
 	
-	private String semester; // 학기
-	private String grade_year; // 학년
+	private int semester; // 학기
+	private int grade_year; // 학년
 	private int hakscore; // 학점(1,2,3학점)
 	
 	private String grade; // 성적(A+, A, B)
 	private double gradePoint; // 평균학점(4.5)
+	private int gradeCount; // 성적별 갯수
 	
 	
+	public int getGradeCount() {
+		return gradeCount;
+	}
+	public void setGradeCount(int gradeCount) {
+		this.gradeCount = gradeCount;
+	}
 	public long getMb_Num() {
 		return mb_Num;
 	}
@@ -55,16 +62,16 @@ public class GradePointDTO {
 		this.sb_Name = sb_Name;
 	}
 	
-	public String getSemester() {
+	public int getSemester() {
 		return semester;
 	}
-	public void setSemester(String semester) {
+	public void setSemester(int semester) {
 		this.semester = semester;
 	}
-	public String getGrade_year() {
+	public int getGrade_year() {
 		return grade_year;
 	}
-	public void setGrade_year(String grade_year) {
+	public void setGrade_year(int grade_year) {
 		this.grade_year = grade_year;
 	}
 	public int getHakscore() {

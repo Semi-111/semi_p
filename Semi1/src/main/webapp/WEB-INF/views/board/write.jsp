@@ -7,11 +7,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/write.css">
+  <script src="${pageContext.request.contextPath}/resources/js/board/wrtie.js"></script>
 
   <title>게시글 작성</title>
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 
-  <script>
+<%--  <script>
     document.addEventListener("DOMContentLoaded", function () {
       window.previewImage = function (input) {
         var preview = document.getElementById('preview');
@@ -67,7 +68,7 @@
 
       f.submit();
     }
-  </script>
+  </script>--%>
 </head>
 <body>
 <header>

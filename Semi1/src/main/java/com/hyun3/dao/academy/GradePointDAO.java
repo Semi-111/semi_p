@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.hyun3.domain.academy.GradePointDTO;
 import com.hyun3.util.DBConn;
@@ -44,8 +46,8 @@ public class GradePointDAO {
 				dto.setSb_Name(rs.getString("sb_Name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 	            dto.setGrade(rs.getString("grade"));
-	            dto.setGrade_year(rs.getString("grade_year"));
-	            dto.setSemester(rs.getString("semester"));
+	            dto.setGrade_year(rs.getInt("grade_year"));
+	            dto.setSemester(rs.getInt("semester"));
 	            dto.setMb_Num(rs.getLong("mb_Num"));
 	            dto.setUserId(rs.getString("userId"));
 	            
@@ -63,7 +65,7 @@ public class GradePointDAO {
 	}
 	
 	
-	public List<GradePointDTO> findById(String userId, String gradeYear, String semester) {
+	public List<GradePointDTO> findById(String userId, int gradeYear, int semester) {
 		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -83,8 +85,8 @@ public class GradePointDAO {
 			pstmt = conn.prepareStatement(sb.toString());
 			
 			pstmt.setString(1, userId);
-			pstmt.setString(2, gradeYear);
-			pstmt.setString(3, semester);
+			pstmt.setInt(2, gradeYear);
+			pstmt.setInt(3, semester);
 			
 			rs = pstmt.executeQuery();
 			
@@ -94,8 +96,8 @@ public class GradePointDAO {
 				dto.setSb_Name(rs.getString("sb_Name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 	            dto.setGrade(rs.getString("grade"));
-	            dto.setGrade_year(rs.getString("grade_year"));
-	            dto.setSemester(rs.getString("semester"));
+	            dto.setGrade_year(rs.getInt("grade_year"));
+	            dto.setSemester(rs.getInt("semester"));
 	            dto.setMb_Num(rs.getLong("mb_Num"));
 	            dto.setUserId(rs.getString("userId"));
 	            
@@ -111,6 +113,41 @@ public class GradePointDAO {
 		
 		return list;
 	}
+	
+	public Map<String, Integer> getGradeDistribution(String userId) {
+	    Map<String, Integer> gradeDistribution = new HashMap<>();
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("SELECT grade, COUNT(*) AS gradeCount "); // 'gradeCount'라는 별칭 사용
+	        sb.append("FROM subject s ");
+	        sb.append("JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
+	        sb.append("JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
+	        sb.append("JOIN member m ON a.mb_Num = m.mb_Num ");
+	        sb.append("WHERE m.userId = ? ");
+	        sb.append("GROUP BY grade");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setString(1, userId);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	        	String grade = rs.getString("grade"); // 성적(A+, B+, ...) 데이터
+	            int count = rs.getInt("gradeCount"); // 각 성적의 개수
+	            gradeDistribution.put(grade, count); // 성적별 데이터를 맵에 추가
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return gradeDistribution;
+	}
+
 		
 	
 	public double convertGradeToPoint(String grade) {

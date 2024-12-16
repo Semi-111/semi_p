@@ -9,12 +9,29 @@ public class LectureReviewDTO {
     private String sb_Name;     // 과목명
     private String pf_Name;     // 교수 이름
     
+    private long at_Num;		// 수강번호
+    private int isWritten;		// 리뷰등록여부
+    
     private String semester;    // 학기
+
+	private long review_Num;    // 리뷰번호
     private String content;		// 리뷰 내용 
     private String reg_date;	// 작성일
     private int rating;			// 평가 점수
     
     
+	public int getIsWritten() {
+		return isWritten;
+	}
+	public void setIsWritten(int isWritten) {
+		this.isWritten = isWritten;
+	}
+	public long getAt_Num() {
+		return at_Num;
+	}
+	public void setAt_Num(long at_Num) {
+		this.at_Num = at_Num;
+	}
 	public long getMb_Num() {
 		return mb_Num;
 	}
@@ -57,6 +74,14 @@ public class LectureReviewDTO {
 	public void setSemester(String semester) {
 		this.semester = semester;
 	}
+    
+    public long getReview_Num() {
+		return review_Num;
+	}
+	public void setReview_Num(long review_Num) {
+		this.review_Num = review_Num;
+	}
+	
 	public String getContent() {
 		return content;
 	}
@@ -75,7 +100,5 @@ public class LectureReviewDTO {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-    
-    
-    
+   
 }

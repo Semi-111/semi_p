@@ -58,28 +58,43 @@ public class InfoBoardDAO {
 
   // 게시글 삭제
   public void deleteBoard(long cmNum, String userId, String role) throws SQLException {
-    String sql;
+    String deleteLikesSql = "DELETE FROM INFO_LK WHERE CM_NUM = ?";
+    String deleteBoardSql;
 
     if (Integer.parseInt(role) >= 60) { // 관리자 권한
-      sql = "DELETE FROM INFOBOARD WHERE CM_NUM = ?";
+      deleteBoardSql = "DELETE FROM INFOBOARD WHERE CM_NUM = ?";
     } else {
-      sql = "DELETE FROM INFOBOARD i " +
+      deleteBoardSql = "DELETE FROM INFOBOARD i " +
           " WHERE i.CM_NUM = ? " +
           " AND EXISTS ( " +
           "   SELECT 1 FROM MEMBER m " +
           "   WHERE m.MB_NUM = i.MB_NUM AND m.USERID = ? AND m.ROLE = ?)";
     }
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setLong(1, cmNum);
-      if (Integer.parseInt(role) < 60) {
-        ps.setString(2, userId);
-        ps.setString(3, role);
+    try {
+      conn.setAutoCommit(false);
+      try (PreparedStatement psLikes = conn.prepareStatement(deleteLikesSql)) {
+        psLikes.setLong(1, cmNum);
+        psLikes.executeUpdate();
       }
 
-      ps.executeUpdate();
+      try (PreparedStatement ps = conn.prepareStatement(deleteBoardSql)) {
+        ps.setLong(1, cmNum);
+        if (Integer.parseInt(role) < 60) {
+          ps.setString(2, userId);
+          ps.setString(3, role);
+        }
+        ps.executeUpdate();
+      }
+      conn.commit();
+    } catch (SQLException e) {
+      conn.rollback();
+      throw e;
+    } finally {
+      conn.setAutoCommit(true);
     }
   }
+
 
   // 게시글 리스트 가져오기
   public List<InfoBoardDTO> listBoard(String division, int offset, int size) {

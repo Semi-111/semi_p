@@ -32,7 +32,41 @@
 			<div class="row">
 				<!-- 왼쪽 사이드 -->
 				<div class="col-2 d-none d-lg-block" id="leftSide">
-					<div class="myPage">프로필</div>
+					<div class="profile-container">
+						<c:choose>
+							<c:when test="${sessionScope.member != null}">
+								<div class="profile">
+									<h5>나의 정보</h5>
+									<div class="profile-info">
+										<div class="MyPicture">
+											<img
+												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
+											<!-- 사진 바뀔 수 있도록 -->
+										</div>
+										<h6>닉네임: ${sessionScope.member.name}</h6>
+										<!-- 의문. 왜 닉네임인데 이름이 나옴...? -->
+									</div>
+									<div class="profile-buttons">
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/mypage'">내정보</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
+									</div>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="login-prompt">
+									<h6>커뮤티니 이용을 위해<br>로그인이 필요합니다!</h6>
+									<div class="login-buttons">
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</button>
+										<button type="button"
+											onclick="location.href='${pageContext.request.contextPath}/member/member'">회원가입</button>
+									</div>
+								</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
 					<div class="row">
 						<div class="col">
 							<div class="weather">날씨 API</div>
@@ -42,11 +76,9 @@
 						<div class="col">
 							<div class="slider">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/1.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad1.jpg">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/2.jpg">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/3.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
 							</div>
 						</div>
 					</div>
@@ -54,11 +86,9 @@
 						<div class="col">
 							<div class="slider">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/4.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad3.jpg">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/5.jpg">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/mainTest/6.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad4.jpg">
 							</div>
 						</div>
 					</div>
@@ -67,12 +97,15 @@
 				<!-- 중앙 화면 -->
 				<div class="col-7 col-lg-7" id="mainContent">
 					<div class="survey">
-						설문조사
+						<a href="/survey-page-url" target="_blank"> <img
+							src="${pageContext.request.contextPath}/resources/images/indexUI/survey1.png"
+							alt="설문조사 이미지" class="survey-image">
+						</a>
 					</div>
 					<div class="row">
 						<div class="col" id="bbs-container">
 							<div class="container text-center">
-								<div class="row row-cols-2 d-flex justify-content-center align-items-center">
+								<div class="row row-cols-2">
 									<div class="col" id="bbs">
 										<table class="board" style="border: 1px solid black">
 											<tr>

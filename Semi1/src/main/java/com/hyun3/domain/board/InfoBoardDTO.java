@@ -11,9 +11,21 @@ public class InfoBoardDTO {
   private String fileName;  // 이미지 파일 이름
   private Integer views;    // 조회수 (null 허용)
   private long mbNum;        // 회원번호
+  private String formattedCaDate;
 
   private int replyCount;
   private int boardLikeCount;
+
+
+  private MemberDTO member; // 작성자 정보 (MemberDTO)
+
+  public String getFormattedCaDate() {
+    return formattedCaDate;
+  }
+
+  public void setFormattedCaDate(String formattedCaDate) {
+    this.formattedCaDate = formattedCaDate;
+  }
 
   public void setMbNum(long mbNum) {
     this.mbNum = mbNum;
@@ -34,8 +46,6 @@ public class InfoBoardDTO {
   public void setBoardLikeCount(int likeCount) {
     boardLikeCount = likeCount;
   }
-
-  private MemberDTO member; // 작성자 정보 (MemberDTO)
 
   public MemberDTO getMember() {
     return member;

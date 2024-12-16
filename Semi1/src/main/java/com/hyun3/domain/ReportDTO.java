@@ -1,0 +1,79 @@
+package com.hyun3.domain;
+
+public class ReportDTO {
+	private long RP_num; // 신고 번호 => 시퀀스
+	private String RP_title; // 신고 제목
+	private String RP_content; // 신고내용
+	private String RP_reason; // 신고사유(음란물/욕설 등등..)
+	private String RP_table; // 게시판 분류(어디 게시판인지. 학과게시판/장터게시판 등등
+	private String RP_url; // 신고 게시판 번호 
+	private long mb_num; // 회원번호
+	
+	private String memberName; // 신고자 이름 (조인용)
+    private String reportDate; // 신고일자 
+    private String status;     // 처리상태
+	
+    
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+	public String getReportDate() {
+		return reportDate;
+	}
+	public void setReportDate(String reportDate) {
+		this.reportDate = reportDate;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public long getRP_num() {
+		return RP_num;
+	}
+	public void setRP_num(long rP_num) {
+		RP_num = rP_num;
+	}
+	public String getRP_title() {
+		return RP_title;
+	}
+	public void setRP_title(String rP_title) {
+		RP_title = rP_title;
+	}
+	public String getRP_content() {
+		return RP_content;
+	}
+	public void setRP_content(String rP_content) {
+		RP_content = rP_content;
+	}
+	public String getRP_reason() {
+		return RP_reason;
+	}
+	public void setRP_reason(String rP_reason) {
+		RP_reason = rP_reason;
+	}
+	public String getRP_table() {
+		return RP_table;
+	}
+	public void setRP_table(String rP_table) {
+		RP_table = rP_table;
+	}
+	public String getRP_url() {
+		return RP_url;
+	}
+	public void setRP_url(String rP_url) {
+		RP_url = rP_url;
+	}
+	public long getMb_num() {
+		return mb_num;
+	}
+	public void setMb_num(long mb_num) {
+		this.mb_num = mb_num;
+	}
+	
+	
+}
