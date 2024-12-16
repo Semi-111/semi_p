@@ -33,140 +33,141 @@ public class LessonController {
 	// 카테고리별 학과게시판으로 이동
 	@RequestMapping(value = "/lessonBoard/list")
 	public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	   ModelAndView mav = new ModelAndView("lesson/list");
-	   
-	   // 세션에서 사용자 정보 가져오기
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo)session.getAttribute("member");
-	    
-	    LessonDAO dao = new LessonDAO();
-	    MyUtil util = new MyUtilBootstrap();
-	    
-	    String page = req.getParameter("page");
-	    String categoryParam = req.getParameter("category");
-	    
-	    int current_page = 1;
-	    if (page != null) {
-	        current_page = Integer.parseInt(page);
-	    }
-	    
-	    // 카테고리 파라미터 처리
-	    int category = 0;
-	    if (categoryParam != null && !categoryParam.isEmpty()) {
-	        category = Integer.parseInt(categoryParam);
-	        
-	        // 관리자 권한 체크 추가
-	        int userRole = Integer.parseInt(info.getRole());
-	        
-	        // 관리자나 lessonNum이 0이 아니고, 자신의 학과가 아닌 경우
-	        if (!(userRole == 99 || info.getLessonNum() == 0) && category != 0 && category != info.getLessonNum()) {
-	            resp.setContentType("text/html;charset=utf-8");
-	            PrintWriter out = resp.getWriter();
-	            out.println("<script>");
-	            out.println("alert('타 학과 학생은 이용이 불가능합니다.');");
-	            out.println("location.href='" + req.getContextPath() + "/lessonBoard/list';");
-	            out.println("</script>");
-	            return null;
-	        }
-	    }
+		ModelAndView mav = new ModelAndView("lesson/list");
 
-	   String schType = req.getParameter("schType");
-	   String kwd = req.getParameter("kwd");
-	   if (schType == null) {
-	       schType = "all";
-	       kwd = "";
-	   }
-	   
-	   int size = 10;
-	   int total_page = 0;
-	   int dataCount = 0;
-	   
-	   try {
-	       if (category > 0) {
-	           // 카테고리별 조회
-	           dataCount = dao.dataCountByCategory(category);
-	       } else if (kwd != null && kwd.length() != 0) {
-	           // 검색어 조회
-	           dataCount = dao.dataCount(schType, kwd);
-	       } else {
-	           // 전체 조회
-	           dataCount = dao.dataCount();
-	       }
-	       
-	       total_page = util.pageCount(dataCount, size);
-	       
-	       if (current_page > total_page) {
-	           current_page = total_page;
-	       }
-	       
-	       int offset = (current_page - 1) * size;
-	       if (offset < 0) offset = 0;
-	       
-	       List<LessonDTO> list = null;
-	       
-	       if (category > 0) {
-	           // 카테고리별 리스트
-	           list = dao.listBoardByCategory(offset, size, category);
-	       } else if (kwd != null && kwd.length() != 0) {
-	           // 검색 리스트
-	           list = dao.listBoard(offset, size, schType, kwd);
-	       } else {
-	           // 전체 리스트
-	           list = dao.listBoard(offset, size);
-	       }
-	       
-	       String query = "";
-	       if (category > 0) {
-	           query = "category=" + category;
-	       } else if (kwd != null && kwd.length() != 0) {
-	           query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
-	       }
-	       
-	       String listUrl = req.getContextPath() + "/lessonBoard/list";
-	       String paginationUrl = listUrl;
-	       if (query.length() != 0) {
-	           paginationUrl += "?" + query;
-	       }
-	       
-	       String paging = util.paging(current_page, total_page, listUrl);
-	       
-	       String articleUrl = req.getContextPath() + "/lessonBoard/article?page=" + current_page;
-	       if (query.length() != 0) {
-	           articleUrl += "&" + query;
-	       }
-	       
-	       mav.addObject("list", list);
-	       mav.addObject("page", current_page);
-	       mav.addObject("total_page", total_page);
-	       mav.addObject("dataCount", dataCount);
-	       mav.addObject("size", size);
-	       mav.addObject("category", category);  // 현재 선택된 카테고리
-	       mav.addObject("paginationUrl", paginationUrl);
-	       mav.addObject("paging", paging);
-	       mav.addObject("articleUrl", articleUrl);
-	       mav.addObject("query", query);
-	       mav.addObject("userLessonNum", info.getLessonNum());  // 사용자의 학과 번호
-	       
-	   } catch (Exception e) {
-	       e.printStackTrace();
-	   }
-	   
-	   return mav;
+		// 세션에서 사용자 정보 가져오기
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		LessonDAO dao = new LessonDAO();
+		MyUtil util = new MyUtilBootstrap();
+
+		String page = req.getParameter("page");
+		String categoryParam = req.getParameter("category");
+
+		int current_page = 1;
+		if (page != null) {
+			current_page = Integer.parseInt(page);
+		}
+
+		// 카테고리 파라미터 처리
+		int category = 0;
+		if (categoryParam != null && !categoryParam.isEmpty()) {
+			category = Integer.parseInt(categoryParam);
+
+			// 관리자 권한 체크 추가
+			int userRole = Integer.parseInt(info.getRole());
+
+			// 관리자나 lessonNum이 0이 아니고, 자신의 학과가 아닌 경우
+			if (!(userRole == 99 || info.getLessonNum() == 0) && category != 0 && category != info.getLessonNum()) {
+				resp.setContentType("text/html;charset=utf-8");
+				PrintWriter out = resp.getWriter();
+				out.println("<script>");
+				out.println("alert('타 학과 학생은 이용이 불가능합니다.');");
+				out.println("location.href='" + req.getContextPath() + "/lessonBoard/list';");
+				out.println("</script>");
+				return null;
+			}
+		}
+
+		String schType = req.getParameter("schType");
+		String kwd = req.getParameter("kwd");
+		if (schType == null) {
+			schType = "all";
+			kwd = "";
+		}
+
+		int size = 10;
+		int total_page = 0;
+		int dataCount = 0;
+
+		try {
+			if (category > 0) {
+				// 카테고리별 조회
+				dataCount = dao.dataCountByCategory(category);
+			} else if (kwd != null && kwd.length() != 0) {
+				// 검색어 조회
+				dataCount = dao.dataCount(schType, kwd);
+			} else {
+				// 전체 조회
+				dataCount = dao.dataCount();
+			}
+
+			total_page = util.pageCount(dataCount, size);
+
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
+
+			int offset = (current_page - 1) * size;
+			if (offset < 0)
+				offset = 0;
+
+			List<LessonDTO> list = null;
+
+			if (category > 0) {
+				// 카테고리별 리스트
+				list = dao.listBoardByCategory(offset, size, category);
+			} else if (kwd != null && kwd.length() != 0) {
+				// 검색 리스트
+				list = dao.listBoard(offset, size, schType, kwd);
+			} else {
+				// 전체 리스트
+				list = dao.listBoard(offset, size);
+			}
+
+			String query = "";
+			if (category > 0) {
+				query = "category=" + category;
+			} else if (kwd != null && kwd.length() != 0) {
+				query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+			}
+
+			String listUrl = req.getContextPath() + "/lessonBoard/list";
+			String paginationUrl = listUrl;
+			if (query.length() != 0) {
+				paginationUrl += "?" + query;
+			}
+
+			String paging = util.paging(current_page, total_page, listUrl);
+
+			String articleUrl = req.getContextPath() + "/lessonBoard/article?page=" + current_page;
+			if (query.length() != 0) {
+				articleUrl += "&" + query;
+			}
+
+			mav.addObject("list", list);
+			mav.addObject("page", current_page);
+			mav.addObject("total_page", total_page);
+			mav.addObject("dataCount", dataCount);
+			mav.addObject("size", size);
+			mav.addObject("category", category); // 현재 선택된 카테고리
+			mav.addObject("paginationUrl", paginationUrl);
+			mav.addObject("paging", paging);
+			mav.addObject("articleUrl", articleUrl);
+			mav.addObject("query", query);
+			mav.addObject("userLessonNum", info.getLessonNum()); // 사용자의 학과 번호
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mav;
 	}
 
 	// 글쓰기 폼으로 이동
 	@RequestMapping(value = "/lessonBoard/writeForm", method = RequestMethod.GET)
 	public ModelAndView lessonWriteForm(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException, SQLException {
-	    ModelAndView mav = new ModelAndView("lesson/write");
-	    
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo)session.getAttribute("member");
-	    
-	    // 사용자의 학과 번호를 뷰로 전달
-	    
-	    mav.addObject("userLessonNum", info.getLessonNum());
-	    return mav;
+			throws ServletException, IOException, SQLException {
+		ModelAndView mav = new ModelAndView("lesson/write");
+
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		// 사용자의 학과 번호를 뷰로 전달
+
+		mav.addObject("userLessonNum", info.getLessonNum());
+		return mav;
 	}
 
 	// 글 작성
@@ -221,10 +222,12 @@ public class LessonController {
 		return new ModelAndView("redirect:/lessonBoard/list");
 	}
 
+	// 글 상세보기
 	@RequestMapping(value = "/lessonBoard/article", method = RequestMethod.GET)
 	public ModelAndView article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("lesson/article");
 		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		String page = req.getParameter("page");
 		String query = "page=" + page;
@@ -244,16 +247,29 @@ public class LessonController {
 
 		try {
 			long num = Long.parseLong(req.getParameter("cm_num"));
-			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-			// 조회수 증가
-			dao.updateHitCount(num);
-
-			// 게시물 가져오기
+			// 게시물 정보 먼저 가져오기
 			LessonDTO dto = dao.findById(num);
 			if (dto == null) {
 				return new ModelAndView("redirect:/lessonBoard/list?" + query);
 			}
+
+			// 권한 체크: 관리자(99)이거나 lessonNum이 0이 아닌 경우에만 체크
+			if (!(Integer.parseInt(info.getRole()) == 99 || info.getLessonNum() == 0)) {
+				// 게시물의 학과번호와 사용자의 학과번호가 다른 경우
+				if (dto.getLessonNum() != info.getLessonNum()) {
+					resp.setContentType("text/html;charset=utf-8");
+					PrintWriter out = resp.getWriter();
+					out.println("<script>");
+					out.println("alert('타 학과 학생의 게시물은 열람할 수 없습니다.');");
+					out.println("location.href='" + req.getContextPath() + "/lessonBoard/list';");
+					out.println("</script>");
+					return null;
+				}
+			}
+
+			// 조회수 증가
+			dao.updateHitCount(num);
 
 			// 좋아요 정보 설정
 			dto.setUserLiked(dao.getUserLike(info.getMb_Num(), num));
@@ -264,11 +280,17 @@ public class LessonController {
 			LessonDTO prevDto = dao.findByPrev(num, schType, kwd);
 			LessonDTO nextDto = dao.findByNext(num, schType, kwd);
 
+			String articleUrl = req.getContextPath() + "/lessonBoard/article?page=" + page;
+			if (query.length() != 0) {
+				articleUrl += "&" + query;
+			}
+
 			mav.addObject("dto", dto);
 			mav.addObject("page", page);
 			mav.addObject("query", query);
 			mav.addObject("prevDto", prevDto);
 			mav.addObject("nextDto", nextDto);
+			mav.addObject("articleUrl", articleUrl);
 
 		} catch (Exception e) {
 			e.printStackTrace();
