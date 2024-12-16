@@ -52,7 +52,7 @@ public class MainManageController {
 	}
 	
 	@RequestMapping(value = "/admin/home/reportInsert", method = RequestMethod.POST)
-	public ModelAndView reportInsert(HttpServletRequest req, HttpServletResponse resp)
+	public void reportInsert(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// 신고하기 버튼을 누르면 이곳에서 report 테이블에 데이터를 인서트. 
 		// 넘겨받는 파라미터 : 어디게시판인지(lessonNum) ? page, cm_num(게시물번호), 신고사유?, 신고내용?
@@ -65,7 +65,7 @@ public class MainManageController {
 		String state = "false";
 		try {
 			 // 신고 데이터 설정
-	        dto.setRP_title(req.getParameter("rpTable") + " 게시판 신고");
+	        dto.setRP_title(req.getParameter("rpTitle"));
 	        dto.setRP_content(req.getParameter("rpContent"));
 	        dto.setRP_reason(req.getParameter("rpReason"));
 	        dto.setRP_table(req.getParameter("rpTable"));
@@ -76,18 +76,19 @@ public class MainManageController {
 	        state = "true";
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			state = "false";
 		}
 		
 		JSONObject job = new JSONObject();
 		job.put("state", state);
 		
-		resp.setContentType("appliaction/json");
-		resp.setCharacterEncoding("uth-8");
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("UTF-8");
+		
 		PrintWriter out = resp.getWriter();
 		out.print(job.toString());
-
-		return new ModelAndView("redirect:admin/home/main");
+		out.flush();
 	}
 
 }

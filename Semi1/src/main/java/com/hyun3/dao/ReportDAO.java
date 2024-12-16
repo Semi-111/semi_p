@@ -22,7 +22,7 @@ public class ReportDAO {
         try {
             sql = "INSERT INTO Report(RP_num, RP_title, RP_content, RP_reason, "
                 + " RP_table, RP_url, MB_num) "
-                + " VALUES (report_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+                + " VALUES (seq_report.NEXTVAL, ?, ?, ?, ?, ?, ?)";
             
             pstmt = conn.prepareStatement(sql);
             

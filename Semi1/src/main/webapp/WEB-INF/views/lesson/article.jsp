@@ -241,6 +241,9 @@ body {
         }
     }
 </script>
+<script type="text/javascript">
+		window.contextPath = "${pageContext.request.contextPath}";
+</script>
 </head>
 <body>
     <div class="post-container">
@@ -297,11 +300,11 @@ body {
                 </c:if>
                 <!-- 신고 버튼 수정 -->
                	 <button type="button" class="btn btn-red btnReport" 
-					    data-table="학과게시판" 
-					    data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}" 
-					    data-title="${dto.title}">
-					    <i class="bi bi-exclamation-triangle"></i> 신고
-					</button>
+				    data-table="${dto.lessonNum}"
+				    data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}" 
+				    data-title="${dto.title}">
+				    <i class="bi bi-exclamation-triangle"></i> 신고
+				</button>
                 <button class="btn btn-gray" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">목록</button>
             </div>
 
