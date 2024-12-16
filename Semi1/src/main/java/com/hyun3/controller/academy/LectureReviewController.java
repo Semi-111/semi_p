@@ -43,6 +43,12 @@ public class LectureReviewController {
 			
 			mav.addObject("myLlist", myLlist);
 			
+			for(LectureReviewDTO dto : myLlist) {
+				long atNum = dto.getAt_Num();
+				int reviewCount = dao.reviewCount(atNum);
+				dto.setIsWritten(reviewCount > 0 ? 1 : 0); // 리뷰가 작성된 경우 1, 아니면 0
+			}
+			
 			
 			
 			// 리뷰 리스트
@@ -55,7 +61,7 @@ public class LectureReviewController {
 			int dataCount = dao.dataCount();
 			
 			// 전체 페이지 수
-			int size = 3;
+			int size = 10;
 			int total_page = util.pageCount(dataCount, size);
 			if(current_page > total_page) {
 				current_page = total_page;
@@ -228,9 +234,56 @@ public class LectureReviewController {
 			throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("lectureReview/article");
 		
+		LectureReviewDAO dao = new LectureReviewDAO();
+		MyUtil util = new MyUtilBootstrap();
+		
+		String page = req.getParameter("page");
+		String query = "page=" + page;
+		
+		try {
+			long reviewNum = Long.parseLong(req.getParameter("review_num"));
+			
+			// 게시물 가져오기
+			LectureReviewDTO dto = dao.findById(reviewNum);
+			if(dto == null) { // 게시물이 없으면 다시 리스트로
+				return new ModelAndView("redirect:lectureReview/list?" + query);
+			}
+			dto.setContent(util.htmlSymbols(dto.getContent()));
+			
+			mav.addObject("dto", dto);
+			mav.addObject("page", page);
+			mav.addObject("query", query);
+			
+			return mav;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		return new ModelAndView("redirect:/lectureReview/list?" + query);
+	}
+
+	
+	// 수정폼
+	@RequestMapping(value = "/lectureReview/update", method = RequestMethod.GET)
+	public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		LectureReviewDAO dao = new LectureReviewDAO();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		String page = req.getParameter("page");
+		
+		try {
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		ModelAndView mav = new ModelAndView("lectureReview/write");
 		
 		return mav;
 	}
-	
 	
 }

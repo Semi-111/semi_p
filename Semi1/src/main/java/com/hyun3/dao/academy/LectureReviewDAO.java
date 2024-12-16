@@ -37,6 +37,8 @@ public class LectureReviewDAO {
 			pstmt.setString(3, userId);
 			pstmt.setInt(4, sbNum);
 			
+			pstmt.executeUpdate();
+			
 	        // 커밋
 	        conn.commit();
 			
@@ -64,14 +66,14 @@ public class LectureReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" select s.sb_num, s.sb_name, p.pf_name ");
-			sb.append(" from member m ");
-			sb.append(" join at_subject at on m.mb_num = at.mb_num ");
-			sb.append(" join dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
-			sb.append(" join subject s on dt.sb_num = s.sb_num ");
-			sb.append(" join pf_sb ps on s.sb_num = ps.sb_num ");
-			sb.append(" join professor p on ps.pf_num = p.pf_num ");
-			sb.append(" where m.userId = ? ");
+			sb.append(" SELECT s.sb_num, s.sb_name, p.pf_name, at.at_num ");
+			sb.append(" FROM member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE m.userId = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -85,6 +87,7 @@ public class LectureReviewDAO {
 				dto.setSb_Num(rs.getLong("sb_num"));
 				dto.setSb_Name(rs.getString("sb_name"));
 				dto.setPf_Name(rs.getString("pf_name"));
+				dto.setAt_Num(rs.getLong("at_num"));
 			
 				list.add(dto);
 				
@@ -134,14 +137,14 @@ public class LectureReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" select lr.review_num, s.sb_name, p.pf_name, lr.rating, m.nickName, lr.content ");
-			sb.append(" from member m ");
-			sb.append(" join at_subject at on m.mb_num = at.mb_num ");
-			sb.append(" join lectureReview lr on at.at_num = lr.at_num ");
-			sb.append(" join dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
-			sb.append(" join subject s on dt.sb_num = s.sb_num ");
-			sb.append(" join pf_sb ps on s.sb_num = ps.sb_num ");
-			sb.append(" join professor p on ps.pf_num = p.pf_num ");
+			sb.append(" SELECT lr.review_num, s.sb_name, p.pf_name, lr.rating, ");
+			sb.append("    m.nickName, lr.content from member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
 			sb.append(" ORDER BY lr.review_num ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -199,6 +202,83 @@ public class LectureReviewDAO {
 			DBUtil.close(pstmt);
 		}
 				
+		return result;
+	}
+	
+	// 해당 게시물 보기
+	public LectureReviewDTO findById(long reviewNum) {
+		LectureReviewDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT lr.review_num, s.sb_name, p.pf_name, lr.rating, ");
+			sb.append("   m.nickName, m.userId, lr.content ");
+			sb.append(" FROM member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE lr.review_num = ? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setLong(1, reviewNum);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new LectureReviewDTO();
+				
+				dto.setReview_Num(rs.getLong("review_num"));
+				dto.setSb_Name(rs.getString("sb_name"));
+				dto.setPf_Name(rs.getString("pf_name"));
+				dto.setRating(rs.getInt("rating"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setContent(rs.getString("content"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return dto;
+	}
+	
+	public int reviewCount(long atNum) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = " SELECT count(*) cnt FROM lectureReview lr "
+				+ " JOIN at_subject at ON lr.at_num = at.at_num "
+				+ " WHERE at.at_num= ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, atNum);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("cnt");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+	
 		return result;
 	}
 	

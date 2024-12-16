@@ -12,6 +12,23 @@
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 
+<script type="text/javascript">
+
+$(function() {
+	// .lecture-list의 개수 구하기
+    var lectureCount = $('.lecture-detail .lecture-list').length;
+    
+    // 하나당 높이가 60이므로 총 높이 계산
+    var totalHeight = lectureCount * 60 + 80;
+
+    // .sidebar의 높이를 동적으로 설정
+    $('.sidebar').css("height", totalHeight + "px");	
+});
+
+
+
+</script>
+
 </head>
 <body>
 
@@ -25,28 +42,14 @@
             	<!-- 검색 바 -->
 
                 <div class="lecture-my">내 강의</div>
-                
-                
+                           
                 <div class="lecture-detail">
                 	<c:forEach var="dto" items="${myLlist}">
                 		<div class="lecture-list">
-		                    <span class="lecture-title">
-		                    	
-		                    		<!-- 강의평가가 등록된 경우 -->
-		                    		<!-- 
-		                    			<a href="${pageContext.request.contextPath}/lectureReview/article?">
-		                    				${dto.sb_Name} (수정/확인)
-		                    			</a>
-		                    		
-		                    		 -->
-		                    		
-		                    		
-		                    		<!-- 강의평가가 등록되지 않은 경우 -->
-		                    		
-				                    	<a href="${pageContext.request.contextPath}/lectureReview/write?sbNum=${dto.sb_Num}">
-				                    		${dto.sb_Name} (평가하기)
-				                    	</a>
-		                    		
+		                    <span class="lecture-title">		                    			                    		
+		                    	<a href="${pageContext.request.contextPath}/lectureReview/write?sbNum=${dto.sb_Num}">
+		                    		${dto.sb_Name} ${dto.isWritten==1 ? '(수정/확인)' : '(평가하기)'}
+		                    	</a>
 		                    </span>
 		                    <br>
 		                    <span class="professor">${dto.pf_Name}</span>
@@ -61,10 +64,10 @@
         <!-- 오른쪽 강의 평가 리스트 -->
         <div class="main-content">
         	
-            <c:forEach var="dto" items="${reviewList}">
+            <c:forEach var="dto" items="${reviewList}" varStatus="status">
             	<div class="review-list">
 	                <div class="lecture-title">
-	                	<a href="${pageContext.request.contextPath}/lectureReview/article"></a>
+	                	<a href="#"></a>
 	                	${dto.sb_Name}
 	                </div>
 	                <div class="professor">${dto.pf_Name}</div>
@@ -88,8 +91,6 @@
 function login() {
 	location.href = '${pageContext.request.contextPath}/member/login';
 }
-
-
 
 
 </script>

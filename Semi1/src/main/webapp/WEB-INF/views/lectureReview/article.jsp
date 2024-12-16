@@ -25,15 +25,15 @@
 
 		<div class="post-detail">
 			<div class="post-header">
-				<h1 class="post-title">${dto.title}</h1>
+				<h1 class="post-title">${dto.sb_Name}</h1>
 				<div class="post-meta">
 					<div class="post-info">
 						<span>작성자: ${dto.nickName}</span>
 						<hr>
-						<span>작성일: ${dto.ca_date}</span>
+						<span>작성일: </span>
 					</div>
 					<div class="post-info">
-						<span> | 조회 ${dto.views}</span>
+						<span> | 조회 </span>
 					</div>
 				</div>
 			</div>
