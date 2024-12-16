@@ -6,6 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript">
+window.contextPath = "${pageContext.request.contextPath}";
+</script>
 <title>${dto.title}-Trainee</title>
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -20,6 +23,8 @@
     <!-- 외부 css -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/lesson/article.css">
     
+    <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <script type="text/javascript">
     function deleteBoard() {
         if (confirm("게시글을 삭제하시겠습니까?")) {
@@ -29,9 +34,13 @@
         }
     }
 </script>
-<script type="text/javascript">
-		window.contextPath = "${pageContext.request.contextPath}";
+
+
+<script>
+console.log("lessonNum:", "${dto.lessonNum}");
+console.log("title:", "${dto.title}");
 </script>
+
 </head>
 <body>
     <div class="post-container">
@@ -78,21 +87,21 @@
             </div>
 
             <div class="post-actions">
-                <c:if test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role == 99}">
-                    <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/update?cm_num=${dto.cm_num}&page=${page}';">수정</button>
-                    <button class="btn btn-red" onclick="deleteBoard();">삭제</button>
-                </c:if>
-                <c:if test="${sessionScope.member.role >= 51 && sessionScope.member.role < 99 && sessionScope.member.lessonNum == dto.lessonNum}">
-                    <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/update?cm_num=${dto.cm_num}&page=${page}';">수정</button>
-                    <button class="btn btn-red" onclick="deleteBoard();">삭제</button>
-                </c:if>
+			    <c:if test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role == 60}">
+			        <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/update?cm_num=${dto.cm_num}&page=${page}';">수정</button>
+			        <button class="btn btn-red" onclick="deleteBoard();">삭제</button>
+			    </c:if>
                 <!-- 신고 버튼 수정 -->
-               	 <button type="button" class="btn btn-red btnReport" 
-				    data-table="${dto.lessonNum}"
-				    data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}" 
-				    data-title="${dto.title}">
-				    <i class="bi bi-exclamation-triangle"></i> 신고
-				</button>
+                <!-- table 자리에 divison이 들어갈까. -->
+               	 <c:if test="${not empty sessionScope.member}">
+				    <button type="button" class="btn btn-red btnReport" 
+				        data-table="lessonBoard" 
+				        data-lessonNum="${dto.lessonNum}"
+				        data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}"
+				        data-title="${dto.title}">
+				        <i class="bi bi-exclamation-triangle"></i> 신고
+				    </button>
+				</c:if>
                 <button class="btn btn-gray" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">목록</button>
             </div>
 
@@ -120,8 +129,11 @@
             </div>
         </div>
     </div>
+	
+<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 
-    <script type="text/javascript">
+<script type="text/javascript">
         function toggleLike() {
             let url = "${pageContext.request.contextPath}/lessonBoard/like";
             let query = "cm_num=${dto.cm_num}";

@@ -5,6 +5,8 @@
 <html lang="ko">
 <head>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/market/write.css">
+<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <meta charset="UTF-8">
 <title>${mode=="update"?"게시글 수정":"게시글 작성"}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,21 +62,6 @@
 </script>
 </head>
 <body>
-	<header>
-		<nav>
-			<div class="logo">
-				<img
-					src="${pageContext.request.contextPath}/resources/images/trainee.png"
-					alt="트레이니 로고">
-			</div>
-			<div class="nav-links">
-				<a href="#" class="active">게시판</a> <a href="#">시간표</a> <a href="#">학점계산기</a>
-				<a href="#">친구</a> <a href="#">공지</a> <a href="#">마이페이지</a> <a
-					href="#">맛집</a>
-			</div>
-		</nav>
-	</header>
-
 	<div class="container">
 		<h1 class="board-title">${mode=="update"?"게시글 수정":"게시글 작성"}</h1>
 

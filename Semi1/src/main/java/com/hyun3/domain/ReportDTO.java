@@ -13,7 +13,30 @@ public class ReportDTO {
     private String reportDate; // 신고일자 
     private String status;     // 처리상태
 	
+    private String postTitle;
+    private String postContent;
+    private String postWriter;
     
+    
+    
+	public String getPostTitle() {
+		return postTitle;
+	}
+	public void setPostTitle(String postTitle) {
+		this.postTitle = postTitle;
+	}
+	public String getPostContent() {
+		return postContent;
+	}
+	public void setPostContent(String postContent) {
+		this.postContent = postContent;
+	}
+	public String getPostWriter() {
+		return postWriter;
+	}
+	public void setPostWriter(String postWriter) {
+		this.postWriter = postWriter;
+	}
 	public String getMemberName() {
 		return memberName;
 	}

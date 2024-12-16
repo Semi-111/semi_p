@@ -1,26 +1,22 @@
 package com.hyun3.controller.admin;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
-
-import org.json.JSONObject;
 
 import com.hyun3.dao.ReportDAO;
 import com.hyun3.domain.ReportDTO;
-import com.hyun3.domain.SessionInfo;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
-import com.hyun3.mvc.annotation.RequestMethod;
+import com.hyun3.mvc.annotation.ResponseBody;
 import com.hyun3.mvc.view.ModelAndView;
+import com.hyun3.util.MyUtil;
+import com.hyun3.util.MyUtilBootstrap;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainManageController {
@@ -32,63 +28,109 @@ public class MainManageController {
 		return mav;
 	}
 
-	// 기존의 두 메소드를 하나로 합침
+	// 신고 목록 조회
+	
 	@RequestMapping(value = "/admin/home/report")
-	public ModelAndView report(HttpServletRequest req, HttpServletResponse resp)  throws ServletException, IOException {
+	public ModelAndView report(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	    ModelAndView mav = new ModelAndView("admin/home/report");
 	    
+	    ReportDAO dao = new ReportDAO();
+	    MyUtil util = new MyUtilBootstrap();
+
 	    try {
-	        ReportDAO dao = new ReportDAO();
-	        List<ReportDTO> list = dao.listReport();
+	        String page = req.getParameter("page");
+	        int current_page = 1;
+	        if (page != null) {
+	            current_page = Integer.parseInt(page);
+	        }
+
+	        // 검색
+	        String schType = req.getParameter("schType");
+	        String kwd = req.getParameter("kwd");
+	        if (schType == null) {
+	            schType = "all";
+	            kwd = "";
+	        }
+
+	        // GET 방식이면 디코딩
+	        if (req.getMethod().equalsIgnoreCase("GET")) {
+	            kwd = URLDecoder.decode(kwd, "utf-8");
+	        }
+
+	        // 전체 데이터 개수
+	        int dataCount;
+	        if (kwd.length() == 0) {
+	            dataCount = dao.dataCount();
+	        } else {
+	            dataCount = dao.dataCount(schType, kwd);
+	        }
+
+	        // 전체 페이지 수
+	        int size = 10;
+	        int total_page = util.pageCount(dataCount, size);
+	        if (current_page > total_page) {
+	            current_page = total_page;
+	        }
+
+	        // 게시물 가져오기
+	        int offset = (current_page - 1) * size;
+	        if (offset < 0) offset = 0;
+
+	        List<ReportDTO> list = null;
+	        if (kwd.length() == 0) {
+	            list = dao.listReport(offset, size);
+	        } else {
+	            list = dao.listReport(offset, size, schType, kwd);
+	        }
+
+	        String query = "";
+	        if (kwd.length() != 0) {
+	            query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+	        }
+
+	        // 페이징 처리
+	        String cp = req.getContextPath();
+	        String listUrl = cp + "/admin/home/report";
 	        
-	        // 목록을 모델에 추가
+	        if (query.length() != 0) {
+	            listUrl += "?" + query;
+	        }
+
+	        String paging = util.paging(current_page, total_page, listUrl);
+
+	        // JSP에 전달할 속성
 	        mav.addObject("list", list);
-	        
+	        mav.addObject("page", current_page);
+	        mav.addObject("total_page", total_page);
+	        mav.addObject("dataCount", dataCount);
+	        mav.addObject("size", size);
+	        mav.addObject("paging", paging);
+	        mav.addObject("schType", schType);
+	        mav.addObject("kwd", kwd);
+
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    
+
 	    return mav;
 	}
 	
-	@RequestMapping(value = "/admin/home/reportInsert", method = RequestMethod.POST)
-	public void reportInsert(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		// 신고하기 버튼을 누르면 이곳에서 report 테이블에 데이터를 인서트. 
-		// 넘겨받는 파라미터 : 어디게시판인지(lessonNum) ? page, cm_num(게시물번호), 신고사유?, 신고내용?
-		ReportDTO dto = new ReportDTO();
-		ReportDAO dao = new ReportDAO();
-		
-		HttpSession session = req.getSession(); // 누가 신고했는지 알기위해서 세션에 저장
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		String state = "false";
-		try {
-			 // 신고 데이터 설정
-	        dto.setRP_title(req.getParameter("rpTitle"));
-	        dto.setRP_content(req.getParameter("rpContent"));
-	        dto.setRP_reason(req.getParameter("rpReason"));
-	        dto.setRP_table(req.getParameter("rpTable"));
-	        dto.setRP_url(req.getParameter("rpUrl"));
-	        dto.setMb_num(info.getMb_Num());
+	@ResponseBody
+	@RequestMapping(value = "/admin/report/detail")
+	public ReportDTO detail(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	    ReportDTO dto = null;
+	    
+	    try {
+	        long rpNum = Long.parseLong(req.getParameter("rpNum"));
 	        
-	        dao.insertReport(dto);
-	        state = "true";
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			state = "false";
-		}
-		
-		JSONObject job = new JSONObject();
-		job.put("state", state);
-		
-		resp.setContentType("application/json");
-		resp.setCharacterEncoding("UTF-8");
-		
-		PrintWriter out = resp.getWriter();
-		out.print(job.toString());
-		out.flush();
+	        ReportDAO dao = new ReportDAO();
+	        dto = dao.findByIdWithPostInfo(rpNum);
+	        
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    }
+	    
+	    return dto;
 	}
-
 }

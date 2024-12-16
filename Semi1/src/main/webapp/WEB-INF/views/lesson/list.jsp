@@ -11,6 +11,9 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/lesson/list.css">
 
+<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+
 <script type="text/javascript">
 function checkDepartmentAccess(category) {
     const userLessonNum = ${userLessonNum};
@@ -34,20 +37,6 @@ function checkDepartmentAccess(category) {
 
 </head>
 <body>
-	<header>
-		<nav>
-			<div class="logo">
-				<img
-					src="${pageContext.request.contextPath}/resources/images/logo.png"
-					alt="트레이니 로고">
-			</div>
-			<div class="nav-links">
-				<a href="#">게시판</a> <a href="#">시간표</a> <a href="#">학점계산기</a> <a
-					href="#">친구</a> <a href="#">공지</a> <a href="#">마이페이지</a> <a
-					href="#">맛집</a>
-			</div>
-		</nav>
-	</header>
 
 	<div class="container">
 		<h1 class="board-title">학과게시판</h1>
@@ -108,9 +97,10 @@ function checkDepartmentAccess(category) {
 							<a href="${articleUrl}&cm_num=${dto.cm_num}">${dto.title}</a>
 						</h3>
 						<div class="post-info">
-							<span>작성자: ${dto.nickName}</span> <span>작성일:
-								${dto.ca_date}</span> <span>조회수: ${dto.views}</span> <span>학과:
-								${dto.lessonName}</span>
+							<span>작성자: ${dto.nickName}</span> 
+							<span>작성일: ${dto.ca_date}</span>
+							<span>조회수: ${dto.views}</span> 
+							<span>학과: ${dto.lessonName}</span>
 						</div>
 					</div>
 				</c:forEach>
@@ -152,17 +142,8 @@ function checkDepartmentAccess(category) {
 			</div>
 		</div>
 	</div>
-
-	<footer>
-		<div class="footer-content">
-			<p>씨유트레이니 주식회사</p>
-			<p>서울특별시 광도달북로21 동성빌딩 2층 | 사업자등록번호 : 123456789</p>
-			<div class="footer-links">
-				<a href="#">이용약관</a> <a href="#">개인정보처리방침</a> <a href="#">청소년보호정책</a>
-				<a href="#">커뮤니티이용규칙</a> <a href="#">공지사항</a> <a href="#">문의하기</a> <a
-					href="#">@TRAINNF</a>
-			</div>
-		</div>
-	</footer>
+	
+<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 </body>
 </html>
