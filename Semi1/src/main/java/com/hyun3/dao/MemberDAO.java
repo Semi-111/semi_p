@@ -19,12 +19,13 @@ public class MemberDAO {
 		String sql;
 
 		try {
-			sql = "SELECT mb_Num, userId, nickname, " + " role, ca_Day, modifyDay, lessonNum " + " FROM member "
+			sql = "SELECT mb_Num, userId, nickname, " + " role, ca_Day, lessonNum " + " FROM member "
 					+ " WHERE userId = ? AND pwd = ? AND block = 0";
 
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, userId);
+			System.out.println("SQL 실행 전에 전달된 pwd 값: " + pwd);
 			pstmt.setString(2, pwd);
 
 			rs = pstmt.executeQuery();
@@ -37,7 +38,6 @@ public class MemberDAO {
 				dto.setName(rs.getString("nickname"));
 				dto.setRole(rs.getString("role"));
 				dto.setCa_Day(rs.getString("ca_Day"));
-				dto.setModifyDay(rs.getString("modifyDay"));
 				dto.setLessonNum(rs.getInt("lessonNum")); // lessonNum 설정 추가
 			}
 
@@ -55,7 +55,7 @@ public class MemberDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 		// 시퀀스 값을 가져오는 SQL
-		sql = "SELECT member_seq.NEXTVAL FROM dual";
+		sql = "SELECT seq_member.NEXTVAL FROM dual";
 		pstmt = conn.prepareStatement(sql);
 		ResultSet rs = pstmt.executeQuery();
 
@@ -92,20 +92,10 @@ public class MemberDAO {
 			pstmt.setInt(6, dto.getStudentNum());
 
 			pstmt.executeUpdate();
-
-			/*
-			 * sql = "INSERT ALL " +
-			 * " INTO member(mb_Num, userId, pwd, nickName, ca_Day, modifyDay, role, lessonNum, block) VALUES (member_seq.NEXTVAL, ?, ?, ?, SYSDATE, SYSDATE, 1, ?, 1) "
-			 * +
-			 * " INTO dt_member(mb_Num, name, email, birthday, tel, studentnum) VALUES (member_seq.NEXTVAL, ?, ?, TO_DATE(?,'YYYY-MM-DD'), ?, ?) "
-			 * + " SELECT * FROM dual";
-			 * 
-			 * pstmt = conn.prepareStatement(sql);
-			 * 
-			 * ...
-			 * 
-			 * pstmt.executeUpdate();
-			 */
+			
+			System.out.println("Executing Query: " + sql);
+			System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
+			
 			conn.commit();
 
 		} catch (SQLException e) {

@@ -51,9 +51,9 @@
 			return;
 		}
 
-		str = f.userPwd.value;
+		str = f.pwd.value;
 		if (!str) {
-			f.userPwd.focus();
+			f.pwd.focus();
 			return;
 		}
 
@@ -79,7 +79,7 @@
 							</div>
 							<div class="col-12">
 								<label class="mb-1">패스워드</label> <input type="password"
-									name="userPwd" class="form-control" autocomplete="off"
+									name="pwd" class="form-control" autocomplete="off"
 									placeholder="PW">
 							</div>
 							<div class="col-12">

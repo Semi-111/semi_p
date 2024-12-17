@@ -55,7 +55,9 @@
 							</c:when>
 							<c:otherwise>
 								<div class="login-prompt">
-									<h6>커뮤티니 이용을 위해<br>로그인이 필요합니다!</h6>
+									<h6>
+										커뮤티니 이용을 위해<br>로그인이 필요합니다!
+									</h6>
 									<div class="login-buttons">
 										<button type="button"
 											onclick="location.href='${pageContext.request.contextPath}/member/login'">로그인</button>
@@ -105,26 +107,58 @@
 						<div class="col" id="bbs-container">
 							<div class="container text-center">
 								<div class="row row-cols-2">
-								
-										<div class="col-4 p-1">
-					<div>
-						<div class="fw-semibold pt-2 pb-1"><i class="bi bi-app"></i> 자유게시판</div>
-						<div class="border px-2">
-							<c:forEach var="dto" items="${listBoard}">
-								<div class="text-truncate px-2 subject-list">
-									<a href="${pageContext.request.contextPath}/lesson/article?page=1&num=${dto.num}">${dto.subject}</a>
-								</div>
-							</c:forEach>
-							<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
-								<div class="text-truncate px-2 subject-list">&nbsp;</div>
-							</c:forEach>
-						</div>
-						<div class="pt-2 text-end">
-							<a class="text-reset" href="${pageContext.request.contextPath}/lesson/list">더보기</a>
-						</div>
-					</div>
-				</div>
-				
+
+
+									<!--멍  -->
+									<div class="col-4 p-1">
+										<div class="col" id="bbs">
+											<div class="board" style="border: 1px solid black">
+												<div>
+													<h4>게시글 목록</h4>
+												</div>
+												<c:forEach var="dto" items="${listBoard}">
+													<div>
+														<a
+															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
+													</div>
+												</c:forEach>
+												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
+													<div class="text-truncate px-2 subject-list">&nbsp;</div>
+												</c:forEach>
+											</div>
+											<div class="pt-2 text-end">
+												<a class="text-reset"
+													href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-4 p-1">
+										<div>
+											<div class="fw-semibold pt-2 pb-1">
+												<i class="bi bi-app"></i> 자유게시판
+											</div>
+											<div class="border px-2">
+												<c:forEach var="dto" items="${listBoard}">
+													<div class="text-truncate px-2 subject-list">
+														<a
+															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
+													</div>
+												</c:forEach>
+												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
+													<div class="text-truncate px-2 subject-list">&nbsp;</div>
+												</c:forEach>
+											</div>
+											<div class="pt-2 text-end">
+												<a class="text-reset"
+													href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
+											</div>
+										</div>
+									</div>
+
+
 									<div class="col" id="bbs">
 										<table class="board" style="border: 1px solid black">
 											<tr>
@@ -248,8 +282,16 @@
 				<!-- 오른쪽 사이드 -->
 				<jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
 
+
+				<div class="col" id="bbs">
+					<div class="board" style="border: 1px solid black">
+						<a
+							href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=${boardType}&cmNum=${dto.cmNum}">
+							${dto.title} </a>
+					</div>
+
+				</div>
 			</div>
-		</div>
 	</form>
 
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />

@@ -53,10 +53,10 @@ h3>img {
 	        return;
 		}
 		
-		str = f.userName.value;
+		str = f.name.value;
 	    if( !/^[가-힣]{2,5}$/.test(str) ) {
 	        alert("이름을 다시 입력하세요. ");
-	        f.userName.focus();
+	        f.name.focus();
 	        return;
 	    }
 	    
@@ -232,9 +232,9 @@ h3>img {
 						</div>
 
 						<div class="row mb-3">
-							<label class="col-sm-2 col-form-label" for="userName">이름</label>
+							<label class="col-sm-2 col-form-label" for="name">이름</label>
 							<div class="col-sm-7">
-								<input type="text" name="userName" id="userName"
+								<input type="text" name="name" id="name"
 									class="form-control" value="${dto.name}"
 									${mode=="update" ? "readonly ":""} placeholder="이름">
 							</div>

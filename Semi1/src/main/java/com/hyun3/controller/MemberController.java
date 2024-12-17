@@ -26,6 +26,7 @@ public class MemberController {
 	@RequestMapping(value = "/member/login", method = GET)
 	public ModelAndView loginForm(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
 		// 로그인 폼
 		ModelAndView mav = new ModelAndView("member/login");
 		return mav;
@@ -35,17 +36,20 @@ public class MemberController {
 	public ModelAndView loginSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// 로그인 처리
-
+		    
 		// 세션 객체
 		HttpSession session = req.getSession();
 
 		MemberDAO dao = new MemberDAO();
 
 		// 클라이언트가 보낸 아이디/패스워드
+		req.setCharacterEncoding("UTF-8"); // 요청 데이터의 인코딩 설정
 		String userId = req.getParameter("userId");
-		String userPwd = req.getParameter("userPwd");
+		String pwd = req.getParameter("pwd");
 
-		MemberDTO dto = dao.loginMember(userId, userPwd);
+		MemberDTO dto = dao.loginMember(userId, pwd);
+		System.out.println("로그인 요청 userId: " + userId);
+		System.out.println("로그인 요청 pwd: " + pwd);
 		if (dto != null) {
 			// 로그인 성공한 경우
 			// 세션에 아이디, 이름, 권한등을 저장
@@ -59,6 +63,7 @@ public class MemberController {
 			info.setUserId(dto.getUserId());
 			info.setName(dto.getName());
 			info.setRole(dto.getRole());
+			info.setNickName(dto.getNickName());
 			info.setLessonNum(dto.getLessonNum()); // 이 부분 추가 - 선웅
 
 			// 세션에 member 라는 이름으로 로그인 정보를 저장
@@ -107,12 +112,10 @@ public class MemberController {
 		// 세션에서 사용자 정보 가져오기
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		/* -- 만약 상단바에 마이페이지 배치할 경우, 아래코드 필요
-		if (info == null) {
-		    // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-		    return new ModelAndView("redirect:/member/login");
-		}
-		*/
+		/*
+		 * -- 만약 상단바에 마이페이지 배치할 경우, 아래코드 필요 if (info == null) { // 로그인하지 않은 경우 로그인 페이지로
+		 * 리다이렉트 return new ModelAndView("redirect:/member/login"); }
+		 */
 		// 사용자 정보를 ModelAndView에 추가
 		ModelAndView mav = new ModelAndView("member/myPage");
 		mav.addObject("memberInfo", info);
@@ -152,6 +155,7 @@ public class MemberController {
 			dto.setUserId(req.getParameter("userId"));
 			dto.setPwd(req.getParameter("pwd"));
 			dto.setName(req.getParameter("name"));
+			System.out.println(req.getParameter("name"));
 			dto.setNickName(req.getParameter("nickName"));
 			dto.setBirth(req.getParameter("birth"));
 			dto.setEmail(req.getParameter("email"));
@@ -171,6 +175,7 @@ public class MemberController {
 			} else if (e.getErrorCode() == 1840 || e.getErrorCode() == 1861) {
 				message = "날짜 형식이 일치하지 않습니다.";
 			} else {
+				e.printStackTrace();
 				message = "회원 가입이 실패 했습니다.";
 				// 기타 - 2291:참조키 위반, 12899:폭보다 문자열 입력 값이 큰경우
 			}
@@ -326,7 +331,7 @@ public class MemberController {
 		String userId = req.getParameter("userId");
 		MemberDTO dto = dao.findById(userId);
 		String passed = "false";
-		
+
 		if (dto == null) {
 			passed = "true";
 		}
