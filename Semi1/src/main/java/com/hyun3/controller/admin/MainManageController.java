@@ -11,6 +11,7 @@ import com.hyun3.dao.ReportDAO;
 import com.hyun3.domain.ReportDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.RequestMethod;
 import com.hyun3.mvc.annotation.ResponseBody;
 import com.hyun3.mvc.view.ModelAndView;
 import com.hyun3.util.MyUtil;
@@ -141,6 +142,36 @@ public class MainManageController {
 				model.put("postTitle", dto.getPostTitle());
 				model.put("postContent", dto.getPostContent());
 				model.put("postWriter", dto.getPostWriter());
+			} else {
+				model.put("state", "false");
+			}
+
+		} catch (Exception e) {
+			model.put("state", "false");
+			e.printStackTrace();
+		}
+
+		return model;
+	}
+
+	// 유저 차단 - AJAX
+	@ResponseBody
+	@RequestMapping(value = "/admin/report/block", method = RequestMethod.POST)
+	public Map<String, Object> block(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		Map<String, Object> model = new HashMap<>();
+
+		try {
+			long rpNum = Long.parseLong(req.getParameter("rpNum"));
+			ReportDAO dao = new ReportDAO();
+
+			// 신고글 정보 조회 (게시글 작성자의 mb_num 포함)
+			ReportDTO dto = dao.findByIdWithPostInfo(rpNum);
+
+			if (dto != null) {
+				// 게시글 작성자 차단
+				dao.userBlock(dto.getPostWriterNum());
+				model.put("state", "success");
 			} else {
 				model.put("state", "false");
 			}
