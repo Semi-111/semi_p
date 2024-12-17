@@ -521,6 +521,8 @@ function blockUser() {
             if(data.state === 'success') {
                 alert('사용자가 차단되었습니다.');
                 location.reload();
+            } else {
+                alert('차단 처리 중 오류가 발생했습니다.');
             }
         });
     }

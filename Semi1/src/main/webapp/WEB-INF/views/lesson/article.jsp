@@ -92,12 +92,11 @@ console.log("title:", "${dto.title}");
 			        <button class="btn btn-red" onclick="deleteBoard();">삭제</button>
 			    </c:if>
                 <!-- 신고 버튼 수정 -->
-                <!-- table 자리에 divison이 들어갈까. -->
                	 <c:if test="${not empty sessionScope.member}">
 				    <button type="button" class="btn btn-red btnReport" 
 				        data-table="lessonBoard" 
-				        data-lessonNum="${dto.lessonNum}"
-				        data-url="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}"
+				        data-num="${dto.cm_num}"  
+				        data-mb-num="${dto.mb_num}" 
 				        data-title="${dto.title}">
 				        <i class="bi bi-exclamation-triangle"></i> 신고
 				    </button>

@@ -16,10 +16,10 @@ window.addEventListener('DOMContentLoaded', function() {
                <h3>신고하기</h3>
                <span class="close">&times;</span>
                <form name="reportForm">
-                   <input type="hidden" name="rpTable" id="rpTable">
-                   <input type="hidden" name="rpUrl" id="rpUrl">
-                   <input type="hidden" name="rpTitle" id="rpTitle">
-                   <input type="hidden" name="cm_num" id="rpCm_num">
+			  	   <input type="hidden" name="rpTable" id="rpTable">
+			       <input type="hidden" name="rpTitle" id="rpTitle">
+			       <input type="hidden" name="rpTargetNum" id="rpTargetNum">     <!-- 추가 -->
+			       <input type="hidden" name="rpTargetMbNum" id="rpTargetMbNum"> <!-- 추가 -->
                    <div class="form-group">
                        <label>신고 사유</label>
                        <select name="rpReason" class="form-select">
@@ -51,14 +51,15 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // 신고 버튼 클릭 이벤트 
 $(document).on("click", ".btnReport", function(){
-   let table = $(this).data("table");
-   let url = $(this).data("url");
-   let title = $(this).data("title");
+	let table = $(this).data("table");
+	let targetNum = $(this).data("num");      // 게시글 번호
+	let targetMbNum = $(this).data("mb-num"); // 작성자 번호  
+	let title = $(this).data("title");
 
    $("#rpTable").val(table);
-   $("#rpUrl").val(url);
    $("#rpTitle").val(title);
-   $("textarea[name='rpContent']").val("신고 게시글: " + title + "\n신고 사유: ");
+   $("#rpTargetNum").val(targetNum);        
+   $("#rpTargetMbNum").val(targetMbNum);     
 
    document.getElementById('reportModal').style.display = 'block';
 });
@@ -82,12 +83,14 @@ $(document).on("click", ".btnSendReport", function() {
    let query = {
        rpTitle:  f.rpTitle.value,
        rpTable: f.rpTable.value,
-       rpUrl: f.rpUrl.value, 
        rpReason: f.rpReason.value,
-       rpContent: f.rpContent.value
+       rpContent: f.rpContent.value,
+	   rpTargetNum: f.rpTargetNum.value,     // 추가
+	   rpTargetMbNum: f.rpTargetMbNum.value  // 추가
    };
 
    console.log("=== Report Send Debug ===");
+   console.log("전송되는 데이터:", query);  // 디버깅용
    console.log("form 데이터:", query);
 
    $.ajax({

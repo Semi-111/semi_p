@@ -21,14 +21,11 @@ public class ReportController {
 	// 신고 등록
 	@ResponseBody
 	@RequestMapping(value = "/report/insert", method = RequestMethod.POST)
-    public Map<String, Object> reportInsert(HttpServletRequest req, HttpServletResponse resp) {
-		
+	public Map<String, Object> reportInsert(HttpServletRequest req, HttpServletResponse resp) {
 		Map<String, Object> model = new HashMap<String, Object>();
-
 		try {
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-
 			if (info == null) {
 				model.put("state", "false");
 				model.put("message", "로그인이 필요합니다.");
@@ -36,26 +33,31 @@ public class ReportController {
 			}
 
 			ReportDTO dto = new ReportDTO();
-			ReportDAO dao = new ReportDAO();
-
 			dto.setRP_title(req.getParameter("rpTitle"));
 			dto.setRP_content(req.getParameter("rpContent"));
 			dto.setRP_reason(req.getParameter("rpReason"));
 			dto.setRP_table(req.getParameter("rpTable"));
-			dto.setRP_url(req.getParameter("rpUrl"));
-			dto.setMb_num(info.getMb_Num());
+			dto.setMb_num(info.getMb_Num()); // 신고자 번호
 
+			// 추가된 필드들
+			dto.setTargetNum(Long.parseLong(req.getParameter("rpTargetNum"))); // 신고된 글번호
+			dto.setTargetMbNum(Long.parseLong(req.getParameter("rpTargetMbNum"))); // 신고된 작성자번호
+
+			ReportDAO dao = new ReportDAO();
 			dao.insertReport(dto);
 
 			model.put("state", "true");
 			model.put("message", "신고가 접수되었습니다.");
 
-		} catch (Exception e) {
-			System.out.println("Controller Error: " + e.getMessage());
-			e.printStackTrace();
-			model.put("state", "false");
-			model.put("message", "신고 처리 중 오류가 발생했습니다.");
-		}
+		} catch (NumberFormatException e) {
+	        model.put("state", "false");
+	        model.put("message", "잘못된 데이터 형식입니다.");
+	        e.printStackTrace();
+	    } catch (Exception e) {
+	        model.put("state", "false");
+	        model.put("message", "신고 처리 중 오류가 발생했습니다.");
+	        e.printStackTrace();
+	    }
 
 		return model;
 	}

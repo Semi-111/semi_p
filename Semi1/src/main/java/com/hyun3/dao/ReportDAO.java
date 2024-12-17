@@ -19,12 +19,10 @@ public class ReportDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 
-		System.out.println("DAO insert 시도:");
-		System.out.println("제목: " + dto.getRP_title());
-		System.out.println("내용: " + dto.getRP_content());
+		// target_num 은 신고당한 글번호
 		try {
-			sql = "INSERT INTO Report(RP_num, RP_title, RP_content, RP_reason, " + " RP_table, RP_url, MB_num) "
-					+ " VALUES (seq_report.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+			sql = "INSERT INTO report( RP_num, RP_title, RP_content, RP_reason, RP_table, MB_num, target_num, target_mb_num) "
+					+ " VALUES (seq_report.NEXTVAL, ?, ?, ?, ?,?, ?, ?) ";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -32,14 +30,13 @@ public class ReportDAO {
 			pstmt.setString(2, dto.getRP_content());
 			pstmt.setString(3, dto.getRP_reason());
 			pstmt.setString(4, dto.getRP_table());
-			pstmt.setString(5, dto.getRP_url());
-			pstmt.setLong(6, dto.getMb_num());
+			pstmt.setLong(5, dto.getMb_num());
+			pstmt.setLong(6, dto.getTargetNum());
+			pstmt.setLong(7, dto.getTargetMbNum());
 
 			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-			System.out.println("SQL State: " + e.getSQLState());
 			e.printStackTrace();
 			throw e;
 		} finally {
@@ -47,7 +44,6 @@ public class ReportDAO {
 		}
 	}
 
-	// 신고 목록
 	public List<ReportDTO> listReport() {
 		List<ReportDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -56,10 +52,11 @@ public class ReportDAO {
 
 		try {
 			sb.append("SELECT r.RP_num, r.RP_title, r.RP_content, ");
-			sb.append("    r.RP_reason, r.RP_table, r.RP_url, ");
-			sb.append("    r.MB_num, m.nickName ");
+			sb.append("    r.RP_reason, r.RP_table, r.target_num, r.target_mb_num, "); // url 제거, target 컬럼 추가
+			sb.append("    r.MB_num, m1.nickName memberName, m2.nickName postWriter "); // postWriter 추가
 			sb.append(" FROM Report r ");
-			sb.append(" JOIN Member m ON r.MB_num = m.MB_num ");
+			sb.append(" JOIN Member m1 ON r.MB_num = m1.MB_num "); // 신고자 정보
+			sb.append(" JOIN Member m2 ON r.target_mb_num = m2.MB_num "); // 신고당한 사람 정보
 			sb.append(" ORDER BY r.RP_num DESC ");
 
 			pstmt = conn.prepareStatement(sb.toString());
@@ -73,9 +70,11 @@ public class ReportDAO {
 				dto.setRP_content(rs.getString("RP_content"));
 				dto.setRP_reason(rs.getString("RP_reason"));
 				dto.setRP_table(rs.getString("RP_table"));
-				dto.setRP_url(rs.getString("RP_url"));
+				dto.setTargetNum(rs.getLong("target_num")); // 추가
+				dto.setTargetMbNum(rs.getLong("target_mb_num")); // 추가
 				dto.setMb_num(rs.getLong("MB_num"));
-				dto.setMemberName(rs.getString("nickName"));
+				dto.setMemberName(rs.getString("memberName"));
+				dto.setPostWriter(rs.getString("postWriter")); // 추가
 
 				list.add(dto);
 			}
@@ -229,10 +228,11 @@ public class ReportDAO {
 
 		try {
 			sb.append("SELECT r.RP_num, r.RP_title, r.RP_content, ");
-			sb.append("    r.RP_reason, r.RP_table, r.RP_url, ");
-			sb.append("    r.MB_num, m.nickName ");
+			sb.append("    r.RP_reason, r.RP_table, r.target_num, r.target_mb_num, "); // url 제거, target 컬럼 추가
+			sb.append("    r.MB_num, m1.nickName memberName, m2.nickName postWriter "); // postWriter 추가
 			sb.append(" FROM Report r ");
-			sb.append(" JOIN Member m ON r.MB_num = m.MB_num ");
+			sb.append(" JOIN Member m1 ON r.MB_num = m1.MB_num "); // 신고자 정보
+			sb.append(" JOIN Member m2 ON r.target_mb_num = m2.MB_num "); // 신고당한 사람 정보
 			sb.append(" ORDER BY r.RP_num DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 
@@ -251,9 +251,11 @@ public class ReportDAO {
 				dto.setRP_content(rs.getString("RP_content"));
 				dto.setRP_reason(rs.getString("RP_reason"));
 				dto.setRP_table(rs.getString("RP_table"));
-				dto.setRP_url(rs.getString("RP_url"));
+				dto.setTargetNum(rs.getLong("target_num")); // 추가
+				dto.setTargetMbNum(rs.getLong("target_mb_num")); // 추가
 				dto.setMb_num(rs.getLong("MB_num"));
-				dto.setMemberName(rs.getString("nickName"));
+				dto.setMemberName(rs.getString("memberName"));
+				dto.setPostWriter(rs.getString("postWriter")); // 추가
 
 				list.add(dto);
 			}
@@ -338,39 +340,52 @@ public class ReportDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
-		
+
 		try {
-			
-			// rp_url 컬럼 삭제
-			sb.append("SELECT r.RP_num, r.RP_title, r.RP_content, r.RP_reason, ");
-	        sb.append("    r.RP_table, r.MB_num, r.target_mb_num, ");
-	        sb.append("    m1.nickName memberName, m2.nickName postWriter ");
+			// 게시판 종류에 따라 동적으로 조인하는 쿼리 작성
+	        sb.append("SELECT r.RP_num, r.RP_title, r.RP_content, r.RP_reason, ");
+	        sb.append("    r.RP_table, r.MB_num, r.target_num, r.target_mb_num, ");
+	        sb.append("    m1.nickName memberName, m2.nickName postWriter, ");
+	        sb.append("    CASE r.RP_table ");
+	        sb.append("        WHEN 'lessonBoard' THEN (SELECT title FROM lessonBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'eventBoard' THEN (SELECT title FROM eventBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'infoBoard' THEN (SELECT title FROM infoBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'secretBoard' THEN (SELECT title FROM secretBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'studentBoard' THEN (SELECT title FROM studentBoard WHERE cm_num = r.target_num) ");
+	        sb.append("    END as postTitle, ");
+	        sb.append("    CASE r.RP_table ");
+	        // content 컬럼명 수정 - lessonBoard 테이블은 content로 수정
+	        sb.append("        WHEN 'lessonBoard' THEN (SELECT content FROM lessonBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'eventBoard' THEN (SELECT content FROM eventBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'infoBoard' THEN (SELECT content FROM infoBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'secretBoard' THEN (SELECT content FROM secretBoard WHERE cm_num = r.target_num) ");
+	        sb.append("        WHEN 'studentBoard' THEN (SELECT content FROM studentBoard WHERE cm_num = r.target_num) ");
+	        sb.append("    END as postContent ");
 	        sb.append(" FROM Report r ");
-	        sb.append(" JOIN Member m1 ON r.MB_num = m1.MB_num ");  // 신고자 정보
-	        sb.append(" JOIN Member m2 ON r.target_mb_num = m2.MB_num ");  // 신고당한 사람 정보
+	        sb.append(" JOIN Member m1 ON r.MB_num = m1.MB_num ");
+	        sb.append(" JOIN Member m2 ON r.target_mb_num = m2.MB_num ");
 	        sb.append(" WHERE r.RP_num = ?");
-			
-	        pstmt = conn.prepareStatement(sb.toString());
-	        pstmt.setLong(1, rpNum);
-	        rs = pstmt.executeQuery();
+
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setLong(1, rpNum);
+
+			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
 				dto = new ReportDTO();
 
 				dto.setRP_num(rs.getLong("RP_num"));
-	            dto.setRP_title(rs.getString("RP_title"));
-	            dto.setRP_content(rs.getString("RP_content"));
-	            dto.setRP_reason(rs.getString("RP_reason"));
-	            dto.setRP_table(rs.getString("RP_table"));
-	            dto.setMb_num(rs.getLong("MB_num"));
-	            dto.setTargetMbNum(rs.getLong("target_mb_num"));
-	            dto.setMemberName(rs.getString("memberName"));
-	            dto.setPostWriter(rs.getString("postWriter"));
-
-				// 게시글 정보
+				dto.setRP_title(rs.getString("RP_title"));
+				dto.setRP_content(rs.getString("RP_content"));
+				dto.setRP_reason(rs.getString("RP_reason"));
+				dto.setRP_table(rs.getString("RP_table"));
+				dto.setMb_num(rs.getLong("MB_num"));
+				dto.setTargetNum(rs.getLong("target_num"));
+				dto.setTargetMbNum(rs.getLong("target_mb_num"));
+				dto.setMemberName(rs.getString("memberName"));
+				dto.setPostWriter(rs.getString("postWriter"));
 				dto.setPostTitle(rs.getString("postTitle"));
 				dto.setPostContent(rs.getString("postContent"));
-				dto.setPostWriter(rs.getString("postWriter"));
 			}
 		} finally {
 			DBUtil.close(rs);
@@ -381,19 +396,21 @@ public class ReportDAO {
 	}
 
 	// 사용자 block 처리 차단
-	public void userBlock(long mb_num) throws SQLException {
+	public void userBlock(long target_mb_num) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "UPDATE member SET block = 1 WHERE MB_num = ?";
-			pstmt = conn.prepareStatement(sql);
+			sql = "UPDATE Member SET Block = 1 WHERE MB_num = ?";
 
-			pstmt.setLong(1, mb_num);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, target_mb_num);
 
 			pstmt.executeUpdate();
-		} catch (Exception e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			DBUtil.close(pstmt);
 		}
