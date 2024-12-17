@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>트레니 에브리타임</title>
-<%-- 
+<%--
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap5/css/bootstrap.min.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
@@ -118,9 +118,9 @@
 												</div>
 												<c:forEach var="dto" items="${listBoard}">
 													<div>
-														<a
-															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
+														<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+															${dto.title}
+														 </a>
 													</div>
 												</c:forEach>
 												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
@@ -142,9 +142,9 @@
 											<div class="border px-2">
 												<c:forEach var="dto" items="${listBoard}">
 													<div class="text-truncate px-2 subject-list">
-														<a
-															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
+														<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+															${dto.title}
+														</a>
 													</div>
 												</c:forEach>
 												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
@@ -285,14 +285,22 @@
 
 				<div class="col" id="bbs">
 					<div class="board" style="border: 1px solid black">
-						<a
-							href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=${boardType}&cmNum=${dto.cmNum}">
-							${dto.title} </a>
+						<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+							${dto.title}
+							</a>
 					</div>
 
 				</div>
 			</div>
 	</form>
+
+
+	<div>
+			<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=195&page=1">
+															${dto.title}
+														</a>
+	</div>
+
 
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />

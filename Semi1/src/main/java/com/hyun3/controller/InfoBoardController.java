@@ -1,10 +1,25 @@
 package com.hyun3.controller;
 
+import static com.hyun3.mvc.annotation.RequestMethod.GET;
+import static com.hyun3.mvc.annotation.RequestMethod.POST;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.hyun3.dao.board.InfoBoardDAO;
 import com.hyun3.domain.SessionInfo;
 import com.hyun3.domain.board.InfoBoardDTO;
 import com.hyun3.domain.board.ReplyDTO;
-import com.hyun3.domain.board.StudentBoardDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.ResponseBody;
@@ -13,31 +28,12 @@ import com.hyun3.util.FileManager;
 import com.hyun3.util.MyMultipartFile;
 import com.hyun3.util.MyUtil;
 import com.hyun3.util.MyUtilBootstrap;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static com.hyun3.mvc.annotation.RequestMethod.*;
-import static jakarta.servlet.http.HttpServletResponse.*;
-import static java.nio.charset.StandardCharsets.*;
 
 @Controller
 public class InfoBoardController {

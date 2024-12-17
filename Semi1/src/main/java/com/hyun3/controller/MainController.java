@@ -36,13 +36,13 @@ public class MainController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		/*
 		 * StudentBoardDAO studentdao = new StudentBoardDAO(); String boardType =
 		 * req.getParameter("type"); List<StudentBoardDTO> listBoard =
 		 * studentdao.listBoard(boardType, 0, 5, , );
 		 */
-		
+
 
 		mav.addObject("listBoard", listBoard);
 		return mav;
