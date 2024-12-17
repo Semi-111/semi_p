@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>spring</title>
+<title>TRAINEE</title>
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
@@ -20,10 +20,10 @@
 function sendOk() {
 	const f = document.pwdForm;
 
-	let str = f.userPwd.value;
+	let str = f.pwd.value;
 	if(!str) {
 		alert("패스워드를 입력하세요. ");
-		f.userPwd.focus();
+		f.pwd.focus();
 		return;
 	}
 
@@ -58,7 +58,7 @@ function sendOk() {
 	                            		readonly>
 	                        </div>
 	                        <div class="d-grid">
-	                            <input type="password" name="userPwd" class="form-control form-control-lg" autocomplete="off" placeholder="패스워드">
+	                            <input type="password" name="pwd" class="form-control form-control-lg" autocomplete="off" placeholder="패스워드">
 	                        </div>
 	                        <div class="d-grid">
 	                            <button type="button" class="btn btn-lg btn-primary" onclick="sendOk();">확인 <i class="bi bi-check2"></i> </button>

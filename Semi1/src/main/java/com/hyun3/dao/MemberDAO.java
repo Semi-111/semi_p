@@ -93,8 +93,7 @@ public class MemberDAO {
 
 			pstmt.executeUpdate();
 			
-			System.out.println("Executing Query: " + sql);
-			System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
+			//System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
 			
 			conn.commit();
 
@@ -210,6 +209,22 @@ public class MemberDAO {
 			if (rs.next()) {
 				long mb_Num = rs.getLong("mb_Num");
 
+				/*
+				sql = "UPDATE member SET pwd = ?, modifyDay = SYSDATE WHERE userId = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, dto.getPwd());
+                pstmt.setString(2, dto.getUserId());
+                pstmt.executeUpdate();
+
+                sql = "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, dto.getEmail());
+                pstmt.setString(2, dto.getBirth());
+                pstmt.setString(3, dto.getTel());
+                pstmt.setLong(4, mb_Num);
+                pstmt.executeUpdate();
+                */
+				
 				// 2. dt_member 테이블 업데이트
 				sql = "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?";
 				pstmt = conn.prepareStatement(sql);

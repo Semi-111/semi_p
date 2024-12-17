@@ -17,8 +17,6 @@
 	display: flex;
 	justify-content: center; /* 수평 가운데 */
 	/* align-items: center; //수직 가운데 */
-	margin-top: 100px;
-	margin-bottom: 100px;
 }
 
 .border {

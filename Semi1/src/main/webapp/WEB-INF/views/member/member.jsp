@@ -13,11 +13,38 @@
 <style type="text/css">
 .body-container {
 	max-width: 800px;
-	margin-top: 80px;
+	margin: 10px auto;
+	padding: 20px;
+	background: #FCFCFC;
+	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15), 0 3px 3px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.body-container:hover {
+	transform: scale(1.01);
+	box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
 }
 
 h3>img {
 	width: 30px;
+}
+
+.custom-btn {
+	width: 130px;
+	background-color: #F6EFFA;
+	color: #743394;
+	font-size: 14px;
+	border: 1px solid #8235B6;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	background-color: #F6EFFA;
+	margin-top: 2px;
+}
+
+.custom-btn:hover {
+	background-color: #D5C3E5;
+	color: #000;
 }
 </style>
 
@@ -197,7 +224,7 @@ h3>img {
 										<input type="hidden" name="userIdValid" id="userIdValid"
 											value="false">
 										<c:if test="${mode=='member'}">
-											<button type="button" class="btn btn-light"
+											<button type="button" class="btn custom-btn"
 												onclick="userIdCheck();">아이디중복검사</button>
 										</c:if>
 
@@ -205,7 +232,7 @@ h3>img {
 								</div>
 								<c:if test="${mode=='member'}">
 									<small class="form-control-plaintext help-block">아이디는
-										5~8자 이내이며, 첫글자는 영문자로 시작해야 합니다.</small>
+										5~8자이며, 첫글자는 영문자로 시작해야 합니다.</small>
 								</c:if>
 							</div>
 						</div>
@@ -234,9 +261,11 @@ h3>img {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label" for="name">이름</label>
 							<div class="col-sm-7">
-								<input type="text" name="name" id="name"
-									class="form-control" value="${dto.name}"
-									${mode=="update" ? "readonly ":""} placeholder="이름">
+								<input type="text" name="name" id="name" class="form-control"
+									value="${dto.name}" ${mode=="update" ? "readonly ":""}
+									placeholder="이름"> <small
+									class="form-control-plaintext help-block">이름은 한글만
+									가능합니다.</small>
 							</div>
 						</div>
 
@@ -246,7 +275,8 @@ h3>img {
 								<input type="text" name="nickName" id="nickName"
 									class="form-control" value="${dto.nickName}"
 									${mode=="update" ? "readonly" : ""} placeholder="닉네임">
-								<small class="form-control-plaintext">닉네임은 2~8자이며 한글, 숫자, 영문만 가능합니다.</small>
+								<small class="form-control-plaintext">닉네임은 2~8자이며 한글,
+									숫자, 영문만 가능합니다.</small>
 							</div>
 						</div>
 
@@ -278,6 +308,7 @@ h3>img {
 								<div class="col-sm">
 									<input type="text" name="tel" id="tel" class="form-control"
 										value="${dto.tel}" maxlength="11" placeholder="전화번호">
+									<small class="form-control-plaintext">숫자만 입력해주세요.</small>
 								</div>
 							</div>
 						</div>
@@ -288,7 +319,7 @@ h3>img {
 								<input type="text" name="studentNum" id="studentNum"
 									class="form-control" value="${dto.studentNum}"
 									${mode=="update" ? "readonly" : ""} placeholder="학번"> <small
-									class="form-control-plaintext">전체 학번을 입력해주세요.</small>
+									class="form-control-plaintext">전체 학번[숫자만]을 입력해주세요.</small>
 							</div>
 						</div>
 
@@ -301,6 +332,13 @@ h3>img {
 										onchange="form.sendButton.disabled = !checked"> <label
 										class="form-check-label"> <a href="#"
 										class="text-decoration-none">이용약관</a>에 동의합니다.
+										<a href="#" class="text-decoration-none">서비스 이용약관 </a>동의(필수)
+										<a href="#"
+										class="text-decoration-none">개인정보 수집 및 이용 </a>동의 (필수)
+										<a href="#"
+										class="text-decoration-none">광고성 정보 수신 </a>동의(선택)
+										<a href="#"
+										class="text-decoration-none">만 14세 </a>이상입니다.
 									</label>
 								</div>
 							</div>
@@ -308,11 +346,11 @@ h3>img {
 
 						<div class="row mb-3">
 							<div class="text-center">
-								<button type="button" name="sendButton" class="btn btn-primary"
+								<button type="button" name="sendButton" class="btn btn-danger"
 									onclick="memberOk();">
 									${mode=="member"?"회원가입":"정보수정"} <i class="bi bi-check2"></i>
 								</button>
-								<button type="button" class="btn btn-danger"
+								<button type="button" class="btn btn-secondary"
 									onclick="location.href='${pageContext.request.contextPath}/';">
 									${mode=="member"?"가입취소":"수정취소"} <i class="bi bi-x"></i>
 								</button>

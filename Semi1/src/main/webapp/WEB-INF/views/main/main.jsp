@@ -23,10 +23,12 @@
 	src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
-<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 </head>
 
 <body>
+	<header>
+		<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+	</header>
 	<form name="mainForm" method="get">
 		<div class="container-fluid">
 			<div class="row">
@@ -109,6 +111,8 @@
 								<div class="row row-cols-2">
 
 
+
+
 									<!--멍  -->
 									<div class="col-4 p-1">
 										<div class="col" id="bbs">
@@ -118,9 +122,9 @@
 												</div>
 												<c:forEach var="dto" items="${listBoard}">
 													<div>
-														<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-															${dto.title}
-														 </a>
+														<a
+															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
 													</div>
 												</c:forEach>
 												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
@@ -142,9 +146,9 @@
 											<div class="border px-2">
 												<c:forEach var="dto" items="${listBoard}">
 													<div class="text-truncate px-2 subject-list">
-														<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-															${dto.title}
-														</a>
+														<a
+															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
 													</div>
 												</c:forEach>
 												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
@@ -157,6 +161,23 @@
 											</div>
 										</div>
 									</div>
+
+									<div class="col" id="bbs">
+										<div class="board" style="border: 1px solid black">
+											<a
+												href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+												${dto.title} </a>
+										</div>
+
+									</div>
+									<div>
+										<a
+											href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=195&page=1">
+											${dto.title} </a>
+									</div>
+
+									<!--멍  -->
+
 
 
 									<div class="col" id="bbs">
@@ -282,25 +303,9 @@
 				<!-- 오른쪽 사이드 -->
 				<jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
 
-
-				<div class="col" id="bbs">
-					<div class="board" style="border: 1px solid black">
-						<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-							${dto.title}
-							</a>
-					</div>
-
-				</div>
 			</div>
+		</div>
 	</form>
-
-
-	<div>
-			<a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=195&page=1">
-															${dto.title}
-														</a>
-	</div>
-
 
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
