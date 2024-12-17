@@ -156,7 +156,7 @@ public class MemberController {
 			dto.setBirth(req.getParameter("birth"));
 			dto.setEmail(req.getParameter("email"));
 			dto.setTel(req.getParameter("tel"));
-			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
+			dto.setStudentNum(Integer.parseInt(req.getParameter("studentNum")));
 			dao.insertMember(dto);
 
 			session.setAttribute("mode", "insert");
@@ -325,9 +325,8 @@ public class MemberController {
 
 		String userId = req.getParameter("userId");
 		MemberDTO dto = dao.findById(userId);
-
 		String passed = "false";
-
+		
 		if (dto == null) {
 			passed = "true";
 		}

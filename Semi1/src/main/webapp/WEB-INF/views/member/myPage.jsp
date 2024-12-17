@@ -66,7 +66,6 @@
 			<div class="third-profile">
 				<h3>일정</h3>
 				
-				<jsp:include page="/WEB-INF/views/myCalendar/myCal.jsp" />
 			</div>
 		</form>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
