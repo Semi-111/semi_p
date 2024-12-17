@@ -86,16 +86,16 @@ public class StudentBoardDAO {
     List<StudentBoardDTO> list = new ArrayList<>();
     StringBuilder sql = new StringBuilder();
 
-    sql.append("SELECT s.CM_NUM, s.DIVISION, s.TITLE, s.CONTENT, s.VIEWS, ")
-        .append("TO_CHAR(s.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, s.FILENAME, ")
-        .append("m.USERID, m.NICKNAME, ")
-        .append("c.CT_NUM, c.CT_NAME, ")
-        .append("COUNT(l.CM_NUM) AS likeCount ")
-        .append("FROM STUDENTBOARD s ")
-        .append("JOIN MEMBER m ON s.MB_NUM = m.MB_NUM ")
-        .append("LEFT JOIN STUDENT_LK l ON s.CM_NUM = l.CM_NUM ")
-        .append("LEFT JOIN CATEGORY c ON s.CT_NUM = c.CT_NUM ")
-        .append("WHERE s.DIVISION = ? ");
+    sql.append(" SELECT s.CM_NUM, s.DIVISION, s.TITLE, s.CONTENT, s.VIEWS, ")
+        .append(" s.CA_DATE, s.FILENAME, ")
+        .append(" m.USERID, m.NICKNAME, ")
+        .append(" c.CT_NUM, c.CT_NAME, ")
+        .append(" COUNT(l.CM_NUM) AS likeCount ")
+        .append(" FROM STUDENTBOARD s ")
+        .append(" JOIN MEMBER m ON s.MB_NUM = m.MB_NUM ")
+        .append(" LEFT JOIN STUDENT_LK l ON s.CM_NUM = l.CM_NUM ")
+        .append(" LEFT JOIN CATEGORY c ON s.CT_NUM = c.CT_NUM ")
+        .append(" WHERE s.DIVISION = ? ");
 
     // 학번 카테고리 추가 (student 타입일 경우)
     if ("student".equals(division) && category != null && !category.isEmpty()) {
@@ -115,10 +115,10 @@ public class StudentBoardDAO {
       }
     }
 
-    sql.append("GROUP BY s.CM_NUM, s.DIVISION, s.TITLE, s.CONTENT, s.VIEWS, s.CA_DATE, s.FILENAME, ")
-        .append("m.USERID, m.NICKNAME, c.CT_NUM, c.CT_NAME ")
-        .append("ORDER BY s.CM_NUM DESC ")
-        .append("OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
+    sql.append(" GROUP BY s.CM_NUM, s.DIVISION, s.TITLE, s.CONTENT, s.VIEWS, s.CA_DATE, s.FILENAME, ")
+        .append(" m.USERID, m.NICKNAME, c.CT_NUM, c.CT_NAME ")
+        .append(" ORDER BY s.CM_NUM DESC ")
+        .append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
 
     try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
       int paramIndex = 1;

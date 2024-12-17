@@ -2,6 +2,7 @@ package com.hyun3.dao.board;
 
 import com.hyun3.domain.MemberDTO;
 import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.board.ReplyDTO;
 import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 
@@ -95,12 +96,12 @@ public class InfoBoardDAO {
     }
   }
 
-
+  // 지금 localDate를 가지고 올거면 TO_CHAR로 가지고오면 안되고 자바에서 SUBSTRING으로 잘라야함
   // 게시글 리스트 가져오기
   public List<InfoBoardDTO> listBoard(String division, int offset, int size) {
     List<InfoBoardDTO> list = new ArrayList<>();
     String sql = "SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, " +
-        "TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, " +
+        "i.CA_DATE, i.FILENAME, " +
         "m.USERID, m.NICKNAME, " +
         "COUNT(l.CM_NUM) AS likeCount " +
         "FROM INFOBOARD i " +
@@ -148,7 +149,7 @@ public class InfoBoardDAO {
     StringBuilder sql = new StringBuilder();
 
     sql.append("SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, ")
-        .append("TO_CHAR(i.CA_DATE, 'YYYY-MM-DD') AS CA_DATE, i.FILENAME, ")
+        .append("i.CA_DATE, i.FILENAME, ")
         .append("m.USERID, m.NICKNAME, ")
         .append("COUNT(l.CM_NUM) AS likeCount ")
         .append("FROM INFOBOARD i ")
@@ -221,7 +222,7 @@ public class InfoBoardDAO {
     }
   }
 
-  // 데이터 개수
+  // 데이터 개수e
   public int dataCount(String division) {
     String sql = "SELECT COUNT(*) AS cnt FROM INFOBOARD WHERE DIVISION = ?";
 
@@ -557,7 +558,246 @@ public class InfoBoardDAO {
     return result;
   }
 
+  // 게시글 댓글
 
+  // 게시글의 댓글 및 답글 저장
+  public void insertReply(ReplyDTO dto) throws SQLException {
+    PreparedStatement ps = null;
+    String sql;
+
+    try {
+      sql = "INSERT INTO INFO_CO(CO_NUM, CONTENT, REG_DATE, MB_NUM, CM_NUM) VALUES " +
+          " (SEQ_INFO_CO.nextval, ?, SYSDATE, ?, ?)";
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setString(1, dto.getContent());
+      ps.setLong(2, dto.getMbNum());
+      ps.setLong(3, dto.getCmNum());
+
+      ps.executeUpdate();
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(ps);
+    }
+  }
+
+  // 게시글의 댓글 개수
+  public int dataCountReply(long cmNum) {
+    int result = 0;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql;
+
+    try {
+      sql = "SELECT COUNT(*) AS cnt FROM INFO_CO WHERE CM_NUM = ? ";
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setLong(1, cmNum);
+
+      rs = ps.executeQuery();
+      if(rs.next()) {
+        result = rs.getInt("cnt");
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(rs);
+      DBUtil.close(ps);
+    }
+
+
+    return result;
+  }
+
+  // 게시글의 댓글
+  public List<ReplyDTO> listReply(long cmNum, int offset, int size) {
+    List<ReplyDTO> list = new ArrayList<>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    StringBuilder sb = new StringBuilder();
+
+    try {
+      sb.append(" SELECT CO_NUM, I.MB_NUM, CONTENT, REG_DATE, I.CM_NUM, M.nickName ");
+      sb.append(" FROM INFO_CO I ");
+      sb.append(" JOIN MEMBER M ON I.MB_NUM = M.MB_NUM");
+      sb.append(" WHERE I.CM_NUM = ? ");
+      sb.append(" ORDER BY I.CO_NUM DESC ");
+      sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+
+      ps = conn.prepareStatement(sb.toString());
+
+      ps.setLong(1, cmNum);
+      ps.setInt(2, offset);
+      ps.setInt(3, size);
+
+      rs = ps.executeQuery();
+
+      while (rs.next()) {
+        ReplyDTO dto = new ReplyDTO();
+        dto.setCoNum(rs.getLong("CO_NUM"));
+        dto.setMbNum(rs.getLong("MB_NUM"));
+        dto.setNickName(rs.getString("nickName"));
+        dto.setContent(rs.getString("CONTENT"));
+        dto.setReg_date(rs.getString("REG_DATE"));
+        dto.setCmNum(rs.getLong("CM_NUM"));
+
+        list.add(dto);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(rs);
+      DBUtil.close(ps);
+    }
+
+    return list;
+  }
+
+  // -------------------------------------------
+  // 댓글의 답글 리스트
+  public List<ReplyDTO> listReplyAnswer(long cmNum) { // 부모
+    List<ReplyDTO> list = new ArrayList<>();
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    StringBuilder sb = new StringBuilder();
+
+    try {
+      sb.append("SELECT CO_NUM, I.MB_NUM, CONTENT, REG_DATE, I.CM_NUM, M.nickName")
+          .append(" FROM INFO_CO I")
+          .append(" JOIN MEMBER M ON I.MB_NUM = M.MB_NUM ")
+          .append(" WHERE CM_NUM = ? ")
+          .append(" ORDER BY CO_NUM DESC ");
+
+      ps = conn.prepareStatement(sb.toString());
+
+      ps.setLong(1, cmNum);
+      rs = ps.executeQuery();
+
+      while (rs.next()) {
+        ReplyDTO dto = new ReplyDTO();
+
+        dto.setCoNum(rs.getLong("CO_NUM"));
+        dto.setMbNum(rs.getLong("MB_NUM"));
+        dto.setNickName(rs.getString("nickName"));
+        dto.setContent(rs.getString("CONTENT"));
+        dto.setReg_date(rs.getString("REG_DATE"));
+        dto.setCmNum(rs.getLong("CM_NUM"));
+        dto.setAnswerCount(rs.getInt("answerCount"));
+
+        list.add(dto);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(ps);
+    }
+
+    return list;
+  }
+
+  // 댓글의 답글 개수
+  public int dataCountReplyAnswer(long cmNum) {
+    int result = 0;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    String sql;
+
+    try {
+      sql = "SELECT COUNT(*) cnt FROM INFO_CO WHERE CM_NUM = ?";
+
+      ps = conn.prepareStatement(sql);
+
+      ps.setLong(1, cmNum);
+
+      rs = ps.executeQuery();
+
+      if(rs.next()) {
+        result = rs.getInt("cnt");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(ps);
+    }
+
+    return result;
+  }
+
+  public ReplyDTO findByReplyId(long coNum) {
+    ReplyDTO dto = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    String sql;
+
+    try {
+      sql = "SELECT CO_NUM, I.MB_NUM, CONTENT, REG_DATE, I.CM_NUM, M.nickName "
+          + " FROM INFO_CO I  "
+          + " JOIN MEMBER M ON I.MB_NUM = M.MB_NUM  "
+          + " WHERE CO_NUM = ? ";
+      pstmt = conn.prepareStatement(sql);
+
+      pstmt.setLong(1, coNum);
+
+      rs=pstmt.executeQuery();
+
+      if(rs.next()) {
+        dto = new ReplyDTO();
+
+        dto.setCoNum(rs.getLong("CO_NUM"));
+        dto.setMbNum(rs.getLong("MB_NUM"));
+        dto.setContent(rs.getString("content"));
+        dto.setReg_date(rs.getString("reg_date"));
+        dto.setNickName(rs.getString("nickName"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      DBUtil.close(rs);
+      DBUtil.close(pstmt);
+    }
+
+    return dto;
+  }
+
+  // 게시물의 댓글 삭제
+  public void deleteReply(long coNum, long mbNum, String role) throws SQLException {
+    PreparedStatement pstmt = null;
+    String sql;
+
+    if (role == null || role.isEmpty()) {
+      throw new IllegalArgumentException("Role 값이 올바르지 않습니다.");
+    }
+
+    int userLevel = Integer.parseInt(role);
+    if(userLevel < 60) {
+      ReplyDTO dto = findByReplyId(coNum);
+      if(dto == null || (mbNum != dto.getMbNum())) {
+        return;
+      }
+    }
+
+    try {
+      sql = "DELETE FROM INFO_CO "
+          + " WHERE CO_NUM IN  "
+          + " (SELECT CO_NUM FROM INFO_CO START WITH CO_NUM = ? "
+          + "     CONNECT BY PRIOR CO_NUM = CM_NUM) ";
+      pstmt = conn.prepareStatement(sql);
+
+      pstmt.setLong(1, coNum);
+
+      pstmt.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      DBUtil.close(pstmt);
+    }
+  }
 
 
 }
