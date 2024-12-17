@@ -54,7 +54,11 @@
                    </button>
                    <button type="button" class="cancel-button" onclick="location.href='${pageContext.request.contextPath}/lectureReview/list'">
                    		취소
-                   	</button>      
+                   	</button> 
+                   	<c:if test="${mode=='update'}">
+						<input type="hidden" name="review_num" value="${dto.review_Num}">
+						<input type="hidden" name="page" value="${page}">
+					</c:if>     
                </div>
                
 			</form>

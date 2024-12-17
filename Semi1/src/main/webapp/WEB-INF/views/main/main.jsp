@@ -41,14 +41,13 @@
 										<div class="MyPicture">
 											<img
 												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
-											<!-- 사진 바뀔 수 있도록 -->
+											<!-- 사진 바뀔 수 있도록.. 연동이 문제임 -->
 										</div>
 										<h6>닉네임: ${sessionScope.member.name}</h6>
-										<!-- 의문. 왜 닉네임인데 이름이 나옴...? -->
 									</div>
 									<div class="profile-buttons">
 										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/mypage'">내정보</button>
+											onclick="location.href='${pageContext.request.contextPath}/member/myPage'">내정보</button>
 										<button type="button"
 											onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
 									</div>
@@ -106,25 +105,26 @@
 						<div class="col" id="bbs-container">
 							<div class="container text-center">
 								<div class="row row-cols-2">
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>자유 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
+								
+										<div class="col-4 p-1">
+					<div>
+						<div class="fw-semibold pt-2 pb-1"><i class="bi bi-app"></i> 자유게시판</div>
+						<div class="border px-2">
+							<c:forEach var="dto" items="${listBoard}">
+								<div class="text-truncate px-2 subject-list">
+									<a href="${pageContext.request.contextPath}/lesson/article?page=1&num=${dto.num}">${dto.subject}</a>
+								</div>
+							</c:forEach>
+							<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
+								<div class="text-truncate px-2 subject-list">&nbsp;</div>
+							</c:forEach>
+						</div>
+						<div class="pt-2 text-end">
+							<a class="text-reset" href="${pageContext.request.contextPath}/lesson/list">더보기</a>
+						</div>
+					</div>
+				</div>
+				
 									<div class="col" id="bbs">
 										<table class="board" style="border: 1px solid black">
 											<tr>

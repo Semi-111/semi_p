@@ -1,12 +1,26 @@
 package com.hyun3.domain.schedule;
 
 public class ScheduleDTO {
-    private String stGrade;
-    private String sbNum;
-    private String sbName;
-    private int hakscore;
-    private String studytime;
+    private String stGrade; // 학년
+    private String sbNum; // 과목 번호
+    private String sbName; // 과목 이름
+    private int hakscore; // 학점
+    private String studytime; // 수업 시간 
+    private String studyDay; // 수업 요일
+    private String color;
     
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
+	public String getStudyDay() {
+		return studyDay;
+	}
+	public void setStudyDay(String studyDay) {
+		this.studyDay = studyDay;
+	}
 	public String getStGrade() {
 		return stGrade;
 	}
@@ -35,6 +49,6 @@ public class ScheduleDTO {
 		return studytime;
 	}
 	public void setStudytime(String studytime) {
-		this.studytime = studytime;
+		this.studytime = studytime != null ? studytime : "시간 없음";
 	}
 }

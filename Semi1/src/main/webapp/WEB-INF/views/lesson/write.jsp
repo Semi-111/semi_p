@@ -7,219 +7,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${mode=='update' ? '글수정' : '글쓰기'}</title>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/css/base.css">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-<style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕",
-		sans-serif;
-}
-
-body {
-	background-color: #f5f5f5;
-}
-
-.container {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 20px;
-}
-
-/* 헤더 스타일 */
-header {
-	background: white;
-	border-bottom: 1px solid #e1e1e1;
-	margin-bottom: 30px;
-}
-
-nav {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 8px 20px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.logo img {
-	height: 45px;
-	width: auto;
-	padding: 5px 0;
-}
-
-.nav-links {
-	display: flex;
-	gap: 2rem;
-}
-
-.nav-links a {
-	text-decoration: none;
-	color: #666;
-	font-size: 14px;
-}
-
-.nav-links a:hover {
-	color: #a855f7;
-}
-
-.nav-links a.active {
-	color: #a855f7;
-	font-weight: bold;
-}
-
-/* 글쓰기 폼 스타일 */
-.write-container {
-	max-width: 800px;
-	margin: 0 auto;
-	background: white;
-	border-radius: 8px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	padding: 30px;
-}
-
-.write-title {
-	margin-bottom: 20px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid #e5e7eb;
-}
-
-.write-title h3 {
-	font-size: 24px;
-	color: #333;
-}
-
-.write-form {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.write-form tr {
-	border-bottom: 1px solid #e5e7eb;
-}
-
-.write-form td {
-	padding: 15px 10px;
-}
-
-.write-form td:first-child {
-	width: 100px;
-	color: #666;
-	font-weight: 500;
-}
-
-.form-select {
-	width: 100%;
-	padding: 8px 12px;
-	border: 1px solid #d1d5db;
-	border-radius: 4px;
-	font-size: 14px;
-}
-
-.form-input {
-	width: 100%;
-	padding: 8px 12px;
-	border: 1px solid #d1d5db;
-	border-radius: 4px;
-	font-size: 14px;
-}
-
-.form-textarea {
-	width: 100%;
-	padding: 12px;
-	border: 1px solid #d1d5db;
-	border-radius: 4px;
-	min-height: 300px;
-	resize: vertical;
-	font-size: 14px;
-	line-height: 1.6;
-}
-
-.form-file {
-	padding: 8px 0;
-}
-
-.img-box {
-	margin-top: 10px;
-}
-
-.img-box img {
-	max-width: 200px;
-	border-radius: 4px;
-}
-
-.button-container {
-	display: flex;
-	justify-content: center;
-	gap: 10px;
-	margin-top: 30px;
-	padding-top: 20px;
-	border-top: 1px solid #e5e7eb;
-}
-
-.btn {
-	padding: 8px 20px;
-	border-radius: 4px;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-	border: 1px solid transparent;
-}
-
-.btn-primary {
-	background-color: #a855f7;
-	color: white;
-}
-
-.btn-primary:hover {
-	background-color: #9333ea;
-}
-
-.btn-light {
-	background-color: #f3f4f6;
-	color: #666;
-	border-color: #d1d5db;
-}
-
-.btn-light:hover {
-	background-color: #e5e7eb;
-}
-
-/* 푸터 스타일 */
-footer {
-	background-color: #f9fafb;
-	padding: 2rem 1rem;
-	margin-top: 40px;
-	border-top: 1px solid #eee;
-}
-
-.footer-content {
-	max-width: 1200px;
-	margin: 0 auto;
-	font-size: 12px;
-	color: #666;
-}
-
-.footer-links {
-	margin-top: 1rem;
-	display: flex;
-	gap: 1rem;
-}
-
-.footer-links a {
-	text-decoration: none;
-	color: #666;
-}
-
-.footer-links a:hover {
-	color: #a855f7;
-}
-</style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/base.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/lesson/write.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 <script type="text/javascript">
 function check() {
     const f = document.boardForm;
@@ -258,21 +50,6 @@ function check() {
 </script>
 </head>
 <body>
-	<header>
-		<nav>
-			<div class="logo">
-				<img
-					src="${pageContext.request.contextPath}/resources/images/logo.png"
-					alt="트레이니 로고">
-			</div>
-			<div class="nav-links">
-				<a href="#" class="active">게시판</a> <a href="#">시간표</a> <a href="#">학점계산기</a>
-				<a href="#">친구</a> <a href="#">공지</a> <a href="#">마이페이지</a> <a
-					href="#">맛집</a>
-			</div>
-		</nav>
-	</header>
-
 	<div class="container">
 		<div class="write-container">
 			<div class="write-title">
@@ -362,17 +139,7 @@ function check() {
 			</form>
 		</div>
 	</div>
-
-	<footer>
-		<div class="footer-content">
-			<p>씨유트레이니 주식회사</p>
-			<p>서울특별시 광도달북로21 동성빌딩 2층 | 사업자등록번호 : 123456789</p>
-			<div class="footer-links">
-				<a href="#">이용약관</a> <a href="#">개인정보처리방침</a> <a href="#">청소년보호정책</a>
-				<a href="#">커뮤니티이용규칙</a> <a href="#">공지사항</a> <a href="#">문의하기</a> <a
-					href="#">@TRAINNF</a>
-			</div>
-		</div>
-	</footer>
+<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 </body>
 </html>

@@ -37,15 +37,21 @@ public class LectureReviewController {
 			
 			String userId = info.getUserId();
 			
-			// 내 강의 리스트
+			// 왼쪽 : 내 강의 목록
 			List<LectureReviewDTO> myLlist = null;
 			myLlist = dao.listLecture(userId);
 			
 			mav.addObject("myLlist", myLlist);
 			
+			for(LectureReviewDTO dto : myLlist) {
+				long atNum = dto.getAt_Num();
+				int reviewCount = dao.reviewCount(atNum);
+				dto.setIsWritten(reviewCount > 0 ? 1 : 0); // 리뷰가 작성된 경우 1, 아니면 0
+			}
 			
 			
-			// 리뷰 리스트
+			
+			// 오른쪽 : 모든 강의평가 목록
 			String page = req.getParameter("page");
 			int current_page = 1;
 			if(page != null) {
@@ -55,7 +61,7 @@ public class LectureReviewController {
 			int dataCount = dao.dataCount();
 			
 			// 전체 페이지 수
-			int size = 3;
+			int size = 10;
 			int total_page = util.pageCount(dataCount, size);
 			if(current_page > total_page) {
 				current_page = total_page;
@@ -75,19 +81,17 @@ public class LectureReviewController {
 			// 페이징 처리
 			String cp = req.getContextPath();
 			String listUrl = cp + "/lectureReview/list";
-			String articleUrl = cp + "/lectureReview/article?page=" + current_page;
 			
-			// 페이징
 			String paging = util.paging(current_page, total_page, listUrl);
 			
-			
+						
 			// 포워딩할 JSP에 전달할 속성
 			mav.addObject("reviewList", reviewList);
 			mav.addObject("page", current_page);
 			mav.addObject("total_page", total_page);
 			mav.addObject("dataCount", dataCount);
 			mav.addObject("size", size);
-			mav.addObject("articleUrl", articleUrl);
+			
 			mav.addObject("paging", paging);
 			// mav.addObject("schType", schType);
 			// mav.addObject("kwd", kwd);
@@ -168,6 +172,7 @@ public class LectureReviewController {
 	*/
 	
 	
+	// 글쓰기폼
 	@RequestMapping(value = "/lectureReview/write", method = RequestMethod.GET)
 	public ModelAndView writeForm(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -176,14 +181,20 @@ public class LectureReviewController {
 		
 		try {
 			LectureReviewDAO dao = new LectureReviewDAO();
-			long sbNum = Long.parseLong(req.getParameter("sbNum"));
+			long atNum = Long.parseLong(req.getParameter("atNum")); // 파라미터
 			
-			// 과목번호로 과목명 찾기
-			String sbName = dao.findSbNameById(sbNum);
+			// 수강번호로 과목명,교수명 조회
+			LectureReviewDTO dto = dao.findByAtNum(atNum);
 			
-			mav.addObject("sbName", sbName);
-			mav.addObject("sbNum", sbNum);
-			mav.addObject("mode", "write");
+			if(dto!=null) {
+				mav.addObject("sbName", dto.getSb_Name()); // 과목명
+				mav.addObject("pfName", dto.getPf_Name()); // 교수명
+				mav.addObject("atNum", dto.getSb_Num()); // 수강번호
+			} else {
+	            mav.addObject("error", "수강 정보를 찾을 수 없습니다.");
+	        }
+			
+			mav.addObject("mode", "write"); // 글쓰기 모드
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -191,6 +202,7 @@ public class LectureReviewController {
 		return mav;
 	}
 	
+	// 글등록
 	@RequestMapping(value = "/lectureReview/write", method = RequestMethod.POST)
 	public ModelAndView writeSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {	
@@ -228,9 +240,73 @@ public class LectureReviewController {
 			throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("lectureReview/article");
 		
+		LectureReviewDAO dao = new LectureReviewDAO();
+		MyUtil util = new MyUtilBootstrap();
 		
+		try {
+			// review_num과 page 파라미터 받기
+	        long reviewNum = Long.parseLong(req.getParameter("review_num"));
+	        String page = req.getParameter("page");
+	        String query = "page=" + page;
+	        
+	        
+	        // 리뷰 상세 정보 가져오기
+	        LectureReviewDTO dto = dao.findByRvNum(reviewNum);
+	        
+	        // 리뷰가 없는 경우 처리
+	        if (dto == null) {
+	            return new ModelAndView("redirect:/lectureReview/list?" + query);
+	        }
+	        
+	        // 줄바꿈 처리
+	        dto.setContent(util.htmlSymbols(dto.getContent()));
+	        
+			
+	        // JSP로 데이터 전달
+	        mav.addObject("dto", dto); // 리뷰 상세 정보
+	        mav.addObject("page", page); // 현재 페이지 번호
+	        mav.addObject("query", query); // 페이징 쿼리 문자열
+						
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
 		return mav;
 	}
+
 	
+	// 수정폼
+	@RequestMapping(value = "/lectureReview/update", method = RequestMethod.GET)
+	public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("lectureReview/write");
+		LectureReviewDAO dao = new LectureReviewDAO();
+			
+		try {
+			long reviewNum = Long.parseLong(req.getParameter("review_num"));
+			
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+
+	        LectureReviewDTO dto = dao.findByRvNum(reviewNum);
+	        
+	        if(dto == null) {
+	        	return new ModelAndView("redirect:/lectureReview/list");
+	        }
+	        
+	        if(! dto.getUserId().equals(info.getUserId())) {
+	        	return new ModelAndView("redirect:/lectureReview/list");
+	        }
+	        
+	        mav.addObject("dto", dto);       // 리뷰 상세 정보 전달
+            mav.addObject("mode", "update"); // 수정 모드 설정
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		return mav;
+	}
 	
 }

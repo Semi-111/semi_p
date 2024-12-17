@@ -68,8 +68,9 @@
 				<!-- 로그아웃 버튼 -->
 				<i class="bi bi-lock-fill" title="로그아웃"
 					onclick="location.href='${pageContext.request.contextPath}/member/logout'"></i>
-				<!-- 알림 버튼 -->
-				<i class="bi bi-person-circle" title="마이페이지"></i>
+				<!-- 마이페이지 버튼 -->
+				<i class="bi bi-person-circle" title="마이페이지"
+					onclick="location.href='${pageContext.request.contextPath}/member/myPage'"></i>
 				<c:if test="${sessionScope.member.role >= 51}">
 					<!-- 관리자 버튼 -->
 					<i class="bi bi-person-gear" title="관리자 페이지"

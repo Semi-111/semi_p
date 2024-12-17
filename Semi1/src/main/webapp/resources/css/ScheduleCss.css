@@ -1,64 +1,4 @@
 @charset "UTF-8";
-/* 기본 리셋 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* body 스타일 */
-body {
-    font-family: Arial, sans-serif;
-}
-
-/* 헤더 */
-header {
-    background-color: white;
-    border-bottom: 2px solid #D1B2FF;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #fff;
-}
-
-header .logo img {
-    width: 180px;
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-nav a {
-    color: graytext;
-    text-decoration: none;
-}
-
-nav li {
-    position: relative;
-}
-
-nav li:hover {
-    border-bottom: 2px solid #fff;
-}
-
-nav .submenu {
-    display: none;
-    position: absolute;
-    top: 30px;
-    left: 0;
-    background-color: #444;
-    list-style: none;
-    padding: 10px;
-}
-
-nav li:hover .submenu {
-    display: block;
-}
-
 /* 시간표 영역 */
 .time-table-selector {
     margin-top: 20px;
@@ -101,7 +41,6 @@ nav li:hover .submenu {
     gap: 10px;
  	margin-top: 10px; /* 시간표 목록과 버튼 사이의 간격을 추가 */
 }	
-
 
 /* 시간표 그리드 */
 .timetable {
@@ -178,6 +117,22 @@ nav li:hover .submenu {
     text-align: center;
 }
 
+.search-btn-container {
+    position: fixed;
+    bottom: 10px; /* 하단에서 10px 정도 위로 올리기 */
+    left: 50%;
+    transform: translateX(-50%); /* 중앙 정렬 */
+    width: 100%;
+    text-align: center; /* 버튼을 중앙에 위치시킴 */
+    transition: bottom 0.5s ease-out; /* 애니메이션 효과 추가 */
+}
+
+/* 모달이 열릴 때 버튼도 위로 올라가도록 */
+.search-btn-container.modal-open {
+    bottom: 41%; /* 버튼이 모달과 함께 위로 올라가게 조정 */
+    transition: bottom 0.5s ease-out; /* 애니메이션 효과 추가 */
+}
+
 /* 모달 창 */
 .modal {
     display: none; /* 기본적으로 모달은 숨김 */
@@ -187,9 +142,9 @@ nav li:hover .submenu {
     bottom: 0; /* 모달을 화면 하단에 고정 */
     width: 100%;
     height: 40%;
-    overflow: hidden;
     background-color: rgba(0, 0, 0, 0.5); /* 배경이 어두워짐 */
     animation: slideUp 0.5s ease-out; /* 하단에서 위로 올라오는 애니메이션 추가 */
+    overflow: hidden;
 }
 
 /* 하단에서 위로 올라오는 애니메이션 */
@@ -200,6 +155,12 @@ nav li:hover .submenu {
     to {
         bottom: 0; /* 끝나면 화면에 표시됨 */
     }
+}
+
+/* 모달이 열렸을 때 */
+.modal.show {
+    display: block;
+    animation: slideUp 0.5s ease-out; /* 애니메이션 */
 }
 
 .modal-content {
@@ -231,6 +192,23 @@ nav li:hover .submenu {
 
 .modal-content td {
     width: 20%; /* 각 td의 너비를 고르게 설정 */
+}
+
+.modal td:hover {
+	background: #ccc;
+    cursor: pointer;
+}
+
+.time-slot {
+  height: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.highlight {
+    background-color: yellow; /* 배경색을 yellow로 강조 */
+    color: black;  /* 텍스트 색을 검정으로 변경 */
+    font-weight: bold; /* 텍스트를 굵게 표시 */
 }
 
 .close {
@@ -293,6 +271,7 @@ nav li:hover .submenu {
     bottom: 41%; /* 버튼이 모달과 함께 위로 올라가게 조정 */
     transition: bottom 0.5s ease-out; /* 애니메이션 효과 추가 */
 }
+
 
         /* 시간표 버튼을 담을 박스 */
         .timetable-btn-container {

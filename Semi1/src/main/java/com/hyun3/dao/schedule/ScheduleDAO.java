@@ -20,7 +20,7 @@ public class ScheduleDAO {
 		String sql;
 	
 	try {
-		sql = "    SELECT s.st_grade, s.sb_num, s.sb_name, d.hakscore, TO_CHAR(t.studytime, 'HH24:MI') AS studytime "
+		sql = "    SELECT s.st_grade, s.sb_num, s.sb_name, d.hakscore, TO_CHAR(t.studytime, 'HH24:MI') AS studytime, t.studyday "
 				+ "    FROM subject s "
 				+ "    JOIN dt_subject d ON s.sb_num = d.sb_num "
 				+ "    LEFT JOIN timetable t ON d.dt_sub_num = t.dt_sub_num ";
@@ -36,8 +36,10 @@ public class ScheduleDAO {
 			dto.setSbName(rs.getString("sb_name"));
 			dto.setHakscore(rs.getInt("hakscore"));
 			dto.setStudytime(rs.getString("studytime"));
+			dto.setStudyDay(rs.getString("studyday"));
 			
 			list.add(dto);
+			
 		}
 	} catch (Exception e) {
 		e.printStackTrace();		
@@ -48,5 +50,7 @@ public class ScheduleDAO {
 	
 	return list;	
 }
+	
+	
 	
 }

@@ -1,32 +1,30 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Insert title here</title>
 
-<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/core.css" type="text/css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/util-jquery.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/core.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
 
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ScheduleCss.css" type="text/css">
 <script src="${pageContext.request.contextPath}/resources/js/Schedule.js"></script>
-
-<head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시간표 페이지</title>
 </head>
 <body>
 
-    <!-- 헤더 -->
-    <header>
-		<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
-    </header>
-
-    <!-- 시간표 영역 -->
+	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+	
     <main>
         <div class="time-table-selector">
             <div class="select-box-container">
@@ -41,11 +39,11 @@
             </div>
 		</div>
 		
-		<div class="timetable-btn-container" id="timetableBtnContainer">
+		<nav class="timetable-btn-container" id="timetableBtnContainer">
 		    <button class="timetable-btn">시간표 1</button>
 		    <button class="timetable-btn">시간표 2</button>
 		    <button class="add-timetable-btn">새 시간표 만들기</button>
-		</div>
+		</nav>
 			
 			  
         <!-- 시간표 그리드 -->
@@ -53,12 +51,12 @@
             <table id="timetable">
                 <thead>
                     <tr>
-                        <th style="background: #E8D9FF">월</th>
-                        <th style="background: #E8D9FF">화</th>
-                        <th style="background: #E8D9FF">수</th>
-                        <th style="background: #E8D9FF">목</th>
-                        <th style="background: #E8D9FF">금</th>
-                        <th width="30px" style="background: #E8D9FF">시간</th>
+                        <th class="time-slot" id="monday" style="background: #E8D9FF">월</th>
+                        <th class="time-slot" id="tuesday" style="background: #E8D9FF">화</th>
+                        <th class="time-slot" id="wednesday" style="background: #E8D9FF">수</th>
+                        <th class="time-slot" id="thursday" style="background: #E8D9FF">목</th>
+                        <th class="time-slot" id="friday" style="background: #E8D9FF">금</th>
+                        <th class="time-slot" width="30px" style="background: #E8D9FF">시간</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,15 +92,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="vo" items="${viewSubject}">
-                    	<tr>
-	                        <td>${vo.stGrade}</td>
-	                        <td>${vo.sbNum}</td>
-	                        <td>${vo.sbName}</td>
-	                        <td>${vo.hakscore}</td>
-	                        <td>${vo.studytime}</td>
-                  	 	</tr>
-                	</c:forEach>                       
+                
+				<c:forEach var="vo" items="${viewSubject}">
+				    <tr class="modal-line" data-day="${vo.studyDay}" data-start="${vo.studytime}" data-color="${vo.color}" data-sbname="${vo.sbName}">
+				        <td>${vo.stGrade}</td>
+				        <td>${vo.sbNum}</td>
+				        <td>${vo.sbName}</td>
+				        <td>${vo.hakscore}</td>
+				        <td>${vo.studytime}</td> <!-- studyTime은 이미 String -->
+				    </tr>
+				</c:forEach>
+                	
+                	<c:if test="${empty viewSubject}">
+    					<p>수업 정보가 없습니다.</p>
+					</c:if>
+                	                   
                 </tbody>
             </table>
         </div>

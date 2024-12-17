@@ -13,7 +13,51 @@ public class ReportDTO {
     private String reportDate; // 신고일자 
     private String status;     // 처리상태
 	
+    private String postTitle; // 신고글의 제목
+    private String postContent; //신고글의 내용
+    private String postWriter; // 신고글의 작성자
     
+    private long postWriterNum; // 신고당한 사람의 회원번호
+    
+    private Long targetNum;      // 신고당한 게시글 번호
+    private Long targetMbNum;    // 신고당한 회원 번호
+    
+	public Long getTargetNum() {
+		return targetNum;
+	}
+	public void setTargetNum(Long targetNum) {
+		this.targetNum = targetNum;
+	}
+	public Long getTargetMbNum() {
+		return targetMbNum;
+	}
+	public void setTargetMbNum(Long targetMbNum) {
+		this.targetMbNum = targetMbNum;
+	}
+	public long getPostWriterNum() {
+		return postWriterNum;
+	}
+	public void setPostWriterNum(long postWriterNum) {
+		this.postWriterNum = postWriterNum;
+	}
+	public String getPostTitle() {
+		return postTitle;
+	}
+	public void setPostTitle(String postTitle) {
+		this.postTitle = postTitle;
+	}
+	public String getPostContent() {
+		return postContent;
+	}
+	public void setPostContent(String postContent) {
+		this.postContent = postContent;
+	}
+	public String getPostWriter() {
+		return postWriter;
+	}
+	public void setPostWriter(String postWriter) {
+		this.postWriter = postWriter;
+	}
 	public String getMemberName() {
 		return memberName;
 	}

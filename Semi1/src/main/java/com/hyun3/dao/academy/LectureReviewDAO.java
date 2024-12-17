@@ -37,6 +37,8 @@ public class LectureReviewDAO {
 			pstmt.setString(3, userId);
 			pstmt.setInt(4, sbNum);
 			
+			pstmt.executeUpdate();
+			
 	        // 커밋
 	        conn.commit();
 			
@@ -64,14 +66,15 @@ public class LectureReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" select s.sb_num, s.sb_name, p.pf_name ");
-			sb.append(" from member m ");
-			sb.append(" join at_subject at on m.mb_num = at.mb_num ");
-			sb.append(" join dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
-			sb.append(" join subject s on dt.sb_num = s.sb_num ");
-			sb.append(" join pf_sb ps on s.sb_num = ps.sb_num ");
-			sb.append(" join professor p on ps.pf_num = p.pf_num ");
-			sb.append(" where m.userId = ? ");
+			sb.append(" SELECT s.sb_name, p.pf_name, at.at_num, lr.review_num ");
+			sb.append(" FROM member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" LEFT OUTER JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE m.userId = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -82,9 +85,10 @@ public class LectureReviewDAO {
 			while(rs.next()) {
 				LectureReviewDTO dto = new LectureReviewDTO();
 				
-				dto.setSb_Num(rs.getLong("sb_num"));
 				dto.setSb_Name(rs.getString("sb_name"));
 				dto.setPf_Name(rs.getString("pf_name"));
+				dto.setAt_Num(rs.getLong("at_num"));
+				dto.setReview_Num(rs.getLong("review_num"));
 			
 				list.add(dto);
 				
@@ -99,22 +103,31 @@ public class LectureReviewDAO {
 		return list;
 	}
 	
-	// 과목번호로 과목명 찾기
-	public String findSbNameById(long sbNum) throws SQLException {
-		String sbName = null;
+	// 수강번호로 과목명, 교수명 찾기
+	public LectureReviewDTO findByAtNum(long atNum) throws SQLException {
+		LectureReviewDTO dto =null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
+		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sql = " SELECT sb_name FROM subject WHERE sb_num = ? ";
-			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setLong(1, sbNum);
+			sb.append(" SELECT s.sb_name, p.pf_name, at.at_num ");
+			sb.append(" FROM at_subject at ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE at.at_num = ? ");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setLong(1, atNum);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				sbName = rs.getString("sb_name");
+				dto = new LectureReviewDTO();
+	            dto.setSb_Name(rs.getString("sb_name"));
+	            dto.setPf_Name(rs.getString("pf_name"));
+	            dto.setAt_Num(rs.getLong("at_num"));
 			}
 			
 		} catch (SQLException e) {
@@ -124,8 +137,9 @@ public class LectureReviewDAO {
 			DBUtil.close(pstmt);
 		}
 		
-		return sbName;
+		return dto;
 	}
+	
 	
 	public List<LectureReviewDTO> listReview(int offset, int size) {
 		List<LectureReviewDTO> list = new ArrayList<LectureReviewDTO>();
@@ -134,14 +148,14 @@ public class LectureReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" select lr.review_num, s.sb_name, p.pf_name, lr.rating, m.nickName, lr.content ");
-			sb.append(" from member m ");
-			sb.append(" join at_subject at on m.mb_num = at.mb_num ");
-			sb.append(" join lectureReview lr on at.at_num = lr.at_num ");
-			sb.append(" join dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
-			sb.append(" join subject s on dt.sb_num = s.sb_num ");
-			sb.append(" join pf_sb ps on s.sb_num = ps.sb_num ");
-			sb.append(" join professor p on ps.pf_num = p.pf_num ");
+			sb.append(" SELECT lr.review_num, at.at_num, s.sb_name, p.pf_name, lr.rating, ");
+			sb.append("    m.nickName, lr.content from member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
 			sb.append(" ORDER BY lr.review_num ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -155,7 +169,8 @@ public class LectureReviewDAO {
 			while(rs.next()) {
 				LectureReviewDTO dto = new LectureReviewDTO();
 				
-				dto.setReview_Num(rs.getLong("review_num"));				
+				dto.setReview_Num(rs.getLong("review_num"));
+				dto.setAt_Num(rs.getLong("at_num"));
 				dto.setSb_Name(rs.getString("sb_name"));
 				dto.setPf_Name(rs.getString("pf_name"));
 				dto.setRating(rs.getInt("rating"));
@@ -201,5 +216,123 @@ public class LectureReviewDAO {
 				
 		return result;
 	}
+	
+	// 해당 게시물 보기
+	public LectureReviewDTO findByRvNum(long reviewNum) {
+		LectureReviewDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT lr.review_num, s.sb_num, s.sb_name, p.pf_name, lr.rating, ");
+			sb.append("   m.nickName, m.userId, lr.content ");
+			sb.append(" FROM member m ");
+			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
+			sb.append(" JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE lr.review_num = ? ");
+			
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setLong(1, reviewNum);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new LectureReviewDTO();
+				
+				dto.setReview_Num(rs.getLong("review_num"));
+				dto.setSb_Num(rs.getLong("sb_num"));
+				dto.setSb_Name(rs.getString("sb_name"));
+				dto.setPf_Name(rs.getString("pf_name"));
+				dto.setRating(rs.getInt("rating"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setContent(rs.getString("content"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return dto;
+	}
+	
+	public int reviewCount(long atNum) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = " SELECT count(*) cnt FROM lectureReview lr "
+				+ " JOIN at_subject at ON lr.at_num = at.at_num "
+				+ " WHERE at.at_num= ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, atNum);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("cnt");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+	
+		return result;
+	}
+	
+	public LectureReviewDTO findBySbNum(long sbNum) {
+	    LectureReviewDTO dto = null; // 결과를 담을 DTO
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    StringBuilder sb = new StringBuilder();
+
+	    try {
+	        // SQL 쿼리 작성
+	        sb.append(" SELECT s.sb_num, s.sb_name, p.pf_name ");
+	        sb.append(" FROM subject s ");
+	        sb.append(" JOIN pf_sb ps ON s.sb_num = ps.sb_num "); // 교수와 과목 연결
+	        sb.append(" JOIN professor p ON ps.pf_num = p.pf_num "); // 교수 정보 조회
+	        sb.append(" WHERE s.sb_num = ? "); // 과목 번호 조건
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setLong(1, sbNum); // sbNum 값 설정
+
+	        // 쿼리 실행
+	        rs = pstmt.executeQuery();
+
+	        // 결과 처리
+	        if (rs.next()) {
+	            dto = new LectureReviewDTO();
+	            dto.setSb_Num(rs.getLong("sb_num"));   // 과목 번호
+	            dto.setSb_Name(rs.getString("sb_name")); // 과목명
+	            dto.setPf_Name(rs.getString("pf_name")); // 교수명
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 리소스 정리
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return dto; // 조회된 DTO 반환
+	}
+
 	
 }
