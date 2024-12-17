@@ -50,7 +50,7 @@ $(function() {
 		                    <span class="lecture-title">
 		                    	<c:choose>
 		                    		<c:when test="${dto.isWritten == 1}">
-		                    			<a href="${pageContext.request.contextPath}/lectureReview/update?reviewNum=${dto.review_Num}">
+		                    			<a href="${pageContext.request.contextPath}/lectureReview/update?reviewnum=${dto.review_Num}">
 		                    				${dto.sb_Name} (수정/확인)
 		                    			</a>		                  		
 		                    		</c:when>

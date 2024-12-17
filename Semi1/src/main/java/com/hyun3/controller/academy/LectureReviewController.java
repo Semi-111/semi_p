@@ -186,14 +186,9 @@ public class LectureReviewController {
 			// 수강번호로 과목명,교수명 조회
 			LectureReviewDTO dto = dao.findByAtNum(atNum);
 			
-			if(dto!=null) {
-				mav.addObject("sbName", dto.getSb_Name()); // 과목명
-				mav.addObject("pfName", dto.getPf_Name()); // 교수명
-				mav.addObject("atNum", dto.getSb_Num()); // 수강번호
-			} else {
-	            mav.addObject("error", "수강 정보를 찾을 수 없습니다.");
-	        }
-			
+			mav.addObject("sbName", dto.getSb_Name()); // 과목명
+			mav.addObject("pfName", dto.getPf_Name()); // 교수명
+			mav.addObject("atNum", dto.getAt_Num()); // 수강번호
 			mav.addObject("mode", "write"); // 글쓰기 모드
 			
 		} catch (Exception e) {
@@ -222,9 +217,9 @@ public class LectureReviewController {
 			dto.setContent(req.getParameter("content"));
 			dto.setRating(Integer.parseInt(req.getParameter("rating")));
 			
-			int sbNum = Integer.parseInt(req.getParameter("sbNum"));
-			
-			dao.insertLectureReview(dto, info.getUserId(), sbNum);
+			int atNum = Integer.parseInt(req.getParameter("atNum"));
+			dto.setAt_Num(atNum);
+			dao.insertLectureReview(dto);
 			
 			
 		} catch (Exception e) {
@@ -283,8 +278,9 @@ public class LectureReviewController {
 		LectureReviewDAO dao = new LectureReviewDAO();
 			
 		try {
-			long reviewNum = Long.parseLong(req.getParameter("review_num"));
+			long reviewNum = Long.parseLong(req.getParameter("reviewnum"));
 			
+		
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
@@ -299,6 +295,8 @@ public class LectureReviewController {
 	        	return new ModelAndView("redirect:/lectureReview/list");
 	        }
 	        
+	        mav.addObject("sbName", dto.getSb_Name());
+	        mav.addObject("rating", dto.getRating());
 	        mav.addObject("dto", dto);       // 리뷰 상세 정보 전달
             mav.addObject("mode", "update"); // 수정 모드 설정
 			
@@ -308,5 +306,15 @@ public class LectureReviewController {
 	
 		return mav;
 	}
+	
+	// 수정완료
+	@RequestMapping(value = "/lectureReview/update", method = RequestMethod.POST)
+	public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("lectureReview/write");
+		LectureReviewDAO dao = new LectureReviewDAO();
+		
+		return mav;
+	}
+	
 	
 }

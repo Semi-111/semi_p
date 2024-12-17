@@ -38,9 +38,7 @@
 				        <i class="fa-solid fa-star star" data-value="4"></i>
 				        <i class="fa-solid fa-star star" data-value="5"></i>
 				        <span class="rate-value"> 0 / 5 </span>
-			    	</div>
-			    	<input type="hidden" name="rating" id="ratingInput" value="0">
-					<input type="hidden" name="sbNum" value="${sbNum}">
+			    	</div>						
 				</div>
 				
 				<div class="form-group">
@@ -55,8 +53,10 @@
                    <button type="button" class="cancel-button" onclick="location.href='${pageContext.request.contextPath}/lectureReview/list'">
                    		취소
                    	</button> 
+                   	<input type="hidden" name="atNum" value="${atNum}">
                    	<c:if test="${mode=='update'}">
 						<input type="hidden" name="review_num" value="${dto.review_Num}">
+						<input type="hidden" name="rating" value="${rating}">
 						<input type="hidden" name="page" value="${page}">
 					</c:if>     
                </div>
@@ -75,8 +75,7 @@ function login() {
 
 let rateValue = 0; // 초기 별점 값 (0)
 
-$(function() {
-	$('.star').click(function() {
+$('.star').click(function() {
 		rateValue = $(this).attr('data-value');	
 		
 		$('.rate-value').text(rateValue + " / 5 ");
@@ -89,9 +88,32 @@ $(function() {
             $('.star[data-value="' + i + '"]').addClass('active');
         }
 
-		// hidden 필드 값 업데이트
-        $('#ratingInput').val(rateValue);
-	});
+});
+
+
+
+$(function() {
+	// mode가 update일 때만 실행
+	let mode = '${mode}';
+	let rating = '${rating}';
+	
+	if(mode === 'update') {
+		$('.star').each(function() {
+			let starValue = $(this).data('value'); // data-value 값 가져오기
+			
+			if(starValue <= rating) {
+				// rating 이하의 별에 활성화 클래스 추가
+				$(this).addClass('active');
+			} else {
+				$(this).removeClass('active');
+			}
+			
+		});
+	}
+	
+	// rate-value 영역에 현재 별점 표시
+    $(".rate-value").text(rating + " / 5");
+		
 });
 
 function submitForm() {

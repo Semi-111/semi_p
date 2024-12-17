@@ -14,43 +14,24 @@ import com.hyun3.util.DBUtil;
 public class LectureReviewDAO {
 	public Connection conn = DBConn.getConnection();
 	
-	public void insertLectureReview(LectureReviewDTO dto, String userId, int sbNum) throws SQLException{
+	public void insertLectureReview(LectureReviewDTO dto) throws SQLException{
 		PreparedStatement pstmt = null;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
 		
 		try {
 			sb.append(" INSERT INTO lectureReview(review_num, content, reg_date, rating, at_num) ");
-			sb.append(" VALUES(seq_lecture_review.NEXTVAL, ?, SYSDATE, ?, ");
-			sb.append("         (SELECT at.at_num FROM at_subject at ");
-			sb.append("          JOIN member m ON at.mb_num = m.mb_num");
-			sb.append("          JOIN dt_subject dt ON at.dt_sub_num = dt.dt_sub_num ");
-			sb.append("          JOIN subject s ON dt.sb_num = s.sb_num ");
-			sb.append("          WHERE m.userId = ? AND s.sb_num = ?)) ");
-			
-			conn.setAutoCommit(false); // 트랜잭션 시작
+			sb.append(" VALUES(seq_lecture_review.NEXTVAL, ?, SYSDATE, ?, ? ) ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
 			// 파라미터 바인딩
 			pstmt.setString(1, dto.getContent());
 			pstmt.setInt(2, dto.getRating());
-			pstmt.setString(3, userId);
-			pstmt.setInt(4, sbNum);
-			
+			pstmt.setLong(3, dto.getAt_Num());
+						
 			pstmt.executeUpdate();
-			
-	        // 커밋
-	        conn.commit();
-			
+				        			
 		} catch (SQLException e) {
-			// 오류 발생 시 롤백
-	        if (conn != null) {
-	            try {
-	                conn.rollback();
-	            } catch (SQLException rollbackEx) {
-	                rollbackEx.printStackTrace();
-	            }
-	        }
 	        e.printStackTrace();
 			throw e;
 		} finally {
@@ -58,7 +39,7 @@ public class LectureReviewDAO {
 		}
 	}
 	
-	
+	// 수강목록 리스트
 	public List<LectureReviewDTO> listLecture(String userId) {
 		List<LectureReviewDTO> list = new ArrayList<LectureReviewDTO>();
 		PreparedStatement pstmt = null;
@@ -75,6 +56,7 @@ public class LectureReviewDAO {
 			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
 			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
 			sb.append(" WHERE m.userId = ? ");
+			sb.append(" ORDER BY at.grade_year ASC, semester ASC ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -140,7 +122,7 @@ public class LectureReviewDAO {
 		return dto;
 	}
 	
-	
+	// 강의평가 목록
 	public List<LectureReviewDTO> listReview(int offset, int size) {
 		List<LectureReviewDTO> list = new ArrayList<LectureReviewDTO>();
 		PreparedStatement pstmt = null;
@@ -156,7 +138,7 @@ public class LectureReviewDAO {
 			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
 			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
 			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
-			sb.append(" ORDER BY lr.review_num ");
+			sb.append(" ORDER BY lr.reg_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
@@ -334,5 +316,25 @@ public class LectureReviewDAO {
 	    return dto; // 조회된 DTO 반환
 	}
 
+	
+	// 강의평 수정
+	public void updateReview(LectureReviewDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = " UPDATE lectureReview SET content=?, rating=? "
+					+ " WHERE review_num=? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+	}
 	
 }
