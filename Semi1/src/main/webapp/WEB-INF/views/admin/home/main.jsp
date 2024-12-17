@@ -202,7 +202,7 @@
 <body>
     <aside class="admin-sidebar">
         <div class="admin-logo">
-            <img src="${pageContext.request.contextPath}/test/trainee/trainee.png" alt="트레이니 어드민">
+            <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 어드민">
         </div>
         <ul class="admin-menu">
             <li><a href="#" class="active">대시보드</a></li>

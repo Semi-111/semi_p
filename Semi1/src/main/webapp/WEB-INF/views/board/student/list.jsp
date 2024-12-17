@@ -9,15 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><c:out value="${boardType == 'student' ? '새내기게시판' : '졸업생게시판'}"/></title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/list.css">
-  <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
-
+  <script src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
-<%--  <script>--%>
-<%--    function searchList() {--%>
-<%--      const f = document.searchForm;--%>
-<%--      f.submit();--%>
-<%--    }--%>
-<%--  </script>--%>
 </head>
 <body>
 
@@ -30,19 +23,22 @@
     <c:out value="${boardType == 'student' ? '새내기게시판' : '졸업생게시판'}"/>
   </h1>
 
-  <!-- 카테고리 탭 -->
-  <div class="category-tabs">
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=all"
-       class="${category == 'all' ? 'active' : ''}">전체</a>
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=7"
-       class="${category == '7' ? 'active' : ''}">25학번</a>
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=8"
-       class="${category == '8' ? 'active' : ''}">24학번</a>
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=9"
-       class="${category == '9' ? 'active' : ''}">23학번</a>
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=10"
-       class="${category == '10' ? 'active' : ''}">22학번 이전</a>
-  </div>
+  <c:choose>
+    <c:when test="${boardType == 'student'}">
+    <!-- 카테고리 탭 -->
+    <div class="category-tabs">
+      <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}">전체</a>
+      <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=7"
+         class="${category == '7' ? 'active' : ''}">25학번</a>
+      <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=8"
+         class="${category == '8' ? 'active' : ''}">24학번</a>
+      <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=9"
+         class="${category == '9' ? 'active' : ''}">23학번</a>
+      <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&category=10"
+         class="${category == '10' ? 'active' : ''}">22학번 이전</a>
+    </div>
+    </c:when>
+  </c:choose>
 
   <form name="searchForm" action="${pageContext.request.contextPath}/bbs/studentBoard/list">
     <input type="hidden" name="type" value="${boardType}">

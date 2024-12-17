@@ -56,6 +56,7 @@ body {
 
 .lecture-list:hover {
 	background-color: #f8f9fa;
+	cursor: pointer;
 }
 
 .lectureName {
@@ -172,4 +173,50 @@ body {
     font-size: 14px;
     line-height: 1.5;
     color: #444;
+    
+    overflow: hidden;            /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis;     /* 말줄임표(...) 표시 */
+    line-height: 1.5;            /* 줄 간격 설정 (선택사항) */
+    max-height: 3em;             /* 2줄 기준 높이 설정: 1.5em * 2줄 */
+    white-space: nowrap;
+    display: -webkit-box;        /* Flex 기반 레이아웃 */
+    -webkit-line-clamp: 2;       /* 최대 표시할 줄 수 */
+	-webkit-box-orient: vertical; /* 세로 방향으로 텍스트 정렬 */
+}
+
+
+/* 페이징 처리 */
+.page-navigation {
+	
+	display: flex;
+	justify-content: center;
+	gap: 5px;
+}
+
+.page-link {
+	text-decoration: none;
+	color: #666;
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	transition: all 0.2s;
+}
+
+.page-link:hover {
+	background-color: #f0f0f0;
+	color: #a855f7;
+}
+
+.page-link.active {
+	background-color: #a855f7;
+	color: white;
+	border-color: #a855f7;
+}
+
+.page-box {
+	background: white;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	padding: 15px;
+	
 }

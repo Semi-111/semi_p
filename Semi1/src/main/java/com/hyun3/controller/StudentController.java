@@ -495,27 +495,23 @@ public class StudentController {
   private static void formatPostDate(List<StudentBoardDTO> list) {
     LocalDateTime now = LocalDateTime.now(); // 현재 시간
 
+
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     for (StudentBoardDTO dto : list) {
-      try {
-        LocalDateTime postDate;
 
-        if (dto.getCaDate().length() == 10) {
-          LocalDate date = LocalDate.parse(dto.getCaDate(), dateFormatter);
-          postDate = date.atTime(now.getHour(), now.getMinute());
-        } else {
-          postDate = LocalDateTime.parse(dto.getCaDate(), dateTimeFormatter);
-        }
+      try {
+        LocalDateTime postDate = LocalDateTime.parse(dto.getCaDate(), dateTimeFormatter); // yyyy-MM-dd HH:mm:ss로 가지고옴
 
         Duration duration = Duration.between(postDate, now);
 
-        if (duration.toHours() < 24) {
-          dto.setFormattedCaDate(postDate.format(timeFormatter)); // HH:mm
+        if(duration.toHours() < 12) {
+          dto.setFormattedCaDate(postDate.format(timeFormatter));
         } else {
-          dto.setFormattedCaDate(postDate.format(dateFormatter)); // yyyy-MM-dd
+          dto.setFormattedCaDate(postDate.format(dateFormatter));
         }
       } catch (Exception e) {
         e.printStackTrace();

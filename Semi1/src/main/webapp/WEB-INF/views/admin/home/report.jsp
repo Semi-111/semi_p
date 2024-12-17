@@ -378,8 +378,7 @@ tr:hover {
 </head>
 <body>
 	<div class="container">
-		<h1 style="margin: 20px 0; font-size: 24px; color: #374151;">신고
-			관리</h1>
+		<h1 style="margin: 20px 0; font-size: 24px; color: #374151;">신고 관리</h1>
 
 		<form name="searchForm"
 			action="${pageContext.request.contextPath}/admin/home/report"

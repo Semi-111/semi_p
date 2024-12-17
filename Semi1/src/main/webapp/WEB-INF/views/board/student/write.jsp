@@ -28,17 +28,21 @@
       <input type="hidden" name="type" value="${type}" />
       <input type="hidden" name="page" value="${page}" />
 
+<c:choose>
+  <c:when test="${boardType == 'student'}">
         <div class="form-group">
           <label for="category">학번:</label>
           <select name="category" id="category" required class="form-control">
-            <option value="">학번을 선택하세요</option>
-            <!-- 학번 카테고리 추가 -->
-            <option value="7" <c:if test="${7 == dto.categoryNum}">selected</c:if>>25학번</option>
-            <option value="8" <c:if test="${8 == dto.categoryNum}">selected</c:if>>24학번</option>
-            <option value="9" <c:if test="${9 == dto.categoryNum}">selected</c:if>>23학번</option>
-            <option value="10" <c:if test="${10 == dto.categoryNum}">selected</c:if>>22학번</option>
+          <option value="">학번을 선택하세요</option>
+          <!-- 학번 카테고리 추가 -->
+          <option value="7" <c:if test="${7 == dto.categoryNum}">selected</c:if>>25학번</option>
+          <option value="8" <c:if test="${8 == dto.categoryNum}">selected</c:if>>24학번</option>
+          <option value="9" <c:if test="${9 == dto.categoryNum}">selected</c:if>>23학번</option>
+          <option value="10" <c:if test="${10 == dto.categoryNum}">selected</c:if>>22학번</option>
           </select>
         </div>
+  </c:when>
+</c:choose>
 
       <div class="form-group">
         <label for="title">제목:</label>
@@ -72,41 +76,6 @@
   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
   <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 </footer>
-
-<script>
-  <%--document.getElementById('file').addEventListener('change', function(event) {--%>
-  <%--  const fileInput = event.target;--%>
-  <%--  const fileName = fileInput.files[0]?.name || '';--%>
-  <%--  const preview = document.querySelector('.preview-image');--%>
-
-  <%--  // 파일명이 존재하면 표시--%>
-  <%--  if (fileName) {--%>
-  <%--    const fileNameDisplay = document.createElement('p');--%>
-  <%--    fileNameDisplay.classList.add('file-name');--%>
-  <%--    fileNameDisplay.textContent = `선택된 파일: ${fileName}`;--%>
-  <%--    fileInput.parentNode.appendChild(fileNameDisplay);--%>
-  <%--  }--%>
-
-  <%--  // 이미지 미리보기 (이미지 파일인 경우)--%>
-  <%--  const file = fileInput.files[0];--%>
-  <%--  if (file && file.type.startsWith('image/')) {--%>
-  <%--    const reader = new FileReader();--%>
-  <%--    reader.onload = function(e) {--%>
-  <%--      let img = preview.querySelector('img');--%>
-  <%--      if (!img) {--%>
-  <%--        img = document.createElement('img');--%>
-  <%--        preview.appendChild(img);--%>
-  <%--      }--%>
-  <%--      img.src = e.target.result;--%>
-  <%--      preview.style.display = 'flex';--%>
-  <%--    };--%>
-  <%--    reader.readAsDataURL(file);--%>
-  <%--  } else {--%>
-  <%--    preview.style.display = 'none';--%>
-  <%--    preview.innerHTML = '';--%>
-  <%--  }--%>
-  <%--});--%>
-</script>
 
 </body>
 </html>
