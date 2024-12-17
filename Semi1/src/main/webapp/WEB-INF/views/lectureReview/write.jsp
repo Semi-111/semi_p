@@ -13,6 +13,7 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 
+
 </head>
 <body>
 
@@ -37,8 +38,8 @@
 				        <i class="fa-solid fa-star star" data-value="3"></i>
 				        <i class="fa-solid fa-star star" data-value="4"></i>
 				        <i class="fa-solid fa-star star" data-value="5"></i>
-				        <span class="rate-value"> 0 / 5 </span>
-			    	</div>						
+				        <span class="rate-value"> 0 / 5 </span>				        
+			    	</div>				    					
 				</div>
 				
 				<div class="form-group">
@@ -52,13 +53,11 @@
                    </button>
                    <button type="button" class="cancel-button" onclick="location.href='${pageContext.request.contextPath}/lectureReview/list'">
                    		취소
-                   	</button> 
-                   	<input type="hidden" name="atNum" value="${atNum}">
-                   	<c:if test="${mode=='update'}">
-						<input type="hidden" name="review_num" value="${dto.review_Num}">
-						<input type="hidden" name="rating" value="${rating}">
-						<input type="hidden" name="page" value="${page}">
-					</c:if>     
+                   	</button>
+                   	<input type="hidden" name="rating" id="ratingInput" value="0">
+			    	<input type="hidden" name="atNum" value="${atNum}">
+			    	<input type="hidden" name="reviewnum" value="${dto.review_Num}">                					
+                   	<input type="hidden" name="page" value="${page}">
                </div>
                
 			</form>
@@ -75,7 +74,8 @@ function login() {
 
 let rateValue = 0; // 초기 별점 값 (0)
 
-$('.star').click(function() {
+$(function() {
+	$('.star').click(function() {
 		rateValue = $(this).attr('data-value');	
 		
 		$('.rate-value').text(rateValue + " / 5 ");
@@ -87,7 +87,10 @@ $('.star').click(function() {
         for (let i = 1; i <= rateValue; i++) {
             $('.star[data-value="' + i + '"]').addClass('active');
         }
-
+		
+     	// hidden 필드 값 업데이트
+        $('#ratingInput').val(rateValue);
+	});
 });
 
 
@@ -96,6 +99,10 @@ $(function() {
 	// mode가 update일 때만 실행
 	let mode = '${mode}';
 	let rating = '${rating}';
+	
+	if(!rating) {
+		rating = 0;
+	}
 	
 	if(mode === 'update') {
 		$('.star').each(function() {
@@ -107,13 +114,11 @@ $(function() {
 			} else {
 				$(this).removeClass('active');
 			}
-			
-		});
+		});	
 	}
 	
 	// rate-value 영역에 현재 별점 표시
-    $(".rate-value").text(rating + " / 5");
-		
+    $(".rate-value").text(rating + " / 5");		
 });
 
 function submitForm() {
@@ -136,7 +141,6 @@ function submitForm() {
 	f.action = '${pageContext.request.contextPath}/lectureReview/${mode}';
 	f.submit();
 }
-
 
 </script>
 

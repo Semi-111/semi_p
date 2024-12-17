@@ -56,7 +56,7 @@ public class LectureReviewDAO {
 			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
 			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
 			sb.append(" WHERE m.userId = ? ");
-			sb.append(" ORDER BY at.grade_year ASC, semester ASC ");
+			sb.append(" ORDER BY at.grade_year ASC, at.semester ASC ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -278,44 +278,6 @@ public class LectureReviewDAO {
 		return result;
 	}
 	
-	public LectureReviewDTO findBySbNum(long sbNum) {
-	    LectureReviewDTO dto = null; // 결과를 담을 DTO
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-	    StringBuilder sb = new StringBuilder();
-
-	    try {
-	        // SQL 쿼리 작성
-	        sb.append(" SELECT s.sb_num, s.sb_name, p.pf_name ");
-	        sb.append(" FROM subject s ");
-	        sb.append(" JOIN pf_sb ps ON s.sb_num = ps.sb_num "); // 교수와 과목 연결
-	        sb.append(" JOIN professor p ON ps.pf_num = p.pf_num "); // 교수 정보 조회
-	        sb.append(" WHERE s.sb_num = ? "); // 과목 번호 조건
-
-	        pstmt = conn.prepareStatement(sb.toString());
-	        pstmt.setLong(1, sbNum); // sbNum 값 설정
-
-	        // 쿼리 실행
-	        rs = pstmt.executeQuery();
-
-	        // 결과 처리
-	        if (rs.next()) {
-	            dto = new LectureReviewDTO();
-	            dto.setSb_Num(rs.getLong("sb_num"));   // 과목 번호
-	            dto.setSb_Name(rs.getString("sb_name")); // 과목명
-	            dto.setPf_Name(rs.getString("pf_name")); // 교수명
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        // 리소스 정리
-	        DBUtil.close(rs);
-	        DBUtil.close(pstmt);
-	    }
-
-	    return dto; // 조회된 DTO 반환
-	}
-
 	
 	// 강의평 수정
 	public void updateReview(LectureReviewDTO dto) throws SQLException {
@@ -326,6 +288,10 @@ public class LectureReviewDAO {
 			sql = " UPDATE lectureReview SET content=?, rating=? "
 					+ " WHERE review_num=? ";
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getContent());
+			pstmt.setInt(2, dto.getRating());
+			pstmt.setLong(3, dto.getReview_Num());
 			
 			pstmt.executeUpdate();
 			

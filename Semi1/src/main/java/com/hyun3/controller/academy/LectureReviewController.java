@@ -78,9 +78,12 @@ public class LectureReviewController {
 			}
 			// reviewList = dao.listReview(userId);
 			
+			
 			// 페이징 처리
 			String cp = req.getContextPath();
 			String listUrl = cp + "/lectureReview/list";
+			
+		
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 			
@@ -201,7 +204,7 @@ public class LectureReviewController {
 	@RequestMapping(value = "/lectureReview/write", method = RequestMethod.POST)
 	public ModelAndView writeSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {	
-		// 글등록하기 : 넘어온 파라미터 - content, rating, sbNum
+		// 글등록하기 : 넘어온 파라미터 - content, rating, atNum
 		
 		LectureReviewDAO dao = new LectureReviewDAO();
 		
@@ -217,7 +220,7 @@ public class LectureReviewController {
 			dto.setContent(req.getParameter("content"));
 			dto.setRating(Integer.parseInt(req.getParameter("rating")));
 			
-			int atNum = Integer.parseInt(req.getParameter("atNum"));
+			long atNum = Long.parseLong(req.getParameter("atNum"));
 			dto.setAt_Num(atNum);
 			dao.insertLectureReview(dto);
 			
@@ -278,25 +281,31 @@ public class LectureReviewController {
 		LectureReviewDAO dao = new LectureReviewDAO();
 			
 		try {
-			long reviewNum = Long.parseLong(req.getParameter("reviewnum"));
-			
-		
 			HttpSession session = req.getSession();
 			SessionInfo info = (SessionInfo) session.getAttribute("member");
-
-
-	        LectureReviewDTO dto = dao.findByRvNum(reviewNum);
-	        
+			
+			String page = req.getParameter("page");
+			
+			// System.out.println(page);
+			
+			long reviewNum = Long.parseLong(req.getParameter("reviewnum"));
+			LectureReviewDTO dto = dao.findByRvNum(reviewNum);
+			
+			
 	        if(dto == null) {
-	        	return new ModelAndView("redirect:/lectureReview/list");
+	        	return new ModelAndView("redirect:/lectureReview/list?page=" + page);
 	        }
 	        
 	        if(! dto.getUserId().equals(info.getUserId())) {
-	        	return new ModelAndView("redirect:/lectureReview/list");
+	        	return new ModelAndView("redirect:/lectureReview/list?page=" + page);
 	        }
 	        
+	        
+	        // sbName, rating 을 넘기지 않으면 수정페이지에서 나오지 않는다
 	        mav.addObject("sbName", dto.getSb_Name());
 	        mav.addObject("rating", dto.getRating());
+	        
+	        mav.addObject("page", page);
 	        mav.addObject("dto", dto);       // 리뷰 상세 정보 전달
             mav.addObject("mode", "update"); // 수정 모드 설정
 			
@@ -310,10 +319,33 @@ public class LectureReviewController {
 	// 수정완료
 	@RequestMapping(value = "/lectureReview/update", method = RequestMethod.POST)
 	public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("lectureReview/write");
+
 		LectureReviewDAO dao = new LectureReviewDAO();
 		
-		return mav;
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		String page = req.getParameter("page");
+		if (page == null || page.isEmpty()) {
+	        page = "1"; // 기본값 설정
+	    }
+		
+		try {
+			LectureReviewDTO dto = new LectureReviewDTO();
+			
+			dto.setReview_Num(Long.parseLong(req.getParameter("reviewnum")));
+			dto.setRating(Integer.parseInt(req.getParameter("rating")));
+			dto.setContent(req.getParameter("content"));
+			
+			dto.setUserId(info.getUserId());
+			
+			dao.updateReview(dto);
+						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ModelAndView("redirect:/lectureReview/list?page=" + page);
 	}
 	
 	
