@@ -39,7 +39,7 @@
 				      	</ul>
 					</li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/schedule/list">시간표</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/schedule/schedule2">시간표</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/grade/list">학점계산기</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>

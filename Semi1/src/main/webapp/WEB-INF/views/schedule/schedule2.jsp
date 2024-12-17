@@ -18,8 +18,11 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
 
 
+
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ScheduleCss.css" type="text/css">
 <script src="${pageContext.request.contextPath}/resources/js/Schedule.js"></script>
+
 </head>
 <body>
 
@@ -29,25 +32,27 @@
         <div class="time-table-selector">
             <div class="select-box-container">
                 <select id="semesterSelect">
-                    <option value="2024-2">2024년 2학기</option>
-                    <option value="2024-1">2024년 1학기</option>
-                    <option value="2023-2">2023년 2학기</option>
-                    <option value="2023-1">2023년 1학기</option>
-                    <option value="2022-2">2022년 2학기</option>
-                    <option value="2022-1">2022년 1학기</option>
+                    <option value="4학년 2학기">4학년 2학기</option>
+                    <option value="4학년 1학기">4학년 1학기</option>
+                    <option value="3학년 2학기">3학년 2학기</option>
+                    <option value="3학년 1학기">3학년 1학기</option>
+                    <option value="2학년 2학기">2학년 2학기</option>
+                    <option value="2학년 1학기">2학년 1학기</option>
+                    <option value="1학년 2학기">1학년 2학기</option>
+                    <option value="1학년 1학기">1학년 1학기</option>
                 </select>
+
+			<nav class="timetable-btn-container" id="timetableBtnContainer">
+			    <button class="save-timetable-btn" onclick="saveTimetable()"> SAVE!<br>TIMETABLE </button>
+			</nav>
+
             </div>
 		</div>
+		 
 		
-		<nav class="timetable-btn-container" id="timetableBtnContainer">
-		    <button class="timetable-btn">시간표 1</button>
-		    <button class="timetable-btn">시간표 2</button>
-		    <button class="add-timetable-btn">새 시간표 만들기</button>
-		</nav>
-			
-			  
         <!-- 시간표 그리드 -->
         <div class="timetable">
+        	<div class="texttable"></div>
             <table id="timetable">
                 <thead>
                     <tr>
@@ -60,11 +65,10 @@
                     </tr>
                 </thead>
                 <tbody>
-
+					<!-- 시간표 내용 -->
                 </tbody>
             </table>
         </div>
-
 
         <!-- 수업 검색 모달을 여는 버튼 -->
            <!-- 수업 검색 버튼을 시간표 안에 위치시키기 -->
@@ -72,6 +76,24 @@
                 <button id="searchModalBtn" class="search-button"><i class="fi fi-rr-search"></i>수업 검색</button>
             </div>
     </main>
+    	
+    <script>
+    // 페이지 로드 후 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', function() {
+        const semesterSelect = document.getElementById('semesterSelect');  // 셀렉트 박스
+        const textTable = document.querySelector('.texttable');  // '시간표' 텍스트가 있는 div
+
+        // 셀렉트 박스 값이 변경될 때마다 실행되는 함수
+        semesterSelect.addEventListener('change', function() {
+            const selectedValue = semesterSelect.value;  // 선택된 값 가져오기
+            textTable.textContent = selectedValue + " 시간표";  // '시간표' 텍스트에 반영
+        });
+
+        // 초기 셀렉트 박스 값에 맞게 설정 (페이지 로드 시)
+        const initialValue = semesterSelect.value;
+        textTable.textContent = initialValue + " 시간표";  // 초기 텍스트 설정
+    });
+	</script>
 
     <!-- 수업 검색 모달 -->
     <div id="searchModal" class="modal">
@@ -111,6 +133,7 @@
             </table>
         </div>
     </div>
+    
 
 </body>
 </html>

@@ -8,7 +8,14 @@ public class ScheduleDTO {
     private String studytime; // 수업 시간 
     private String studyDay; // 수업 요일
     private String color;
+    private String timetableNum; 
     
+	public String getTimetableNum() {
+		return timetableNum;
+	}
+	public void setTimetableNum(String timetableNum) {
+		this.timetableNum = timetableNum;
+	}
 	public String getColor() {
 		return color;
 	}

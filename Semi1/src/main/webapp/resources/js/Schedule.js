@@ -97,69 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
     createTimetable();
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const timetableBtnContainer = document.querySelector('#timetableBtnContainer');
-    const addTimetableBtn = document.querySelector('.add-timetable-btn');
-    
-    // 로컬 스토리지에서 기존 시간표 리스트 가져오기
-    let timetableBtnsData = JSON.parse(localStorage.getItem('timetableBtns')) || [];
-    
-    // 시간표 버튼 클릭 시 해당 시간표를 보여주는 함수
-    function showTimetable(event) {
-        const timetableName = event.target.textContent.replace(' ×', '');  // ' ×' 제거
-        alert(`${timetableName}을(를) 보여줍니다.`);  // 실제로는 시간표 내용을 보여주는 코드로 변경 필요
-    }
-
-    // 시간표 버튼을 로컬 스토리지에 저장하고, 화면에 표시
-    function renderTimetableButtons() {
-        // 기존 버튼들을 모두 삭제하고 새로 렌더링
-        const buttons = timetableBtnContainer.querySelectorAll('.timetable-btn');
-        buttons.forEach(button => button.remove());
-
-        // 로컬 스토리지에 저장된 시간표 버튼을 추가
-        timetableBtnsData.forEach((timetableName, index) => {
-            const newTimetableBtn = document.createElement('button');
-            newTimetableBtn.textContent = timetableName;
-            newTimetableBtn.classList.add('timetable-btn');
-            
-            // 엑스 버튼 추가
-            const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = '×';
-            deleteBtn.classList.add('delete-btn');
-            deleteBtn.addEventListener('click', function(event) {
-                deleteTimetable(index);
-                event.stopPropagation();  // 엑스 버튼 클릭 시 버튼 클릭 이벤트 전파 막기
-            });
-
-            newTimetableBtn.appendChild(deleteBtn);
-            newTimetableBtn.addEventListener('click', showTimetable);
-            timetableBtnContainer.insertBefore(newTimetableBtn, addTimetableBtn); // "새 시간표 만들기" 버튼 앞에 추가
-        });
-    }
-
-    // 시간표 삭제 함수
-    function deleteTimetable(index) {
-        timetableBtnsData.splice(index, 1);  // 해당 시간표를 배열에서 삭제
-        localStorage.setItem('timetableBtns', JSON.stringify(timetableBtnsData));  // 로컬 스토리지에 저장
-        renderTimetableButtons();  // 삭제 후 버튼 다시 렌더링
-    }
-
-    // 새 시간표 만들기 클릭 시 새로운 시간표 버튼 추가
-    function addNewTimetable() {
-        const newTimetableName = `시간표 ${timetableBtnsData.length + 1}`;
-        timetableBtnsData.push(newTimetableName); // 새로운 시간표 이름을 리스트에 추가
-        localStorage.setItem('timetableBtns', JSON.stringify(timetableBtnsData)); // 로컬 스토리지에 저장
-
-        renderTimetableButtons(); // 버튼을 새로 렌더링
-    }
-
-    // 새 시간표 만들기 버튼 클릭 이벤트
-    addTimetableBtn.addEventListener('click', addNewTimetable);
-
-    // 페이지 로드 시 기존 시간표 버튼들을 렌더링
-    renderTimetableButtons();
-});
-
 // 모달 안에 시간표
 document.addEventListener('DOMContentLoaded', function () {
     var modal = document.getElementById("searchModal");
@@ -340,7 +277,7 @@ function toggleCellColor(col, startTime, duration, subjectColor, subjectName, st
                 subjectText.style.transform = 'translate(-50%, -50%)';
                 subjectText.style.fontSize = '16px';
                 subjectText.style.textAlign = 'center';
-                subjectText.style.color = 'black';
+                subjectText.style.color = '#747474';
                 subjectText.style.whiteSpace = 'nowrap';
 
                 // 텍스트를 셀에 추가
@@ -361,10 +298,12 @@ function removeTimeSlots(col, startTime, duration) {
         return;
     }
 
-    const rows = document.querySelectorAll('#timetable tbody tr'); 
-    for (let i = 0; i < duration; i++) {
-        const row = rows[startIndex + i];
-        const targetCell = row.querySelectorAll('td')[col];
+	// 확인을 위한 알림 창 띄우기
+	if (confirm("추가된 수업을 삭제하시겠습니까?")) {
+	    const rows = document.querySelectorAll('#timetable tbody tr'); 
+	    for (let i = 0; i < duration; i++) {
+	        const row = rows[startIndex + i];
+	        const targetCell = row.querySelectorAll('td')[col];
 
         // 색상 삭제
         targetCell.style.backgroundColor = '';
@@ -423,5 +362,7 @@ function removePreviewTimeSlots(col, startTime, duration) {
 
         targetCell.style.backgroundColor = '';
         targetCell.style.borderColor = '';
-    }
+   	 	}
+	}
+
 }

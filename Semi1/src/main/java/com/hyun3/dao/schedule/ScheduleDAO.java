@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyun3.util.DBUtil;
 import com.hyun3.domain.schedule.ScheduleDTO;
 import com.hyun3.util.DBConn;
+import com.hyun3.util.DBUtil;
 
 public class ScheduleDAO {
 	public Connection conn = DBConn.getConnection();

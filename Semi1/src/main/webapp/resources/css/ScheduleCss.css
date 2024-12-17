@@ -7,20 +7,6 @@
     align-items: flex-start;
 }
 
-.add-timetable {
-	width: 100px;     
-    margin-left: 5%;   
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.add-timetable:hover {
-    background-color: #0056b3;
-}
-
 .timetable-list button {
     background-color: #ccc;
     padding: 10px;
@@ -42,10 +28,18 @@
  	margin-top: 10px; /* 시간표 목록과 버튼 사이의 간격을 추가 */
 }	
 
+.texttable {
+	font-size: 40px;
+	font-weight: 500;
+	font-weight: bold;
+	color: #4C4C4C;
+	margin: 1%;
+}
+
 /* 시간표 그리드 */
 .timetable {
 	position: absolute;	
-	top: 9%;
+	top: 8%;
 	right: 1%;
     width: 80%;  /* 시간표 그리드의 너비를 80%로 설정 */
     margin-left: 20%; /* 왼쪽 여백을 없애고, 전체 너비를 사용 */
@@ -58,6 +52,7 @@
     border-collapse: separate;  /* 테이블 셀 간의 경계선이 겹치지 않도록 설정 */
  	border: 3px solid purple;    /* 겉 테두리를 굵은 선으로 설정 */
     border-radius: 15px;   
+	margin-bottom: 25%;
 }
 
 .timetable th, .timetable td {
@@ -68,11 +63,10 @@
 
 /* 셀렉트 박스 스타일 */
 #semesterSelect {
-
     width: 10%;
     padding: 10px;
     font-size: 16px;
-    margin-top: 10px;
+    margin-top: 20px;
     background-color: white;
     color: graytext;
     border: 2px solid purple;
@@ -99,8 +93,8 @@
 /* 셀렉트 박스 스타일 */
 .select-box-container {
     position: relative;
-    bottom: 25px;
-    padding: 12px;
+    bottom: 33px;
+    padding: 15px;
     display: inline-block; /* 인라인 블록으로 설정해서 왼쪽에 붙도록 */
     width: 100%;
     box-sizing: border-box;
@@ -194,7 +188,7 @@
     width: 20%; /* 각 td의 너비를 고르게 설정 */
 }
 
-.modal td:hover {
+.modal tr:hover {
 	background: #ccc;
     cursor: pointer;
 }
@@ -203,12 +197,6 @@
   height: 30px;
   border: 1px solid #ccc;
   text-align: center;
-}
-
-.highlight {
-    background-color: yellow; /* 배경색을 yellow로 강조 */
-    color: black;  /* 텍스트 색을 검정으로 변경 */
-    font-weight: bold; /* 텍스트를 굵게 표시 */
 }
 
 .close {
@@ -253,6 +241,7 @@
 }
 */
 
+
 .search-button:hover {
     background-color: #A566FF;
 }
@@ -272,40 +261,18 @@
     transition: bottom 0.5s ease-out; /* 애니메이션 효과 추가 */
 }
 
-
         /* 시간표 버튼을 담을 박스 */
         .timetable-btn-container {
             display: flex;
             flex-direction: column;  /* 세로로 배치 */
             justify-content: flex-end;
-            margin-bottom: 50%;
             width: 10%; /* 박스의 너비를 설정 */
         }
 
-        /* 시간표 버튼 스타일 */
-        .timetable-btn {
-        	margin-left: 5%;
-            margin: 2%;
-            background-color: white;
-            padding: 8px 20px;
-            border: 2px solid purple;
-            cursor: pointer;
-            text-align: center;
-            width: 100%;  /* 버튼들이 박스의 너비를 꽉 채우게 설정 */
-            border-radius: 8px; /* 둥글게 처리 */
-            font-size: 16px;
-            font-weight: 400;
-            font-weight: bold;
-        }
-
-        .timetable-btn:hover {
-            background-color: #A566FF;
-        }
-
-        /* "새 시간표 만들기" 버튼 스타일 */
-        .add-timetable-btn {
-        	margin: 6%;
-            padding: 8px 20px;
+        /* 시간표 저장하기 버튼 스타일 */
+        .save-timetable-btn {
+        	margin-top: 7%;
+            padding: 2px 10px;
         	border: none;
             background-color: #D1B2FF;
             border-radius: 5px;
@@ -315,21 +282,8 @@
             font-size: 16px;
         }
 
-        .add-timetable-btn:hover {
+        .save-timetable-btn:hover {
        		border: none;
             background-color: #A566FF;
         }
 
-        /* 엑스 버튼 스타일 */
-        .delete-btn {
-            background: none;
-            border: none;
-            color: red;
-            font-size: 18px;
-            cursor: pointer;
-            margin-left: 30px;
-        }
-
-        .delete-btn:hover {
-            color: darkred;
-        }
