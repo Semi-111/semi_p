@@ -7,10 +7,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainee Admin</title>
-    <style>
+<style type="text/css">
         /* 기존 스타일 유지 */
         * {
             margin: 0;
@@ -197,7 +194,10 @@
         .action-button:hover {
             background: #9333ea;
         }
-    </style>
+</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainee Admin</title>
 </head>
 <body>
     <aside class="admin-sidebar">
