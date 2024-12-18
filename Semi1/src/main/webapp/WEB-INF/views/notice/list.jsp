@@ -6,8 +6,9 @@
 <head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="#/resources/css/notice/list.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/market/list.css">
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>공지사항</title>
 
@@ -40,7 +41,7 @@
                 <a href="#/notice/list?category=5"
                     class="${param.category=='5' ? 'active' : ''}">취업</a>
             </div>
-            <a href="#/notice/write" class="write-button">글쓰기</a>
+            <a href="${pageContext.request.contextPath}/noticeBoard/writeForm" class="write-button">글쓰기</a>
         </div>
 
         <!-- 검색 -->

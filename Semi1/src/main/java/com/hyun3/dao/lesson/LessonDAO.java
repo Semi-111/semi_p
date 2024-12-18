@@ -1,4 +1,4 @@
-package com.hyun3.dao;
+package com.hyun3.dao.lesson;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,10 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyun3.domain.LessonDTO;
-import com.hyun3.domain.LessonLikeDTO;
-import com.hyun3.domain.LessonReplyDTO;
-import com.hyun3.domain.sw.ReplyDTO;
+import com.hyun3.domain.lesson.LessonDTO;
+import com.hyun3.domain.lesson.LessonLikeDTO;
+import com.hyun3.domain.lesson.LessonReplyDTO;
 import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 
@@ -537,7 +536,7 @@ public class LessonDAO {
 	}
 
 	// 댓글 추가
-	public void insertReply(ReplyDTO dto) throws SQLException {
+	public void insertReply(LessonReplyDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 
@@ -549,7 +548,7 @@ public class LessonDAO {
 
 			pstmt.setString(1, dto.getContent());
 			pstmt.setLong(2, dto.getMb_num());
-			pstmt.setInt(3, dto.getCm_num());
+			pstmt.setLong(3, dto.getCm_num());
 
 			pstmt.executeUpdate();
 
@@ -591,8 +590,8 @@ public class LessonDAO {
 	}
 
 	// 댓글 목록
-	public List<ReplyDTO> listReply(int cm_num, int offset, int size) throws SQLException {
-		List<ReplyDTO> list = new ArrayList<>();
+	public List<LessonReplyDTO> listReply(int cm_num, int offset, int size) throws SQLException {
+		List<LessonReplyDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
@@ -615,7 +614,7 @@ public class LessonDAO {
 			rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				ReplyDTO dto = new ReplyDTO();
+				LessonReplyDTO dto = new LessonReplyDTO();
 
 				dto.setCo_num(rs.getInt("CO_num"));
 				dto.setMb_num(rs.getInt("MB_num"));
@@ -661,7 +660,7 @@ public class LessonDAO {
 
 	// 댓글 수정
 	// 댓글 수정
-	public void updateReply(ReplyDTO dto) throws SQLException {
+	public void updateReply(LessonReplyDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 
@@ -670,7 +669,7 @@ public class LessonDAO {
 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getContent());
-			pstmt.setInt(2, dto.getCo_num());
+			pstmt.setLong(2, dto.getCo_num());
 			pstmt.setLong(3, dto.getMb_num());
 
 			pstmt.executeUpdate();

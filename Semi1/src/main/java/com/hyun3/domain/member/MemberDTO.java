@@ -1,4 +1,4 @@
-package com.hyun3.domain;
+package com.hyun3.domain.member;
 
 public class MemberDTO {
 	private Long mb_Num; // 회원번호

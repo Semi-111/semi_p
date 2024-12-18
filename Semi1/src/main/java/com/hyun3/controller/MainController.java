@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.hyun3.dao.LessonDAO;
 import com.hyun3.dao.board.InfoBoardDAO;
-import com.hyun3.domain.LessonDTO;
+import com.hyun3.dao.lesson.LessonDAO;
 import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.lesson.LessonDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.view.ModelAndView;

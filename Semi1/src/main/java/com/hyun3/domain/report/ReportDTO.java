@@ -1,4 +1,4 @@
-package com.hyun3.domain;
+package com.hyun3.domain.report;
 
 public class ReportDTO {
 	private long RP_num; // 신고 번호 => 시퀀스

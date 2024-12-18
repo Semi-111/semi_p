@@ -1,4 +1,4 @@
-package com.hyun3.dao;
+package com.hyun3.dao.market;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hyun3.domain.sw.MarketDTO;
+import com.hyun3.domain.market.MarketDTO;
 import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 

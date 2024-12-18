@@ -10,9 +10,9 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import com.hyun3.dao.MarketDAO;
+import com.hyun3.dao.market.MarketDAO;
 import com.hyun3.domain.SessionInfo;
-import com.hyun3.domain.sw.MarketDTO;
+import com.hyun3.domain.market.MarketDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;

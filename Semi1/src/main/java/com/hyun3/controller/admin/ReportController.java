@@ -3,9 +3,9 @@ package com.hyun3.controller.admin;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.hyun3.dao.ReportDAO;
-import com.hyun3.domain.ReportDTO;
+import com.hyun3.dao.report.ReportDAO;
 import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.report.ReportDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;

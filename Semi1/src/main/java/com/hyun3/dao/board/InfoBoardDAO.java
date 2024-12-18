@@ -1,17 +1,17 @@
 package com.hyun3.dao.board;
 
-import com.hyun3.domain.MemberDTO;
-import com.hyun3.domain.board.InfoBoardDTO;
-import com.hyun3.domain.board.ReplyDTO;
-import com.hyun3.util.DBConn;
-import com.hyun3.util.DBUtil;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.board.ReplyDTO;
+import com.hyun3.domain.member.MemberDTO;
+import com.hyun3.util.DBConn;
+import com.hyun3.util.DBUtil;
 
 public class InfoBoardDAO {
 

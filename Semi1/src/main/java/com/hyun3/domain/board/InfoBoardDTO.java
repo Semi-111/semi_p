@@ -1,6 +1,6 @@
 package com.hyun3.domain.board;
 
-import com.hyun3.domain.MemberDTO;
+import com.hyun3.domain.member.MemberDTO;
 
 public class InfoBoardDTO {
   private long cmNum;        // 게시글 번호

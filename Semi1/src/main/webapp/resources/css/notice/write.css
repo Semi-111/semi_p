@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", sans-serif;
+}
+
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.board-title {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #1a1a1a;
+}
+
+/* 글쓰기 폼 스타일 */
+.write-form {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #1a1a1a;
+    font-size: 15px;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #4263eb;
+    box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.1);
+}
+
+.form-group textarea {
+    height: 300px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* 공지구분 스타일 */
+.notice-type {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notice-type input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.notice-type label {
+    display: inline;
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* 날짜 범위 스타일 */
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.date-range input[type="date"] {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* 파일 업로드 스타일 */
+.file-upload {
+    margin-bottom: 16px;
+}
+
+.file-upload label {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: normal;
+    transition: background-color 0.2s ease;
+}
+
+.file-upload label:hover {
+    background-color: #e9ecef;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+.file-name {
+    display: inline-block;
+    font-size: 14px;
+    color: #666;
+}
+
+.preview-image {
+    max-width: 200px;
+    margin-top: 12px;
+    border-radius: 4px;
+}
+
+/* 버튼 스타일 */
+.button-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.submit-button,
+.cancel-button {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.submit-button {
+    background-color: #4263eb;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #e9ecef;
+    color: #495057;
+    text-decoration: none;
+}
+
+.submit-button:hover {
+    background-color: #364fc7;
+}
+
+.cancel-button:hover {
+    background-color: #dee2e6;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px 16px;
+    }
+    
+    .write-form {
+        padding: 24px;
+    }
+    
+    .date-range {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .date-range input[type="date"] {
+        width: 100%;
+    }
+}

@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import com.hyun3.dao.LessonDAO;
-import com.hyun3.domain.LessonDTO;
-import com.hyun3.domain.LessonLikeDTO;
+import com.hyun3.dao.lesson.LessonDAO;
 import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.lesson.LessonDTO;
+import com.hyun3.domain.lesson.LessonLikeDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;

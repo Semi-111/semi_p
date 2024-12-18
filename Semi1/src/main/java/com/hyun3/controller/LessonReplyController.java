@@ -6,9 +6,9 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.hyun3.dao.LessonDAO;
+import com.hyun3.dao.lesson.LessonDAO;
 import com.hyun3.domain.SessionInfo;
-import com.hyun3.domain.sw.ReplyDTO;
+import com.hyun3.domain.lesson.LessonReplyDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.util.MyUtil;
@@ -32,13 +32,15 @@ public class LessonReplyController {
         String state = "true";
         
         try {
-            ReplyDTO dto = new ReplyDTO();
+        	
+        	LessonReplyDTO dto = new LessonReplyDTO();
             
             dto.setCm_num(Integer.parseInt(req.getParameter("cm_num")));
             dto.setContent(req.getParameter("content"));
             dto.setMb_num(info.getMb_Num());
             
             dao.insertReply(dto);
+            
         } catch (Exception e) {
             state = "false";
         }
@@ -77,7 +79,7 @@ public class LessonReplyController {
             int offset = (current_page - 1) * size;
             if(offset < 0) offset = 0;
             
-            List<ReplyDTO> list = dao.listReply(cm_num, offset, size);
+            List<LessonReplyDTO> list = dao.listReply(cm_num, offset, size);
             
             // JSON으로 변환
             JSONObject job = new JSONObject();
@@ -86,7 +88,7 @@ public class LessonReplyController {
             job.put("pageNo", current_page);
             
             JSONArray jarr = new JSONArray();
-            for(ReplyDTO dto : list) {
+            for(LessonReplyDTO dto : list) {
                 JSONObject ob = new JSONObject();
                 
                 ob.put("co_num", dto.getCo_num());
@@ -144,7 +146,7 @@ public class LessonReplyController {
         String state = "false";
         
         try {
-            ReplyDTO dto = new ReplyDTO();
+            LessonReplyDTO dto = new LessonReplyDTO();
             
             dto.setCo_num(Integer.parseInt(req.getParameter("co_num")));
             dto.setContent(req.getParameter("content"));

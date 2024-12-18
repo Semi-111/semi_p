@@ -1,4 +1,4 @@
-package com.hyun3.domain;
+package com.hyun3.domain.lesson;
 
 public class LessonDTO {
 	private long cm_num; // 게시글 번호

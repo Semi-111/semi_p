@@ -1,4 +1,4 @@
-package com.hyun3.domain.sw;
+package com.hyun3.domain.market;
 
 public class MarketDTO {
 	private int marketNum; // 장터번호

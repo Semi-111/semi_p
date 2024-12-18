@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.hyun3.dao.MemberDAO;
-import com.hyun3.domain.MemberDTO;
 import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.member.MemberDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.ResponseBody;

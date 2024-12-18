@@ -1,12 +1,15 @@
 package com.hyun3.dao.board;
 
-import com.hyun3.domain.MemberDTO;
-import com.hyun3.domain.board.StudentBoardDTO;
-import com.hyun3.util.DBConn;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hyun3.domain.board.StudentBoardDTO;
+import com.hyun3.domain.member.MemberDTO;
+import com.hyun3.util.DBConn;
 
 public class StudentBoardDAO {
   private final Connection conn = DBConn.getConnection();

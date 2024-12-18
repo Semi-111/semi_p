@@ -1,4 +1,4 @@
-package com.hyun3.domain;
+package com.hyun3.domain.lesson;
 
 public class LessonLikeDTO {
 	private long mb_num;

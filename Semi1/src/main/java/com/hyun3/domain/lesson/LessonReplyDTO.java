@@ -1,5 +1,4 @@
-package com.hyun3.domain;
-
+package com.hyun3.domain.lesson;
 public class LessonReplyDTO {
     private long co_num;     // 댓글 번호
     private long cm_num;        // 게시글 번호
@@ -10,6 +9,14 @@ public class LessonReplyDTO {
     private long parentNum;     // 부모 댓글 번호
     private int answerCount;    // 답글 개수
     
+	private String content; // 내용
+	
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
 	public long getCo_num() {
 		return co_num;
 	}
