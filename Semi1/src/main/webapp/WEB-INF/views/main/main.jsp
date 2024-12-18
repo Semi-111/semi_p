@@ -105,220 +105,169 @@
 							alt="설문조사 이미지" class="survey-image">
 						</a>
 					</div>
+
 					<div class="row">
 						<div class="col" id="bbs-container">
 							<div class="container text-center">
 								<div class="row row-cols-2">
 
-									<%-- <!--멍  -->
-									<div class="col-4 p-1">
-										<div class="col" id="bbs">
-											<div class="board" style="border: 1px solid black">
-												<div>
-													<h4>게시글 목록</h4>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 자유게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
 												</div>
-												<c:forEach var="dto" items="${listBoard}">
-													<div>
-														<a
-															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
-												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
-													<div class="text-truncate px-2 subject-list">&nbsp;</div>
-												</c:forEach>
 											</div>
-											<div class="pt-2 text-end">
-												<a class="text-reset"
-													href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
-											</div>
-										</div>
-									</div> --%>
-
-									<div class="col-4 p-1">
-										<div>
-											<div class="fw-semibold pt-2 pb-1">
-												<i class="bi bi-app"></i> 자유게시판
-											</div>
-											<div class="border px-2">
-												<c:forEach var="dto" items="${listBoard}">
+											<div class="board-contant">
+												<c:forEach var="dto" items="${freeBoard}">
 													<div class="text-truncate px-2 subject-list">
+														<!-- text-truncate : 말줄임표 -->
 														<a
 															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
 															${dto.title} </a>
 													</div>
 												</c:forEach>
-												<c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
-													<div class="text-truncate px-2 subject-list">&nbsp;</div>
-												</c:forEach>
-											</div>
-											<div class="pt-2 text-end">
-												<a class="text-reset"
-													href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
 											</div>
 										</div>
 									</div>
-									
-									<div class="col-4 p-1">
-    <div class="board-container">
-        <div class="board-title">
-            <i class="bi bi-clipboard"></i> 자유게시판
-        </div>
-        <div class="board-contant">
-            <c:forEach var="dto" items="${listBoard}">
-                <div class="text-truncate px-2 subject-list"> <!-- text-truncate : 말줄임표 -->
-                    <a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-                        ${dto.title}
-                    </a>
-                </div>
-            </c:forEach>
-            <c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
-                <div class="text-truncate px-2 subject-list">&nbsp;</div>
-            </c:forEach>
-        </div>
-        <div class="more-link">
-            <a href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
-        </div>
-    </div>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 학과별게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/lessonBoard/list">더보기</a>
+												</div>
+											</div>
+											<%-- <div class="board-contant">
+	<c:forEach var="dto" items="${lessonBoard}">
+<div class="text-truncate px-2 subject-list">
+	<!-- text-truncate : 말줄임표 -->
+<a
+	href="${pageContext.request.contextPath}/lessonBoard/article?CM_num=${dto.CM_num}&page=1">
+	${dto.title} </a>
 </div>
-
-
-									<div class="col" id="bbs">
-										<div class="board" style="border: 1px solid black">
-											<a
-												href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-												${dto.title} </a>
+</c:forEach>
+		</div> --%>
 										</div>
+									</div>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 비밀게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/bbs/secretBoard/list">더보기</a>
+												</div>
+											</div>
+											<!-- 기은 비밀게시판 빨리 만드렁 -->
+											<%-- <div class="board-contant">
+	<c:forEach var="dto" items="${secretBoard}">
+<div class="text-truncate px-2 subject-list">
+	<!-- text-truncate : 말줄임표 -->
+<a
+	href="${pageContext.request.contextPath}/bbs/secretBoard/article?type=secret&cmNum=${dto.cmNum}&page=1">
+	${dto.title} </a>
+</div>
+</c:forEach>
+		</div> --%>
+										</div>
+									</div>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 공지게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/noticeBoard/list">더보기</a>
+												</div>
+											</div>
+											<div class="board-contant">
+												<c:forEach var="dto" items="${listBoard1}">
+													<div class="text-truncate px-2 subject-list">
+														<!-- text-truncate : 말줄임표 -->
+														<a
+															href="${pageContext.request.contextPath}/noticeBoard/article?CM_Num=${dto.CM_Num}&page=1">
+															${dto.title} </a>
+													</div>
+												</c:forEach>
 
+											</div>
+										</div>
 									</div>
-									<div>
-										<a
-											href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=195&page=1">
-											${dto.title} </a>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 새내기게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=student">더보기</a>
+												</div>
+											</div>
+											<%-- <div class="board-contant">
+	<c:forEach var="dto" items="${studentBoard}">
+<div class="text-truncate px-2 subject-list">
+	<!-- text-truncate : 말줄임표 -->
+<a
+	href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=student&cmNum=${dto.cmNum}&page=1">
+	${dto.title} </a>
+</div>
+</c:forEach>
+		</div> --%>
+										</div>
+									</div>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 정보게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=info">더보기</a>
+												</div>
+											</div>
+											<div class="board-contant">
+												<c:forEach var="dto" items="${infoBoard}">
+													<div class="text-truncate px-2 subject-list">
+														<!-- text-truncate : 말줄임표 -->
+														<a
+															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=info&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
+													</div>
+												</c:forEach>
+
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="board-container">
+											<div class="board-title subject-list" style="color: #A447AB;">
+												<i class="bi bi-clipboard"></i> 졸업생게시판
+												<div class="more-link">
+													<a
+														href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=oldbie">더보기</a>
+												</div>
+											</div>
+											<div class="board-contant">
+												<c:forEach var="dto" items="${oldbieBoard}">
+													<div class="text-truncate px-2 subject-list">
+														<!-- text-truncate : 말줄임표 -->
+														<a
+															href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=oldbie&cmNum=${dto.cmNum}&page=1">
+															${dto.title} </a>
+													</div>
+												</c:forEach>
+
+											</div>
+										</div>
 									</div>
 
-									<!--멍  -->
-
-
-
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>학과별 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>비밀 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>졸업생 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>정보 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>새내기 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
-									<div class="col" id="bbs">
-										<table class="board" style="border: 1px solid black">
-											<tr>
-												<th>공지 게시판</th>
-											</tr>
-											<tr>
-												<td>게시글 1</td>
-											</tr>
-											<tr>
-												<td>게시글 2</td>
-											</tr>
-											<tr>
-												<td>게시글 3</td>
-											</tr>
-											<tr>
-												<td>게시글 4</td>
-											</tr>
-										</table>
-									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+
 				</div>
 
 				<!-- 오른쪽 사이드 -->

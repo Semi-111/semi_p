@@ -33,8 +33,6 @@
 					        	<!-- 학과별 게시판 들어가면 6개의 학과가 나오도록. 6개 중 하나 선택시 해당 학과 게시판으로 이동 ..이 나을듯요 -->
 					        <li><hr class="dropdown-divider"></li>
 					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=oldbie">졸업생 게시판</a></li>
-					        <li><hr class="dropdown-divider"></li>
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/lectureReview/list">강의 평가</a></li>
 
 				      	</ul>
 					</li>
@@ -43,8 +41,9 @@
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/grade/list">학점계산기</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-					<%-- <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/friends/list">친구</a></li>
-					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li> --%>
+					<%-- <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/friends/list">친구</a></li> --%>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/lectureReview/list">강의 평가</a></li>
+					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/market/list">장터</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/food/list">맛집</a></li>

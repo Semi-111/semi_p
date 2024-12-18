@@ -55,9 +55,9 @@
 }
 
 .MyPicture img {
-	width: 50px; /* 원하는 크기로 조정 */
-	height: 50px; /* 원하는 크기로 조정 */
-	border-radius: 50%; /* 원형으로 만들기 */
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
 	object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
 }
 
@@ -114,103 +114,94 @@
 	transform: scale(1.03);
 }
 
-/* #bbs-container {
-	width: 100px;
-	margin: auto;
-	justify-content: center;
-	align-items: center;
-	flex-wrap: wrap;
-}
-
-#bbs {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.board {
-	border-collapse: collapse;
-	margin-bottom: 30px;
-	width: 300px;
-	border-radius: 50px;
-}
-
-.board th, .board td {
-	border: 1px solid #220000;
-	text-align: center;
-	padding: 8px;
-}
-
-.board th {
-	background-color: #F6F2F7;
-} */
-
 /* 게시판 컨테이너 */
 .board-container {
-	border: 1px solid #eee;
-	padding: 15px; 
+	width: 100%;
+	max-width: 300px;
+	border: 1px solid #E1DFE1;
 	margin-bottom: 20px;
+	box-sizing: border-box; /* 보더와 패딩 포함해서 크기 계산 */
+	overflow: hidden; /* 내부 요소 깨짐 방지 */
 }
 
 /* 게시판 제목 */
-.board-container .board-title {
-	font-size: 18px;
+.board-title {
+	display: flex; /* 제목과 더보기 버튼을 나란히 배치 */
+	justify-content: space-between; /* 양 끝으로 배치 */
+	align-items: center; /* 세로 가운데 정렬 */
+	font-size: 24px;
 	font-weight: bold;
-	color: #333; /* 진한 텍스트 색상 */
-	margin-bottom: 10px;
-	display: flex;
-	align-items: center;
+	padding: 10px;
+	border-bottom: 1px solid #E1DFE1; /* 제목과 리스트 구분선 */
 }
 
-.board-container .board-title i {
-	margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
-	color: #6c757d; /* 아이콘 색상 */
+/* 아이콘과 제목(글씨) 배치 */
+.board-title i {
+	margin-right: 5px;
+	font-size: 20px;
+}
+
+.board-title .title-text {
+	display: flex; /* 아이콘과 텍스트를 나란히 배치 */
+	align-items: center; /* 세로 가운데 정렬 */
+	font-size: 18px;
+	color: #84398a;
+	text-align: left;
+	margin: 0;
+}
+
+/* 더보기 버튼 */
+.board-title .more-link {
+	margin-left: auto; /* 오른쪽으로 밀기 */
+}
+
+#bbs-container .board-title .more-link a {
+	font-size: 13px; /* 글씨 작게 */
+	color: #5C8EC7;
+	text-decoration: none; /* 밑줄 제거 */
+	transition: color 0.2s ease; /* 부드러운 색상 전환 효과 */
+}
+
+.board-title .more-link a:hover {
+	color: #004A9F;
+}
+
+/* 첫 번째 줄(타이틀)의 호버 효과 제거 */
+.board-container .board-title:hover {
+	background-color: inherit !important; /* 배경색 변경 효과 제거 */
+	cursor: default; /* 기본 커서 */
 }
 
 /* 게시글 리스트 */
 .board-container .subject-list {
-	padding: 10px;
-	border-bottom: 1px solid #e9ecef; /* 구분선 */
+	padding: 8px;
+	border-bottom: 1px solid #E1DFE1;
 	font-size: 14px;
-	color: #495057; /* 텍스트 색상 */
-	transition: all 0.3s ease;
+	cursor: pointer;
 }
 
+/* 마지막 .subject-list 항목의 보더 제거 */
 .board-container .subject-list:last-child {
-	border-bottom: none; /* 마지막 항목에 구분선 제거 */
+	border-bottom: none; /* 마지막 항목에서 보더 제거 */
 }
 
+/* 첫 번째 줄(타이틀)의 호버 효과 제거 (더보기는 제외) */
+.board-container .subject-list {
+	cursor: default; /* 기본 커서 */
+	background-color: inherit; /* 배경색 변경 효과 제거 */
+}
+
+/* 줄 전체 클릭 가능하게 설정 */
 .board-container .subject-list a {
+	display: block; /* a 태그를 블록 요소로 변경 */
+	width: 100%; /* 줄 전체 너비를 차지하도록 설정 */
+	height: 100%; /* 부모 높이에 맞춤 */
 	text-decoration: none; /* 밑줄 제거 */
-	color: inherit; /* 상속된 텍스트 색상 유지 */
-}
-
-.board-container .subject-list a:hover {
-	color: #007bff; /* 링크 호버 시 파란색 */
-	text-decoration: underline; /* 링크 호버 시 밑줄 */
+	color: inherit; /* 텍스트 색상 상속 */
 }
 
 .board-container .subject-list:hover {
-	background-color: #f1f3f5; /* 항목 호버 시 배경 색상 변경 */
-	border-radius: 5px; /* 부드럽게 둥글림 */
-}
-
-/* 더보기 버튼 */
-.board-container .more-link {
-	text-align: end;
-	margin-top: 10px;
-}
-
-.board-container .more-link a {
-	font-size: 14px;
-	color: #007bff; /* 파란색 */
-	text-decoration: none; /* 밑줄 제거 */
-	transition: all 0.3s ease;
-}
-
-.board-container .more-link a:hover {
-	color: #0056b3; /* 더 어두운 파란색으로 변경 */
-	text-decoration: underline; /* 밑줄 추가 */
+	background-color: #FBF8FC;
 }
 
 /* 오른쪽 사이드바 */

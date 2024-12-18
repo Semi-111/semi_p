@@ -24,7 +24,7 @@
 	border: 2px solid #CE93E8 !important;
 }
 
-.logo-title>img {
+a>img {
 	width: 300px;
 	margin-left: 12px;
 }
@@ -68,8 +68,9 @@
 					<div class="border mt-5 p-4">
 						<form name="loginForm" action="" method="post" class="row g-3">
 							<div class="logo-title">
-								<img
+								<a href="${pageContext.request.contextPath}/"> <img
 									src="${pageContext.request.contextPath}/resources/images/logo.png">
+								</a>
 							</div>
 							<div class="col-12">
 								<label class="mb-1">아이디</label> <input type="text" name="userId"
