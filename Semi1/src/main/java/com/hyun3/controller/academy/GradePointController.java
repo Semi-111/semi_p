@@ -31,11 +31,12 @@ public class GradePointController {
 		
 		ModelAndView mav = new ModelAndView("grade/grade");
 		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String userId = info.getUserId();
+		
 		try {
-			HttpSession session = req.getSession();
-			SessionInfo info = (SessionInfo)session.getAttribute("member");
-			String userId = info.getUserId();
-			
+			/*
 			GradePointDAO dao = new GradePointDAO();
 			
 			// 학점 데이터 가져오기
@@ -58,6 +59,14 @@ public class GradePointController {
 			
 			mav.addObject("totalCredits", totalCredits);
 			mav.addObject("totalGpa", Math.round(totalGpa * 100.0) / 100.0); // GPA 소수점 2자리 반올림
+			*/
+			
+			GradePointDAO dao = new GradePointDAO();
+			
+			// 전체 취득 학점
+			int totalHakscore = dao.totalHakscore(userId);
+			
+			mav.addObject("totalHakscore", totalHakscore);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,6 +75,50 @@ public class GradePointController {
 		
 		return mav;
 	}
+	
+	
+	// 성적 업데이트
+	// AJAX - JSON
+	@ResponseBody
+	@RequestMapping(value = "grade/updateGrade", method = RequestMethod.POST)
+	public Map<String, Object> updateGrade(HttpServletRequest req, HttpServletResponse resp)
+	        throws ServletException, IOException {
+		
+		Map<String, Object> model = new HashMap<>();
+		GradePointDAO dao = new GradePointDAO();
+		
+		try {
+			HttpSession session = req.getSession();
+	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	    	        
+	        String[] atNums = req.getParameterValues("atNum");
+	        String[] grades = req.getParameterValues("grade");
+	        
+	        if (atNums != null && grades != null && atNums.length == grades.length) {
+	            for (int i = 0; i < atNums.length; i++) {
+	                // 각 값으로 DTO 생성
+	                GradePointDTO dto = new GradePointDTO();
+	                dto.setAt_Num(Long.parseLong(atNums[i])); // atNum은 숫자(Long)로 변환
+	                dto.setGrade(grades[i]);                // grade는 문자열로 그대로 저장
+	                
+	                dto.setUserId(info.getUserId());
+	                
+	                // DAO 메서드 호출
+	                dao.updateGrade(dto);
+	            } 
+	            model.put("status", "success");
+	        } else {
+	            model.put("status", "error");
+	            model.put("message", "Invalid parameters.");
+	        }
+	        
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return model;
+	}
+	
 	
 	// 그래프
 	// AJAX - JSON
@@ -89,7 +142,7 @@ public class GradePointController {
 	        List<String> semesterLabels = new ArrayList<>();
 	        List<Double> gpaList = new ArrayList<>();
 
-	     // 학기별 GPA 계산
+	        // 학기별 GPA 계산
 	        Map<String, List<GradePointDTO>> groupedData = gradeList.stream()
 	            .collect(Collectors.groupingBy(dto -> dto.getGrade_year() + "학년 " + dto.getSemester() + "학기",
 	            		TreeMap::new, Collectors.toList())); // 트리맵 사용하여 자동 정렬

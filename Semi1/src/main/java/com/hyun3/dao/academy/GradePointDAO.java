@@ -17,6 +17,67 @@ public class GradePointDAO {
 	private Connection conn = DBConn.getConnection();
 	
 	
+	// 취득 학점 계산
+	public int totalHakscore(String userId) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb = sb.append(" SELECT sum(dt.hakscore) totalhackscore ");
+			sb = sb.append(" FROM dt_subject dt ");
+			sb = sb.append(" JOIN at_subject at ON dt.dt_sub_num = at.dt_sub_num ");
+			sb = sb.append(" JOIN member m ON at.mb_num = m.mb_num ");
+			sb = sb.append(" WHERE m.userId = ? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, userId);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("totalhackscore");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+				
+		return result;
+	}
+	
+	
+	// grade(성적) update
+	public void updateGrade(GradePointDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = " UPDATE at_subject SET grade=? WHERE at_num = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getGrade());
+			pstmt.setLong(2, dto.getAt_Num());
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}		
+	}
+	
+	
+	
+	
+	
+	
 	public List<GradePointDTO> findById(String userId) {
 		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
 		PreparedStatement pstmt = null;
@@ -24,14 +85,14 @@ public class GradePointDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT s.sb_Num, s.sb_Name, ");
-			sb.append(" d.hakscore,  ");
-			sb.append(" grade, grade_year, a.semester, ");
-			sb.append(" m.mb_Num, m.userId ");
+			sb.append(" SELECT at.at_num ,s.sb_num, s.sb_name, ");
+			sb.append(" dt.hakscore,  ");
+			sb.append(" grade, grade_year, at.semester, ");
+			sb.append(" m.mb_num, m.userId ");
 			sb.append(" FROM subject s ");
-			sb.append(" JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
-			sb.append(" JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
-			sb.append(" JOIN member m ON a.mb_Num = m.mb_Num ");
+			sb.append(" JOIN dt_subject dt ON s.sb_Num = dt.sb_Num ");
+			sb.append(" JOIN at_subject at ON dt.dt_sub_Num = at.dt_sub_Num ");
+			sb.append(" JOIN member m ON at.mb_Num = m.mb_Num ");
 			sb.append(" WHERE m.userId=? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
@@ -42,13 +103,14 @@ public class GradePointDAO {
 			
 			while (rs.next()) {
 				GradePointDTO dto = new GradePointDTO();
-				dto.setSb_Num(rs.getLong("sb_Num"));
-				dto.setSb_Name(rs.getString("sb_Name"));
+				dto.setAt_Num(rs.getLong("at_num"));
+				dto.setSb_Num(rs.getLong("sb_num"));
+				dto.setSb_Name(rs.getString("sb_name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 	            dto.setGrade(rs.getString("grade"));
 	            dto.setGrade_year(rs.getInt("grade_year"));
 	            dto.setSemester(rs.getInt("semester"));
-	            dto.setMb_Num(rs.getLong("mb_Num"));
+	            dto.setMb_Num(rs.getLong("mb_num"));
 	            dto.setUserId(rs.getString("userId"));
 	            
 	            list.add(dto);

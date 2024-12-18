@@ -26,11 +26,11 @@
 	        <div class="stats-grid">
 	            <div class="stat-item">
 	                <div class="stat-label">전체 평점</div>
-	                <div class="stat-value">${totalGpa}<span class="stat-max">/4.5</span></div>
+	                <div class="stat-value">4.0<span class="stat-max">/4.5</span></div>
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
-	                <div class="stat-value">${totalCredits}<span class="stat-max">/150</span></div>
+	                <div class="stat-value">${totalHakscore}<span class="stat-max">/150</span></div>
 	            </div>
 	        </div>
 	        
@@ -58,7 +58,7 @@
 	    <div class="grade-table">
 	        <div class="grade-header">
 	            <div class="grade-title">학년 학기</div>
-	            <button class="submit-btn">시간표 불러오기</button>
+	            <button type="button" class="submit-btn">성적 등록하기</button>
 	        </div>
 	        <div class="grade-sub">
 	        	평점<span class="gpa highlight">0.0</span> 취득<span class="credits highlight">0</span>
@@ -158,6 +158,42 @@ $(function () {
         
 	});
 });
+
+
+// 성적 등록 버튼 클릭 이벤트
+$('.submit-btn').click(function() {
+	const rows = $("#semester-data tr"); // 모든 테이블 행 가져오기
+    const formData = [];
+	
+	rows.each(function() {
+		const atNum = $(this).attr("data-atnum"); // 교과목 ID
+        const grade = $(this).find(".grade-select").val(); // 선택된 성적 값
+	
+        if (atNum && grade) {
+            formData.push({ a: atNum, b: grade }); // a와 b 형식으로 데이터 추가
+        }
+        
+	});
+	
+	// 데이터 변환: a=101&b=A+&a=102&b=B 형태
+    const queryString = formData.map(item => `atNum=${item.a}&grade=${item.b}`).join("&");
+
+    ajaxFun(
+        `${pageContext.request.contextPath}/grade/updateGrade`, // 서버 URL
+        "POST",                                                // HTTP 메서드
+        queryString,                                           // 전송 데이터
+        "json",                                                // 응답 형식
+        function (response) {                                  // 콜백
+            if (response.status === "success") {
+                alert("성적이 성공적으로 업데이트되었습니다.");
+            } else {
+                alert(response.message || "성적 업데이트에 실패했습니다.");
+            }
+        }
+    );
+	
+});
+
 
 
 
