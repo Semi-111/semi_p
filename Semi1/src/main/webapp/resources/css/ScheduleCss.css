@@ -167,7 +167,26 @@
     /* max-width: 900px; /* 최대 너비 설정 */
     margin: 0 auto;
     border-radius: 10px;
+  	overflow-y: auto; /* 수직 스크롤 활성화 */
+  	overflow-x: hidden; /* 가로 스크롤 비활성화 */
+  	
 }
+
+
+/* 스크롤바 스타일 (옵션) */
+.modal-content::-webkit-scrollbar {
+  width: 8px; /* 스크롤바의 너비 */
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #D1B2FF;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background-color: #A566FF;
+}
+
 
 .modal-content table {
     width: 100%; /* 테이블 너비를 100%로 설정 */
@@ -189,7 +208,7 @@
 }
 
 .modal tr:hover {
-	background: #ccc;
+	background: #EAEAEA;
     cursor: pointer;
 }
 
@@ -286,4 +305,11 @@
        		border: none;
             background-color: #A566FF;
         }
+        
+        
+        /* selected 클래스가 추가된 수업에 대해 스타일링 */
+.selected {
+    background-color: #A566FF;  /* 클릭된 행에 보라색 배경색을 추가 */
+    color: white;  /* 클릭된 행의 글자 색을 흰색으로 변경 */
+}
 

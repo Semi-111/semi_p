@@ -29,9 +29,10 @@
 	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 	
     <main>
+    <form action="/SaveTimetableServlet" method="POST"></form>
         <div class="time-table-selector">
             <div class="select-box-container">
-                <select id="semesterSelect">
+                <select id="semesterSelect" name="semester">
                     <option value="4학년 2학기">4학년 2학기</option>
                     <option value="4학년 1학기">4학년 1학기</option>
                     <option value="3학년 2학기">3학년 2학기</option>
@@ -48,6 +49,7 @@
 
             </div>
 		</div>
+	
 		 
 		
         <!-- 시간표 그리드 -->
@@ -93,6 +95,57 @@
         const initialValue = semesterSelect.value;
         textTable.textContent = initialValue + " 시간표";  // 초기 텍스트 설정
     });
+    
+    $(document).ready(function() {
+        console.log("문서가 로드되었습니다.");
+        $('#timetable').on('click', 'tr', function() {
+            console.log('클릭된 tr:', $(this));  // 클릭된 tr 요소 확인
+            console.log('클릭되었음:', true);  // 클릭 이벤트가 발생했는지 확인
+            $(this).toggleClass('selected');    // selected 클래스 토글
+            console.log('selected 클래스 여부:', $(this).hasClass('selected'));  // selected 클래스 여부 확인
+        });
+    });
+    
+    // 수업 저장 함수
+    function saveTimetable() {
+        const semester = document.getElementById('semesterSelect').value;  // 선택된 학기
+        const selectedSubjects = [];  // 선택된 수업들을 저장할 배열
+    
+        // 시간표에서 선택된 수업을 배열에 추가
+		 $('#timetable tbody td.selected').each(function() {
+		    const subject = {
+		        grade: $(this).data('grade_year'),  // data-grade_year 값을 가져옵니다
+		        semester: $(this).data('semester'), // data-semester 값을 가져옵니다
+		        sbNum: $(this).data('dt_sb_num'),   // data-dt_sb_num 값을 가져옵니다
+		    };
+		    selectedSubjects.push(subject);  // 가져온 데이터를 배열에 추가합니다
+		});
+        
+        // 선택된 수업이 없으면 경고
+        if (selectedSubjects.length === 0) {
+            alert('선택된 수업이 없습니다.');
+            return;
+        }
+
+        $.ajax({
+            url: '/SaveTimetableServlet',  // 서버 URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ subjects: selectedSubjects }),
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert('시간표 저장 성공!');
+                    location.reload();  // 저장 후 페이지 새로고침
+                } else {
+                    alert('시간표 저장 실패!');
+                }
+            },
+            error: function() {
+                alert('서버 오류가 발생했습니다.');
+            }
+        });
+    }
+        
 	</script>
 
     <!-- 수업 검색 모달 -->
@@ -116,7 +169,7 @@
                 <tbody>
                 
 				<c:forEach var="vo" items="${viewSubject}">
-				    <tr class="modal-line" data-day="${vo.studyDay}" data-start="${vo.studytime}" data-color="${vo.color}" data-sbname="${vo.sbName}">
+				    <tr class="modal-line" data-day="${vo.studyDay}" data-start="${vo.studytime}" data-color="${vo.color}" data-sbname="${vo.sbName}" data-semester="${vo.stGradee}">
 				        <td>${vo.stGrade}</td>
 				        <td>${vo.sbNum}</td>
 				        <td>${vo.sbName}</td>

@@ -150,8 +150,65 @@ const subjectColors = {
     "프로그래밍기초": "#FFD8D8",
     "데이터통신": "#FAECC5",
     "모바일프로그래밍": "#E4F7BA",
-    "데이터엔지니어링": "#D4F4FA"
+    "데이터엔지니어링": "#D4F4FA",
+	"컴퓨터전자과" : "#DAD9FF",
+	"스마트전자과" : "#FFD9EC",
+	"전자정보공학과" : "#FAECC5",
+	"AI전자과" : "#E4F7BA",
+	"ICT융합전자과" : "#FFD8D8",
+	"컴퓨터공학과" : "#DAD9FF",
+	"로봇전자과" : "#FFD9EC",
+	"임베디드전자과" : "#FFD8D8",
+	"스마트기기과" : "#D4F4FA",
+	"데이터 전자과" : "#FFD9EC"
 };    
+
+// 마우스 오버 시 색을 미리보기로 적용하는 함수
+function highlightPreviewTimeSlots(col, startTime, duration, subjectColor) {
+    let times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
+
+    const startIndex = times.indexOf(startTime);
+
+    if (startIndex === -1) {
+        console.error("Invalid startTime: " + startTime);
+        return;
+    }
+
+    const rows = document.querySelectorAll('#timetable tbody tr'); 
+
+    // 지속 시간에 맞게 여러 셀에 색을 미리보기
+    for (let i = 0; i < duration; i++) {
+        const row = rows[startIndex + i];
+        const targetCell = row.querySelectorAll('td')[col];
+
+        // 색을 미리보기 (배경색만 적용)
+        targetCell.style.backgroundColor = subjectColor;
+        targetCell.style.borderColor = subjectColor;
+    }
+}
+
+// 마우스 아웃 시 색을 제거하는 함수
+function removePreviewTimeSlots(col, startTime, duration) {
+    let times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
+
+    const startIndex = times.indexOf(startTime);
+
+    if (startIndex === -1) {
+        console.error("Invalid startTime: " + startTime);
+        return;
+    }
+
+    const rows = document.querySelectorAll('#timetable tbody tr'); 
+
+    // 색을 미리보기한 셀의 색상 삭제
+    for (let i = 0; i < duration; i++) {
+        const row = rows[startIndex + i];
+        const targetCell = row.querySelectorAll('td')[col];
+
+        targetCell.style.backgroundColor = '';
+        targetCell.style.borderColor = '';
+   	 	}
+	}
 
 // 수업 검색 버튼 클릭 시 모달 열기
 document.addEventListener('DOMContentLoaded', function () {
@@ -314,55 +371,47 @@ function removeTimeSlots(col, startTime, duration) {
         const subjectText = targetCell.querySelector('.subject-text');
         if (subjectText) {
             targetCell.removeChild(subjectText);
-        }
-    }
-}
-
-// 마우스 오버 시 색을 미리보기로 적용하는 함수
-function highlightPreviewTimeSlots(col, startTime, duration, subjectColor) {
-    let times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
-
-    const startIndex = times.indexOf(startTime);
-
-    if (startIndex === -1) {
-        console.error("Invalid startTime: " + startTime);
-        return;
-    }
-
-    const rows = document.querySelectorAll('#timetable tbody tr'); 
-
-    // 지속 시간에 맞게 여러 셀에 색을 미리보기
-    for (let i = 0; i < duration; i++) {
-        const row = rows[startIndex + i];
-        const targetCell = row.querySelectorAll('td')[col];
-
-        // 색을 미리보기 (배경색만 적용)
-        targetCell.style.backgroundColor = subjectColor;
-        targetCell.style.borderColor = subjectColor;
-    }
-}
-
-// 마우스 아웃 시 색을 제거하는 함수
-function removePreviewTimeSlots(col, startTime, duration) {
-    let times = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00'];
-
-    const startIndex = times.indexOf(startTime);
-
-    if (startIndex === -1) {
-        console.error("Invalid startTime: " + startTime);
-        return;
-    }
-
-    const rows = document.querySelectorAll('#timetable tbody tr'); 
-
-    // 색을 미리보기한 셀의 색상 삭제
-    for (let i = 0; i < duration; i++) {
-        const row = rows[startIndex + i];
-        const targetCell = row.querySelectorAll('td')[col];
-
-        targetCell.style.backgroundColor = '';
-        targetCell.style.borderColor = '';
-   	 	}
+        	}
+    	}
 	}
 
-}
+	
+	
+	
+	// 수업 저장 버튼 클릭 이벤트 처리
+	function saveTimetable() {
+		const semester = document.getElementById('semesterSelect').value;  // 선택된 학기
+		const selectedSubjects = [];  // 선택된 수업들을 저장할 배열
+
+		   // 시간표에서 선택된 수업을 배열에 추가
+		    $('#timetable tbody tr.selected').each(function() {
+		        const subject = {
+		            grade: $(this).data('grade_year'),  // 학년
+		            semester: semester,  // 선택된 학기 값
+		            sbNum: $(this).data('dt_sb_num'),  // 과목 번호 (속성 이름은 sbnum)
+		        };
+		        selectedSubjects.push(subject);  // 배열에 수업 추가
+		    });
+
+		    // 선택된 수업이 없으면 경고
+		    if (selectedSubjects.length === 0) {
+		        alert('선택된 수업이 없습니다.');
+		        return;  // 수업이 선택되지 않으면 함수 종료
+		    }
+
+		    // 선택된 수업이 있으면 서버로 AJAX 요청
+		    $.ajax({
+		        url: '/SaveTimetableServlet',  // 서버 URL
+		        type: 'POST',
+		        contentType: 'application/json',
+		        data: JSON.stringify({ subjects: selectedSubjects }),
+		        success: function(response) {
+		            alert('시간표 저장 성공!');
+		            location.reload();  // 저장 후 페이지 새로고침
+		        },
+		        error: function() {
+		            alert('시간표 저장 실패!');
+		        }
+		    });
+		}
+	}
