@@ -67,22 +67,22 @@ function check() {
 							</c:if> <c:if test="${mode!='update'}">
 								<select name="category" class="form-select">
 									<option value="51"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==51 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==51 ? "" : "disabled")}
 										${dto.lessonNum==51 ? "selected":""}>경영학과</option>
 									<option value="52"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==52 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==52 ? "" : "disabled")}
 										${dto.lessonNum==52 ? "selected":""}>경찰행정과</option>
 									<option value="53"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==53 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==53 ? "" : "disabled")}
 										${dto.lessonNum==53 ? "selected":""}>디자인학과</option>
 									<option value="54"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==54 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==54 ? "" : "disabled")}
 										${dto.lessonNum==54 ? "selected":""}>화학공학과</option>
 									<option value="55"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==55 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==55 ? "" : "disabled")}
 										${dto.lessonNum==55 ? "selected":""}>컴퓨터응용전자과</option>
 									<option value="56"
-										${sessionScope.member.role == 99 ? "" : (userLessonNum==56 ? "" : "disabled")}
+										${sessionScope.member.role == 60 ? "" : (userLessonNum==56 ? "" : "disabled")}
 										${dto.lessonNum==56 ? "selected":""}>정보통신학부</option>
 								</select>
 							</c:if></td>

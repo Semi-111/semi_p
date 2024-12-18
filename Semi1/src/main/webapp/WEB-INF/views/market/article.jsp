@@ -58,16 +58,20 @@
 					</button>
 					<button class="btn btn-gray">공유하기</button>
 				</div>
+				
 				<div class="action-right">
-					<c:if
-						test="${sessionScope.member.mb_Num==dto.mb_num || sessionScope.member.role >= 51}">
-						<button class="btn btn-purple"
-							onclick="location.href='${pageContext.request.contextPath}/market/update?marketNum=${dto.marketNum}&page=${page}'">
-							수정</button>
-						<button class="btn btn-red" onclick="deletePost()">삭제</button>
-					</c:if>
-					<button class="btn btn-red">신고</button>
+				    <c:set var="isWriter" value="${sessionScope.member.mb_Num == dto.mb_num}"/>
+				    <c:set var="isAdmin" value="${sessionScope.member.role >= 60}"/>
+				    
+				    <c:if test="${isWriter || isAdmin}">
+				        <button class="btn btn-purple"
+				            onclick="location.href='${pageContext.request.contextPath}/market/update?marketNum=${dto.marketNum}&page=${page}'">
+				            수정</button>
+				        <button class="btn btn-red" onclick="deletePost()">삭제</button>
+				    </c:if>
+				    <button class="btn btn-red">신고</button>
 				</div>
+				
 			</div>
 		</div>
 

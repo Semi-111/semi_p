@@ -36,86 +36,88 @@ public class MarketController {
 
 	// 장터게시판으로 이동
 	@RequestMapping(value = "/market/list")
-	public ModelAndView list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, SQLException {
-	    MarketDAO dao = new MarketDAO();
-	    MyUtil util = new MyUtilBootstrap ();
+	public ModelAndView list(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException, SQLException {
+		MarketDAO dao = new MarketDAO();
+		MyUtil util = new MyUtilBootstrap();
 
-	    String page = req.getParameter("page");
-	    int current_page = 1;
-	    if (page != null) {
-	        current_page = Integer.parseInt(page);
-	    }
+		String page = req.getParameter("page");
+		int current_page = 1;
+		if (page != null) {
+			current_page = Integer.parseInt(page);
+		}
 
-	    // 카테고리 파라미터 처리
-	    String categoryParam = req.getParameter("category");
-	    int category = 0; // 0은 전체를 의미
-	    if (categoryParam != null) {
-	        category = Integer.parseInt(categoryParam);
-	    }
+		// 카테고리 파라미터 처리
+		String categoryParam = req.getParameter("category");
+		int category = 0; // 0은 전체를 의미
+		if (categoryParam != null) {
+			category = Integer.parseInt(categoryParam);
+		}
 
-	    String schType = req.getParameter("schType");
-	    String kwd = req.getParameter("kwd");
-	    if (schType == null) {
-	        schType = "all";
-	        kwd = "";
-	    }
+		String schType = req.getParameter("schType");
+		String kwd = req.getParameter("kwd");
+		if (schType == null) {
+			schType = "all";
+			kwd = "";
+		}
 
-	    int size = 10;
-	    int total_page = 0;
-	    int dataCount = 0;
+		int size = 10;
+		int total_page = 0;
+		int dataCount = 0;
 
-	    if (kwd != null && kwd.length() != 0) {
-	        dataCount = dao.dataCount(schType, kwd);
-	    } else if (category > 0) {
-	        dataCount = dao.dataCount(category);
-	    } else {
-	        dataCount = dao.dataCount();
-	    }
+		if (kwd != null && kwd.length() != 0) {
+			dataCount = dao.dataCount(schType, kwd);
+		} else if (category > 0) {
+			dataCount = dao.dataCount(category);
+		} else {
+			dataCount = dao.dataCount();
+		}
 
-	    total_page = util.pageCount(dataCount, size);
+		total_page = util.pageCount(dataCount, size);
 
-	    if (current_page > total_page) {
-	        current_page = total_page;
-	    }
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
 
-	    int offset = (current_page - 1) * size;
-	    if(offset < 0) offset = 0;
+		int offset = (current_page - 1) * size;
+		if (offset < 0)
+			offset = 0;
 
-	    List<MarketDTO> list = null;
-	    if (kwd != null && kwd.length() != 0) {
-	        list = dao.listBoard(offset, size, schType, kwd);
-	    } else if (category > 0) {
-	        list = dao.listBoard(offset, size, category);
-	    } else {
-	        list = dao.listBoard(offset, size);
-	    }
+		List<MarketDTO> list = null;
+		if (kwd != null && kwd.length() != 0) {
+			list = dao.listBoard(offset, size, schType, kwd);
+		} else if (category > 0) {
+			list = dao.listBoard(offset, size, category);
+		} else {
+			list = dao.listBoard(offset, size);
+		}
 
-	    String query = "";
-	    if (kwd != null && kwd.length() != 0) {
-	        query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
-	    } else if (category > 0) {
-	        query = "category=" + category;
-	    }
+		String query = "";
+		if (kwd != null && kwd.length() != 0) {
+			query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+		} else if (category > 0) {
+			query = "category=" + category;
+		}
 
-	    String listUrl = req.getContextPath() + "/market/list";
-	    String paginationUrl = listUrl;
-	    if (query.length() != 0) {
-	        paginationUrl += "?" + query;
-	    }
+		String listUrl = req.getContextPath() + "/market/list";
+		String paginationUrl = listUrl;
+		if (query.length() != 0) {
+			paginationUrl += "?" + query;
+		}
 
-	    ModelAndView mav = new ModelAndView("market/list");
+		ModelAndView mav = new ModelAndView("market/list");
 
-	    mav.addObject("list", list);
-	    mav.addObject("category", category);
-	    mav.addObject("page", current_page);
-	    mav.addObject("dataCount", dataCount);
-	    mav.addObject("size", size);
-	    mav.addObject("total_page", total_page);
-	    mav.addObject("listUrl", listUrl);
-	    mav.addObject("query", query);           // query 추가
-	    mav.addObject("paginationUrl", paginationUrl); // 페이징용 URL 추가
+		mav.addObject("list", list);
+		mav.addObject("category", category);
+		mav.addObject("page", current_page);
+		mav.addObject("dataCount", dataCount);
+		mav.addObject("size", size);
+		mav.addObject("total_page", total_page);
+		mav.addObject("listUrl", listUrl);
+		mav.addObject("query", query); // query 추가
+		mav.addObject("paginationUrl", paginationUrl); // 페이징용 URL 추가
 
-	    return mav;
+		return mav;
 	}
 
 	// 장터 글쓰기폼
@@ -128,62 +130,63 @@ public class MarketController {
 
 	@RequestMapping(value = "/market/write", method = RequestMethod.POST)
 	public ModelAndView marketWriteSubmit(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
-	    MarketDAO dao = new MarketDAO();
+			throws ServletException, IOException {
+		MarketDAO dao = new MarketDAO();
 
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    FileManager fileManager = new FileManager();
+		FileManager fileManager = new FileManager();
 
-	    // 파일 저장 경로
-	    String root = session.getServletContext().getRealPath("/");
-	    String pathname = root + "uploads" + File.separator + "photo";
+		// 파일 저장 경로
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + "uploads" + File.separator + "photo";
 
-	    try {
-	        MarketDTO dto = new MarketDTO();
+		try {
+			MarketDTO dto = new MarketDTO();
 
-	        // DTO에 데이터 저장
-	        dto.setTitle(req.getParameter("title"));
-	        dto.setContent(req.getParameter("content"));
-	        dto.setCt_num(Integer.parseInt(req.getParameter("category")));
-	        dto.setMb_num(info.getMb_Num());
+			// DTO에 데이터 저장
+			dto.setTitle(req.getParameter("title"));
+			dto.setContent(req.getParameter("content"));
+			dto.setCt_num(Integer.parseInt(req.getParameter("category")));
+			dto.setMb_num(info.getMb_Num());
 
-	        // 파일 업로드 처리
-	        String filename = null;
-	        Part p = req.getPart("selectFile");
+			// 파일 업로드 처리
+			String filename = null;
+			Part p = req.getPart("selectFile");
 
-	        // FileManager를 사용하여 파일 업로드
-	        MyMultipartFile multiPart = fileManager.doFileUpload(p, pathname);
-	        if (multiPart != null) {
-	            // 저장된 파일명
-	            filename = multiPart.getSaveFilename();
-	        }
+			// FileManager를 사용하여 파일 업로드
+			MyMultipartFile multiPart = fileManager.doFileUpload(p, pathname);
+			if (multiPart != null) {
+				// 저장된 파일명
+				filename = multiPart.getSaveFilename();
+			}
 
-	        // 파일명을 DTO에 저장
-	        if (filename != null) {
-	            dto.setFileName(filename);
-	        }
+			// 파일명을 DTO에 저장
+			if (filename != null) {
+				dto.setFileName(filename);
+			}
 
-	        // 데이터베이스에 게시물 정보 저장
-	        dao.insertMarket(dto);
+			// 데이터베이스에 게시물 정보 저장
+			dao.insertMarket(dto);
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-	    return new ModelAndView("redirect:/market/list");
+		return new ModelAndView("redirect:/market/list");
 	}
 
 	// 글보기
 	@RequestMapping(value = "/market/article", method = RequestMethod.GET)
-	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public ModelAndView marketArticle(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		MarketDAO dao = new MarketDAO();
 		MyUtil util = new MyUtilBootstrap();
 
 		// 현재 로그인 정보 가져오기
 		HttpSession session = req.getSession();
-		SessionInfo member = (SessionInfo)session.getAttribute("member");
+		SessionInfo member = (SessionInfo) session.getAttribute("member");
 
 		String page = req.getParameter("page");
 		String query = "page=" + page;
@@ -220,8 +223,8 @@ public class MarketController {
 
 			// 좋아요 여부
 			boolean isLiked = false;
-			if(member != null) {
-			    isLiked = dao.isLikedMarket(marketNum, member.getMb_Num());
+			if (member != null) {
+				isLiked = dao.isLikedMarket(marketNum, member.getMb_Num());
 			}
 			int countLikes = dao.countLikes(marketNum);
 
@@ -249,145 +252,182 @@ public class MarketController {
 
 	@RequestMapping(value = "/market/delete", method = RequestMethod.GET)
 	public ModelAndView delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    MarketDAO dao = new MarketDAO();
+		MarketDAO dao = new MarketDAO();
+		String page = req.getParameter("page");
 
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+		// page 파라미터가 null이거나 비어있을 경우 기본값 1로 설정
+		if (page == null || page.length() == 0) {
+			page = "1";
+		}
 
-	    FileManager fileManager = new FileManager();
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    String page = req.getParameter("page");
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
 
-	    // 파일 저장 경로
-	    String root = session.getServletContext().getRealPath("/");
-	    String pathname = root + "uploads" + File.separator + "photo";
+			long marketNum = Long.parseLong(req.getParameter("marketNum"));
 
-	    try {
-	        long marketNum = Long.parseLong(req.getParameter("marketNum"));
+			// 게시물 정보 가져오기
+			MarketDTO dto = dao.findById(marketNum);
+			if (dto == null) {
+				return new ModelAndView("redirect:/market/list");
+			}
 
-	        // 게시물 정보 가져오기
-	        MarketDTO dto = dao.findById(marketNum);
-	        if (dto == null) {
-	            return new ModelAndView("redirect:/market/list?page=" + page);
-	        }
+			// 게시물을 올린 사용자가 아니면서 관리자도 아니면
+			if (dto.getMb_num() != info.getMb_Num() && Integer.parseInt(info.getRole()) < 60) {
+				return new ModelAndView("redirect:/market/list");
+			}
 
-	        // 게시물을 올린 사용자나 관리자가 아니면
-	        // mb_num은 long 타입
-	        if (dto.getMb_num() != info.getMb_Num() && Integer.parseInt(info.getRole())  < 100) {
-	            return new ModelAndView("redirect:/market/list?page=" + page);
-	        }
+			// 파일 저장 경로
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "photo";
 
-	        // 첨부 파일 삭제
-	        if(dto.getFileName() != null && !dto.getFileName().isEmpty()) {
-	            fileManager.doFiledelete(pathname, dto.getFileName());
-	        }
+			// 먼저 해당 게시글의 모든 좋아요 삭제
+			dao.deleteAllLikes(marketNum);
 
-	        // 테이블 데이터 삭제
-	        dao.deleteMarket(marketNum);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			// 첨부 파일 삭제
+			FileManager fileManager = new FileManager();
+			if (dto.getFileName() != null && !dto.getFileName().isEmpty()) {
+				fileManager.doFiledelete(pathname, dto.getFileName());
+			}
 
-	    return new ModelAndView("redirect:/market/list?page=" + page);
+			// 게시글 삭제
+			dao.deleteMarket(marketNum);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/market/list?page=" + page);
 	}
 
+	// 좋아요
 	@RequestMapping(value = "/market/like", method = RequestMethod.POST)
 	public void like(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    MarketDAO dao = new MarketDAO();
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
+		MarketDAO dao = new MarketDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    String state = "true";
+		String state = "true";
 
-	    try {
-	        long marketNum = Long.parseLong(req.getParameter("marketNum"));
+		try {
+			long marketNum = Long.parseLong(req.getParameter("marketNum"));
 
-	        if(info == null) {
-	            state = "loginFail";
-	        } else {
-	            boolean liked = dao.isLikedMarket(marketNum, info.getMb_Num());
-	            if(liked) {
-	                dao.deleteLike(marketNum, info.getMb_Num());
-	            } else {
-	                dao.insertLike(marketNum, info.getMb_Num());
-	            }
-	        }
+			if (info == null) {
+				state = "loginFail";
+			} else {
+				boolean liked = dao.isLikedMarket(marketNum, info.getMb_Num());
+				if (liked) {
+					dao.deleteLike(marketNum, info.getMb_Num());
+				} else {
+					dao.insertLike(marketNum, info.getMb_Num());
+				}
+			}
 
-	        // 좋아요 개수
-	        int countLikes = dao.countLikes(marketNum);
+			// 좋아요 개수
+			int countLikes = dao.countLikes(marketNum);
 
-	        JSONObject job = new JSONObject();
-	        job.put("state", state);
-	        job.put("countLikes", countLikes);
+			JSONObject job = new JSONObject();
+			job.put("state", state);
+			job.put("countLikes", countLikes);
 
-	        resp.setContentType("text/html;charset=utf-8");
-	        PrintWriter out = resp.getWriter();
-	        out.print(job.toString());
+			resp.setContentType("text/html;charset=utf-8");
+			PrintWriter out = resp.getWriter();
+			out.print(job.toString());
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	// 글 수정
-	@RequestMapping(value="/market/update", method = RequestMethod.GET)
-	public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    MarketDAO dao = new MarketDAO();
+	// 글 수정폼
+	@RequestMapping(value = "/market/update", method = RequestMethod.GET)
+	public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		MarketDAO dao = new MarketDAO();
+		String page = req.getParameter("page");
 
-	    String page = req.getParameter("page");
-	    long marketNum = Long.parseLong(req.getParameter("marketNum"));
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    ModelAndView mav = new ModelAndView("market/write");
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
 
-	    try {
-	        MarketDTO dto = dao.findById(marketNum);
-	        if(dto == null) {
-	            return new ModelAndView("redirect:/market/list?page=" + page);
-	        }
+			long marketNum = Long.parseLong(req.getParameter("marketNum"));
 
-	        // 게시물을 작성한 사용자가 아니면
-	        HttpSession session = req.getSession();
-	        SessionInfo info = (SessionInfo)session.getAttribute("member");
-	        if(info.getMb_Num() != dto.getMb_num() && Integer.parseInt(info.getRole()) < 51) {
-	            return new ModelAndView("redirect:/market/list?page=" + page);
-	        }
+			MarketDTO dto = dao.findById(marketNum);
+			if (dto == null) {
+				return new ModelAndView("redirect:/market/list?page=" + page);
+			}
 
-	        mav.addObject("dto", dto);
-	        mav.addObject("page", page);
-	        mav.addObject("mode", "update");
+			// 게시물을 작성한 사용자나 관리자가 아니면
+			if (info.getMb_Num() != dto.getMb_num() && Integer.parseInt(info.getRole()) < 60) {
+				return new ModelAndView("redirect:/market/list?page=" + page);
+			}
 
-	        return mav;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			ModelAndView mav = new ModelAndView("market/write");
+			mav.addObject("dto", dto);
+			mav.addObject("page", page);
+			mav.addObject("mode", "update");
 
-	    return new ModelAndView("redirect:/market/list?page=" + page);
+			return mav;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/market/list?page=" + page);
 	}
 
-	@RequestMapping(value="/market/update", method = RequestMethod.POST)
-	public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    MarketDAO dao = new MarketDAO();
+	@RequestMapping(value = "/market/update", method = RequestMethod.POST)
+	public ModelAndView updateSubmit(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		MarketDAO dao = new MarketDAO();
+		String page = req.getParameter("page");
 
-	    String page = req.getParameter("page");
+		try {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-	    try {
-	        MarketDTO dto = new MarketDTO();
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
 
-	        dto.setMarketNum(Integer.parseInt(req.getParameter("marketNum")));
-	        dto.setTitle(req.getParameter("title"));
-	        dto.setContent(req.getParameter("content"));
-	        dto.setCt_num(Integer.parseInt(req.getParameter("category"))); // 카테고리가 있는 경우
+			MarketDTO dto = new MarketDTO();
+			dto.setMarketNum(Long.parseLong(req.getParameter("marketNum")));
+			dto.setTitle(req.getParameter("title"));
+			dto.setContent(req.getParameter("content"));
+			dto.setCt_num(Integer.parseInt(req.getParameter("category")));
 
-	        // 파일 업로드 처리
-	        String filename = req.getParameter("filename");
-	        dto.setFileName(filename);
+			// 원본 글 가져오기
+			MarketDTO originalDto = dao.findById(dto.getMarketNum());
+			if (originalDto == null) {
+				return new ModelAndView("redirect:/market/list?page=" + page);
+			}
 
-	        dao.updateMarket(dto);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			// 작성자 체크
+			if (info.getMb_Num() != originalDto.getMb_num() && Integer.parseInt(info.getRole()) < 60) {
+				return new ModelAndView("redirect:/market/list?page=" + page);
+			}
 
-	    return new ModelAndView("redirect:/market/list?page=" + page);
+			// 파일 처리
+			String filename = req.getParameter("filename");
+			dto.setFileName(filename);
+
+			dao.updateMarket(dto);
+
+			return new ModelAndView("redirect:/market/article?marketNum=" + dto.getMarketNum() + "&page=" + page);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/market/list?page=" + page);
 	}
 
 }

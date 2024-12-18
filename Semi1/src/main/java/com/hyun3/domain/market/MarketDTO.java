@@ -1,7 +1,7 @@
 package com.hyun3.domain.market;
 
 public class MarketDTO {
-	private int marketNum; // 장터번호
+	private long marketNum; // 장터번호
 	private String title;
 	private String content;
 	private String ca_date;
@@ -25,10 +25,10 @@ public class MarketDTO {
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
-	public int getMarketNum() {
+	public long getMarketNum() {
 		return marketNum;
 	}
-	public void setMarketNum(int marketNum) {
+	public void setMarketNum(long marketNum) {
 		this.marketNum = marketNum;
 	}
 	public String getTitle() {

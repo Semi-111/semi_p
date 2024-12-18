@@ -445,6 +445,23 @@ public class MarketDAO {
 	        DBUtil.close(pstmt);
 	    }
 	}
+	
+	// 게시글의 모든 좋아요 삭제 -> 게시글을 삭제하기 위함
+	public void deleteAllLikes(long marketNum) throws SQLException {
+	    PreparedStatement pstmt = null;
+	    String sql;
+	    
+	    try {
+	        sql = "DELETE FROM market_lk WHERE marketNum = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        
+	        pstmt.setLong(1, marketNum);
+	        pstmt.executeUpdate();
+	        
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
+	}
 
 	// 게시글의 좋아요 개수
 	public int countLikes(long marketNum) throws SQLException {
@@ -486,7 +503,7 @@ public class MarketDAO {
 	        pstmt.setString(2, dto.getContent());
 	        pstmt.setString(3, dto.getFileName());
 	        pstmt.setInt(4, dto.getCt_num());
-	        pstmt.setInt(5, dto.getMarketNum());
+	        pstmt.setLong(5, dto.getMarketNum());
 	        
 	        pstmt.executeUpdate();
 	    } catch (SQLException e) {
