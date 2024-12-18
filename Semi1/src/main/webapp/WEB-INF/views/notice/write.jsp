@@ -68,14 +68,13 @@
             <form name="noticeForm" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="category">카테고리</label>
+                    
                     <select id="category" name="category" required>
-                        <option value="">경영</option>
-                        <option value="">경찰행정</option>
-                        <option value="">디자인</option>
-                        <option value="">화학</option>
-                        <option value="">컴퓨터응용전자</option>
-                        <option value="">정보통신</option>
-                    </select>
+					    <option value="0">전체</option>
+					    <c:forEach var="lesson" items="${lessonList}">
+					        <option value="${lesson.lessonNum}">${lesson.lessonName}</option>
+					    </c:forEach>
+					</select>
                 </div>
 
                 <div class="form-group">

@@ -9,10 +9,17 @@ public class NoticeDTO {
 	private String fileName;
 	private String nickName;
 	
+	private int notice; // 중요공지 여부 (0: 일반, 1: 중요)
+	
 	private long views;
 	private long mb_num;
 	
-	
+	public int getNotice() {
+		return notice;
+	}
+	public void setNotice(int notice) {
+		this.notice = notice;
+	}
 	public String getNickName() {
 		return nickName;
 	}

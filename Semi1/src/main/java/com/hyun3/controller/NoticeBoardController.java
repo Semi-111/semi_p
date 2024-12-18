@@ -26,8 +26,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-@Controller
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 10)
+@Controller
 public class NoticeBoardController {
 
 	@RequestMapping(value = "/noticeBoard/list")
@@ -115,7 +115,7 @@ public class NoticeBoardController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/noticeBoard/write", method = RequestMethod.GET)
+	@RequestMapping(value = "/noticeBoard/writeForm", method = RequestMethod.GET)
 	public ModelAndView writeForm(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		NoticeDAO dao = new NoticeDAO();
@@ -139,45 +139,62 @@ public class NoticeBoardController {
 	public ModelAndView writeSubmit(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
 	    NoticeDAO dao = new NoticeDAO();
-
+	    
 	    HttpSession session = req.getSession();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-
+	    
 	    if (info == null) {
 	        return new ModelAndView("redirect:/member/login");
 	    }
-
-	    // FileManager 객체 생성
-	    FileManager fileManager = new FileManager();
 	    
+	    
+	    
+	    // 파일을 저장할 경로
 	    String root = session.getServletContext().getRealPath("/");
 	    String pathname = root + "uploads" + File.separator + "notice";
+	    
+	    // 폴더가 없으면 생성
+	    File dir = new File(pathname);
+	    if (!dir.exists()) {
+	        dir.mkdirs();
+	    }
 
+	    FileManager fileManager = new FileManager();
+	    
 	    try {
 	        NoticeDTO dto = new NoticeDTO();
-
-	        String division = req.getParameter("category"); // form의 category 값이 lessonNum
-	        dto.setDivision(division);
+	        
+	        String notice = req.getParameter("notice");
+		    
+		    
+		    dto.setNotice(notice != null && notice.equals("1") ? 1 : 0);
+	        dto.setDivision(req.getParameter("category"));
 	        dto.setTitle(req.getParameter("title"));
 	        dto.setContent(req.getParameter("content"));
 	        dto.setMb_num(info.getMb_Num());
-
+	        
+	        // 중요공지 체크박스 처리
+	        System.out.println("notice value: " + notice); // 디버깅용
+	        dto.setNotice(notice != null && notice.equals("1") ? 1 : 0);
+	        
+	        // 파일 처리
 	        String filename = null;
 	        Part p = req.getPart("selectFile");
-
-	        // fileManager 인스턴스의 메서드로 호출
-	        MyMultipartFile multiPart = fileManager.doFileUpload(p, pathname);
-	        if (multiPart != null) {
-	            filename = multiPart.getSaveFilename();
-	            dto.setFileName(filename);
+	        
+	        if(p != null && p.getSize() > 0) {
+	            MyMultipartFile mf = fileManager.doFileUpload(p, pathname);
+	            if (mf != null) {
+	                filename = mf.getSaveFilename();
+	                dto.setFileName(filename);
+	            }
 	        }
-
+	        
 	        dao.insertNotice(dto);
-
+	        
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-
+	    
 	    return new ModelAndView("redirect:/noticeBoard/list");
 	}
 }
