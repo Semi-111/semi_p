@@ -31,15 +31,17 @@
                 <a href="#/notice/list"
                     class="${empty param.category ? 'active' : ''}">전체</a>
                 <a href="#/notice/list?category=1"
-                    class="${param.category=='1' ? 'active' : ''}">일반</a>
+                    class="${param.category=='1' ? 'active' : ''}">경영</a>
                 <a href="#/notice/list?category=2"
-                    class="${param.category=='2' ? 'active' : ''}">학사</a>
+                    class="${param.category=='2' ? 'active' : ''}">경찰행정</a>
                 <a href="#/notice/list?category=3"
-                    class="${param.category=='3' ? 'active' : ''}">장학</a>
+                    class="${param.category=='3' ? 'active' : ''}">디자인</a>
                 <a href="#/notice/list?category=4"
-                    class="${param.category=='4' ? 'active' : ''}">행사</a>
+                    class="${param.category=='4' ? 'active' : ''}">화학</a>
                 <a href="#/notice/list?category=5"
-                    class="${param.category=='5' ? 'active' : ''}">취업</a>
+                    class="${param.category=='5' ? 'active' : ''}">컴퓨터응용전자</a>
+                <a href="#/notice/list?category=5"
+                    class="${param.category=='5' ? 'active' : ''}">정보통신학</a>
             </div>
             <a href="${pageContext.request.contextPath}/noticeBoard/writeForm" class="write-button">글쓰기</a>
         </div>

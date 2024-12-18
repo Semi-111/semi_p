@@ -29,7 +29,7 @@
 
     function submitForm() {
         const f = document.noticeForm;
-
+	
         if (!f.category.value) {
             alert("카테고리를 선택하세요.");
             f.category.focus();
@@ -50,11 +50,12 @@
 
         let mode = '${mode}';
         if (mode === 'update') {
-            f.action = "#/notice/update";
+            f.action = "${pageContext.request.contextPath}/noticeBoard/update";
         } else {
-            f.action = "#/notice/write";
+            f.action = "${pageContext.request.contextPath}/noticeBoard/writeSubmit";
         }
 
+        // 넘어가는 데이터 category / title/ content
         f.submit();
     }
 </script>
@@ -68,12 +69,12 @@
                 <div class="form-group">
                     <label for="category">카테고리</label>
                     <select id="category" name="category" required>
-                        <option value="">카테고리 선택</option>
-                        <option value="1" ${dto.category==1?"selected":""}>일반</option>
-                        <option value="2" ${dto.category==2?"selected":""}>학사</option>
-                        <option value="3" ${dto.category==3?"selected":""}>장학</option>
-                        <option value="4" ${dto.category==4?"selected":""}>행사</option>
-                        <option value="5" ${dto.category==5?"selected":""}>취업</option>
+                        <option value="">경영</option>
+                        <option value="">경찰행정</option>
+                        <option value="">디자인</option>
+                        <option value="">화학</option>
+                        <option value="">컴퓨터응용전자</option>
+                        <option value="">정보통신</option>
                     </select>
                 </div>
 
@@ -88,15 +89,6 @@
                 <div class="form-group">
                     <label for="title">제목</label>
                     <input type="text" id="title" name="title" required value="${dto.title}">
-                </div>
-
-                <div class="form-group">
-                    <label for="startDate">게시 기간</label>
-                    <div class="date-range">
-                        <input type="date" id="startDate" name="startDate" value="${dto.startDate}">
-                        <span>~</span>
-                        <input type="date" id="endDate" name="endDate" value="${dto.endDate}">
-                    </div>
                 </div>
 
                 <div class="form-group">
