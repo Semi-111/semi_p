@@ -43,13 +43,12 @@ public class MemberController {
 		MemberDAO dao = new MemberDAO();
 
 		// 클라이언트가 보낸 아이디/패스워드
-		req.setCharacterEncoding("UTF-8"); // 요청 데이터의 인코딩 설정
+		//req.setCharacterEncoding("UTF-8"); // 요청 데이터의 인코딩 설정
 		String userId = req.getParameter("userId");
 		String pwd = req.getParameter("pwd");
 
 		MemberDTO dto = dao.loginMember(userId, pwd);
-		System.out.println("로그인 요청 userId: " + userId);
-		System.out.println("로그인 요청 pwd: " + pwd);
+		
 		if (dto != null) {
 			// 로그인 성공한 경우
 			// 세션에 아이디, 이름, 권한등을 저장

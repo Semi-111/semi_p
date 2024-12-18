@@ -25,7 +25,6 @@ public class MemberDAO {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, userId);
-			System.out.println("SQL 실행 전에 전달된 pwd 값: " + pwd);
 			pstmt.setString(2, pwd);
 
 			rs = pstmt.executeQuery();
@@ -67,7 +66,7 @@ public class MemberDAO {
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "INSERT INTO member(mb_Num, userId, pwd, nickName, ca_Day, role, lessonNum, block) VALUES (?, ?, ?, ?, SYSDATE, 1, ?, 1)";
+			sql = "INSERT INTO member(mb_Num, userId, pwd, nickName, ca_Day, role, lessonNum, block) VALUES (?, ?, ?, ?, SYSDATE, 1, ?, 0)";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, seqValue);
@@ -93,7 +92,8 @@ public class MemberDAO {
 
 			pstmt.executeUpdate();
 			
-			//System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
+			System.out.println("Executing Query: " + sql);
+			System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
 			
 			conn.commit();
 
@@ -209,22 +209,6 @@ public class MemberDAO {
 			if (rs.next()) {
 				long mb_Num = rs.getLong("mb_Num");
 
-				/*
-				sql = "UPDATE member SET pwd = ?, modifyDay = SYSDATE WHERE userId = ?";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, dto.getPwd());
-                pstmt.setString(2, dto.getUserId());
-                pstmt.executeUpdate();
-
-                sql = "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?";
-                pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, dto.getEmail());
-                pstmt.setString(2, dto.getBirth());
-                pstmt.setString(3, dto.getTel());
-                pstmt.setLong(4, mb_Num);
-                pstmt.executeUpdate();
-                */
-				
 				// 2. dt_member 테이블 업데이트
 				sql = "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?";
 				pstmt = conn.prepareStatement(sql);

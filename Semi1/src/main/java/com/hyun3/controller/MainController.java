@@ -24,9 +24,8 @@ public class MainController {
 		ModelAndView mav = new ModelAndView("main/main");
 
 		InfoBoardDAO infodao = new InfoBoardDAO();
-		String boardType = req.getParameter("type");
-		List<InfoBoardDTO> listBoard = infodao.listBoard(boardType, 0, 5);
-
+		List<InfoBoardDTO> listBoard = infodao.listBoard("free", 0, 5);
+		
 		/* SecretBoardDAO secretdao = new SecretBoardDAO(); */
 
 		LessonDAO lessondao = new LessonDAO();

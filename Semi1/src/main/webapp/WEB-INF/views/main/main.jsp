@@ -110,10 +110,7 @@
 							<div class="container text-center">
 								<div class="row row-cols-2">
 
-
-
-
-									<!--멍  -->
+									<%-- <!--멍  -->
 									<div class="col-4 p-1">
 										<div class="col" id="bbs">
 											<div class="board" style="border: 1px solid black">
@@ -136,7 +133,7 @@
 													href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
 											</div>
 										</div>
-									</div>
+									</div> --%>
 
 									<div class="col-4 p-1">
 										<div>
