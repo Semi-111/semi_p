@@ -17,7 +17,7 @@ public class GradePointDAO {
 	private Connection conn = DBConn.getConnection();
 	
 	
-	// 취득 학점 계산
+	// 총 취득 학점 계산
 	public int totalHakscore(String userId) {
 		int result = 0;
 		PreparedStatement pstmt = null;
@@ -37,7 +37,7 @@ public class GradePointDAO {
 			
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				result = rs.getInt("totalhackscore");
+				result = rs.getObject("totalhackscore") != null ? rs.getInt("totalhackscore") : 0;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -47,6 +47,145 @@ public class GradePointDAO {
 		}
 				
 		return result;
+	}
+	
+	
+	// 전체 평점
+	public double calculateTotalGPA(String userId) {
+	    double totalPoints = 0.0;
+	    int totalHakscore = 0;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    StringBuilder sb = new StringBuilder();
+
+	    try {
+	        sb.append(" SELECT at.grade, dt.hakscore ");
+	        sb.append(" FROM dt_subject dt ");
+	        sb.append(" JOIN at_subject at ON dt.dt_sub_num = at.dt_sub_num ");
+	        sb.append(" JOIN member m ON at.mb_num = m.mb_num ");
+	        sb.append(" WHERE m.userId = ? ");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        pstmt.setString(1, userId);
+
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            String grade = rs.getString("grade");
+	            int hakscore = rs.getInt("hakscore");
+
+	            // 학점과 평점을 이용해 총 평점 계산
+	            totalPoints += convertGradeToPoint(grade) * hakscore;
+	            totalHakscore += hakscore;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    // 총 평점을 계산
+	    return totalHakscore > 0 ? totalPoints / totalHakscore : 0.0;
+	}
+	
+	
+	public double convertGradeToPoint(String grade) {
+		if (grade == null || grade.trim().isEmpty()) {
+	        return 0.0; // null이나 공백일 때 0.0 반환
+	    }
+		
+		switch(grade) {
+		case "A+": return 4.5;
+        case "A0": return 4.0;
+        case "B+": return 3.5;
+        case "B0": return 3.0;
+        case "C+": return 2.5;
+        case "C0": return 2.0;
+        case "D+": return 1.5;
+        case "D0": return 1.0;
+        case "F": return 0.0;
+        default: return 0.0;
+		}
+	}
+	
+	
+	// 학년 학기별 점수
+	public double semesterPoints(String userId) {
+	    double semesterPoints = 0.0;
+
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("SELECT dt.hakscore, at.grade ");
+	        sb.append("FROM dt_subject dt ");
+	        sb.append("JOIN at_subject at ON dt.dt_sub_num = at.dt_sub_num ");
+	        sb.append("JOIN member m ON at.mb_num = m.mb_num ");
+	        sb.append("WHERE m.userId = ? AND at.grade_year = ? AND at.semester = ?");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        
+	        GradePointDTO dto = new GradePointDTO();
+	        pstmt.setString(1, userId);
+	        pstmt.setInt(2, dto.getGrade_year());
+	        pstmt.setInt(3, dto.getSemester());
+
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	            int hakscore = rs.getInt("hakscore");
+	            String grade = rs.getString("grade");
+
+	            double gradePoint = convertGradeToPoint(grade);
+	            semesterPoints += gradePoint * hakscore; // 성적 * 학점 누적
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return semesterPoints;
+	}
+	
+	
+	// 학기별 취득 학점
+	public int semesterCredits(String userId) {
+	    int semesterCredits = 0;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        sb.append("SELECT dt.hakscore ");
+	        sb.append("FROM dt_subject dt ");
+	        sb.append("JOIN at_subject at ON dt.dt_sub_num = at.dt_sub_num ");
+	        sb.append("JOIN member m ON at.mb_num = m.mb_num ");
+	        sb.append("WHERE m.userId = ? AND at.grade_year = ? AND at.semester = ? ");
+
+	        pstmt = conn.prepareStatement(sb.toString());
+	        
+	        GradePointDTO dto = new GradePointDTO();
+	        pstmt.setString(1, userId);
+	        pstmt.setInt(2, dto.getGrade_year());
+	        pstmt.setInt(3, dto.getSemester());
+	        
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+	        	semesterCredits += rs.getInt("hakscore"); // 학점 누적
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        DBUtil.close(rs);
+	        DBUtil.close(pstmt);
+	    }
+
+	    return semesterCredits;
 	}
 	
 	
@@ -73,10 +212,8 @@ public class GradePointDAO {
 		}		
 	}
 	
-	
-	
-	
-	
+
+
 	
 	public List<GradePointDTO> findById(String userId) {
 		List<GradePointDTO> list = new ArrayList<GradePointDTO>();
@@ -134,15 +271,13 @@ public class GradePointDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT s.sb_Num, s.sb_Name, ");
-			sb.append(" d.hakscore,  ");
-			sb.append(" grade, grade_year, a.semester, ");
-			sb.append(" m.mb_Num, m.userId ");
+			sb.append(" SELECT at.at_Num, s.sb_Name, dt.hakscore, at.grade, ");
+			sb.append(" at.grade_year, at.semester, m.userId ");
 			sb.append(" FROM subject s ");
-			sb.append(" JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
-			sb.append(" JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
-			sb.append(" JOIN member m ON a.mb_Num = m.mb_Num ");
-			sb.append(" WHERE m.userId=? AND grade_year = ? AND a.semester = ? ");
+			sb.append(" JOIN dt_subject dt ON s.sb_Num = dt.sb_Num ");
+			sb.append(" JOIN at_subject at ON dt.dt_sub_Num = at.dt_sub_Num ");
+			sb.append(" JOIN member m ON at.mb_Num = m.mb_Num ");
+			sb.append(" WHERE m.userId=? AND at.grade_year = ? AND at.semester = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			
@@ -154,13 +289,13 @@ public class GradePointDAO {
 			
 			while (rs.next()) {
 				GradePointDTO dto = new GradePointDTO();
-				dto.setSb_Num(rs.getLong("sb_Num"));
+				dto.setAt_Num(rs.getLong("at_Num"));
 				dto.setSb_Name(rs.getString("sb_Name"));
 				dto.setHakscore(rs.getInt("hakscore"));
-	            dto.setGrade(rs.getString("grade"));
+				dto.setGrade(rs.getString("grade"));
+	            
 	            dto.setGrade_year(rs.getInt("grade_year"));
-	            dto.setSemester(rs.getInt("semester"));
-	            dto.setMb_Num(rs.getLong("mb_Num"));
+	            dto.setSemester(rs.getInt("semester"));	            
 	            dto.setUserId(rs.getString("userId"));
 	            
 	            list.add(dto);
@@ -183,13 +318,11 @@ public class GradePointDAO {
 
 	    try {
 	        StringBuilder sb = new StringBuilder();
-	        sb.append("SELECT grade, COUNT(*) AS gradeCount "); // 'gradeCount'라는 별칭 사용
-	        sb.append("FROM subject s ");
-	        sb.append("JOIN dt_subject d ON s.sb_Num = d.sb_Num ");
-	        sb.append("JOIN at_subject a ON d.dt_sub_Num = a.dt_sub_Num ");
-	        sb.append("JOIN member m ON a.mb_Num = m.mb_Num ");
+	        sb.append("SELECT at.grade, COUNT(*) AS gradeCount ");
+	        sb.append("FROM at_subject at ");
+	        sb.append("JOIN member m ON at.mb_Num = m.mb_Num ");
 	        sb.append("WHERE m.userId = ? ");
-	        sb.append("GROUP BY grade");
+	        sb.append("GROUP BY at.grade");
 
 	        pstmt = conn.prepareStatement(sb.toString());
 	        pstmt.setString(1, userId);
@@ -210,22 +343,6 @@ public class GradePointDAO {
 	    return gradeDistribution;
 	}
 
-		
+
 	
-	public double convertGradeToPoint(String grade) {
-		switch(grade) {
-		case "A+": return 4.5;
-        case "A0": return 4.0;
-        case "B+": return 3.5;
-        case "B0": return 3.0;
-        case "C+": return 2.5;
-        case "C0": return 2.0;
-        case "D+": return 1.5;
-        case "D0": return 1.0;
-        case "F": return 0.0;
-        default: return 0.0;
-		}
-	}
-
-
 }

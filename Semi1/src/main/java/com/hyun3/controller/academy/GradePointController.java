@@ -36,36 +36,18 @@ public class GradePointController {
 		String userId = info.getUserId();
 		
 		try {
-			/*
-			GradePointDAO dao = new GradePointDAO();
-			
-			// 학점 데이터 가져오기
-			List<GradePointDTO> totalGradeList = dao.findById(userId);
-			
-			// 취득 학점 계산
-			int totalCredits = 0;
-			double totalPoints = 0.0;
-			
-			for (GradePointDTO dto : totalGradeList) {
-				totalCredits += dto.getHakscore(); // 학점 누적
-				double gradePoint = dao.convertGradeToPoint(dto.getGrade()); // 성적을 숫자로 변환
-				totalPoints += gradePoint * dto.getHakscore(); // 총 점수 누적
-			}
-			
-			// 전체 평점 계산
-			double totalGpa = (totalCredits > 0) ? totalPoints / totalCredits : 0.0;
-			
-			mav.addObject("totalGradeList", totalGradeList);
-			
-			mav.addObject("totalCredits", totalCredits);
-			mav.addObject("totalGpa", Math.round(totalGpa * 100.0) / 100.0); // GPA 소수점 2자리 반올림
-			*/
 			
 			GradePointDAO dao = new GradePointDAO();
 			
+			// 전체 평점
+			
+			double gpa = dao.calculateTotalGPA(userId);
+						
+
 			// 전체 취득 학점
 			int totalHakscore = dao.totalHakscore(userId);
 			
+			mav.addObject("totalGpa", gpa);
 			mav.addObject("totalHakscore", totalHakscore);
 			
 		} catch (Exception e) {
@@ -80,9 +62,10 @@ public class GradePointController {
 	// 성적 업데이트
 	// AJAX - JSON
 	@ResponseBody
-	@RequestMapping(value = "grade/updateGrade", method = RequestMethod.POST)
+	@RequestMapping(value = "/grade/updateGrade", method = RequestMethod.POST)
 	public Map<String, Object> updateGrade(HttpServletRequest req, HttpServletResponse resp)
 	        throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
 		
 		Map<String, Object> model = new HashMap<>();
 		GradePointDAO dao = new GradePointDAO();
@@ -90,34 +73,45 @@ public class GradePointController {
 		try {
 			HttpSession session = req.getSession();
 	        SessionInfo info = (SessionInfo) session.getAttribute("member");
+	        String userId = info.getUserId();
 	    	        
 	        String[] atNums = req.getParameterValues("atNum");
 	        String[] grades = req.getParameterValues("grade");
-	        
-	        if (atNums != null && grades != null && atNums.length == grades.length) {
-	            for (int i = 0; i < atNums.length; i++) {
-	                // 각 값으로 DTO 생성
-	                GradePointDTO dto = new GradePointDTO();
-	                dto.setAt_Num(Long.parseLong(atNums[i])); // atNum은 숫자(Long)로 변환
-	                dto.setGrade(grades[i]);                // grade는 문자열로 그대로 저장
-	                
-	                dto.setUserId(info.getUserId());
-	                
-	                // DAO 메서드 호출
-	                dao.updateGrade(dto);
-	            } 
-	            model.put("status", "success");
-	        } else {
-	            model.put("status", "error");
-	            model.put("message", "Invalid parameters.");
-	        }
+	          	        
+            for (int i = 0; i < atNums.length; i++) {
+                GradePointDTO dto = new GradePointDTO();
+                dto.setAt_Num(Long.parseLong(atNums[i]));
+                dto.setGrade(grades[i]);                  
+                
+                // dto.setUserId(info.getUserId());
+                             
+                // DAO 메서드 호출
+                dao.updateGrade(dto);
+                
+            }
+            
+            // 최신 평점과 취득학점 계산
+            double totalGpa = dao.calculateTotalGPA(userId);
+            int totalHakscore = dao.totalHakscore(userId);
+            
+            
+            double semesterPoints = dao.semesterPoints(userId);
+            int semesterCredits = dao.semesterCredits(userId);
+            
+            model.put("status", "true");
+            model.put("totalGpa", Math.round(totalGpa * 100.0) / 100.0);
+            model.put("totalHakscore", totalHakscore);
+            model.put("semesterPoints", Math.round(semesterPoints * 100.0) / 100.0);
+            model.put("semesterCredits", semesterCredits);
 	        
 		} catch (Exception e) {
 			e.printStackTrace();
+			model.put("status", "false");
 		}
 		
 		return model;
 	}
+	
 	
 	
 	// 그래프
@@ -178,6 +172,7 @@ public class GradePointController {
 	
 	
 	// AJAX - JSON
+	// 각 학년 성적, 취득학점
 	@ResponseBody
 	@RequestMapping(value = "/grade/gradeList", method = RequestMethod.POST) 
 	public Map<String, Object> showGrade(HttpServletRequest req, HttpServletResponse resp)
@@ -248,7 +243,9 @@ public class GradePointController {
 				dto.setSb_Name(dto.getSb_Name());
 				dto.setHakscore(dto.getHakscore());
 				dto.setGrade(dto.getGrade());
+				
 			}
+					
 			
 			ModelAndView mav = new ModelAndView("grade/gradeList");
 			
@@ -279,15 +276,24 @@ public class GradePointController {
 	        // DAO를 사용해 성적 데이터를 가져옴
 	        GradePointDAO dao = new GradePointDAO();
 	        Map<String, Integer> gradeDistribution = dao.getGradeDistribution(userId);
-
+	        
+	        
+	        // 기본 성적 라벨 정의
+	        String[] defaultGrades = {"A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"};
+	        for (String grade : defaultGrades) {
+	            gradeDistribution.putIfAbsent(grade, 0); // 값이 없으면 0으로 설정
+	        }
+	        
+	        
 	        // 총 성적 개수 계산
 	        int totalGrades = gradeDistribution.values().stream().mapToInt(Integer::intValue).sum();
 	        
 	        // 각 성적의 비율 계산
 	        Map<String, Double> gradePercentages = new HashMap<>();
-	        for (Map.Entry<String, Integer> entry : gradeDistribution.entrySet()) {
-	            double percentage = (double) entry.getValue() / totalGrades * 100;
-	            gradePercentages.put(entry.getKey(), Math.round(percentage * 100.0) / 100.0); // 소수점 2자리 반올림
+	        for (String grade : defaultGrades) {
+	            int count = gradeDistribution.get(grade);
+	            double percentage = totalGrades > 0 ? (double) count / totalGrades * 100 : 0;
+	            gradePercentages.put(grade, Math.round(percentage * 100.0) / 100.0); // 소수점 2자리 반올림
 	        }
 
 	        // 결과를 JSON 형식으로 반환
