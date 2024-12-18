@@ -158,6 +158,30 @@
 											</div>
 										</div>
 									</div>
+									
+									<div class="col-4 p-1">
+    <div class="board-container">
+        <div class="board-title">
+            <i class="bi bi-clipboard"></i> 자유게시판
+        </div>
+        <div class="board-contant">
+            <c:forEach var="dto" items="${listBoard}">
+                <div class="text-truncate px-2 subject-list"> <!-- text-truncate : 말줄임표 -->
+                    <a href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+                        ${dto.title}
+                    </a>
+                </div>
+            </c:forEach>
+            <c:forEach var="n" begin="${listBoard.size() + 1}" end="5">
+                <div class="text-truncate px-2 subject-list">&nbsp;</div>
+            </c:forEach>
+        </div>
+        <div class="more-link">
+            <a href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
+        </div>
+    </div>
+</div>
+
 
 									<div class="col" id="bbs">
 										<div class="board" style="border: 1px solid black">
@@ -275,7 +299,7 @@
 									<div class="col" id="bbs">
 										<table class="board" style="border: 1px solid black">
 											<tr>
-												<th>이벤트 게시판</th>
+												<th>공지 게시판</th>
 											</tr>
 											<tr>
 												<td>게시글 1</td>

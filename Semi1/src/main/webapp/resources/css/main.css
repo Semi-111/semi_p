@@ -55,46 +55,44 @@
 }
 
 .MyPicture img {
-    width: 50px; /* 원하는 크기로 조정 */
-    height: 50px; /* 원하는 크기로 조정 */
-    border-radius: 50%; /* 원형으로 만들기 */
-    object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
+	width: 50px; /* 원하는 크기로 조정 */
+	height: 50px; /* 원하는 크기로 조정 */
+	border-radius: 50%; /* 원형으로 만들기 */
+	object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
 }
 
 /* 날씨 */
 .weather {
-	border:2px dotted purple;
+	border: 2px dotted purple;
 	height: 150px;
 	margin-bottom: 30px;
 }
 
-
 /* 슬라이더 설정 */
 .slider-container {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .slider {
-    display: flex;
-    overflow: hidden;
-    position: relative;
+	display: flex;
+	overflow: hidden;
+	position: relative;
 }
 
 .slider img {
-    width: 100%;
-    height: auto;
-    transition: transform 0.3s ease;
+	width: 100%;
+	height: auto;
+	transition: transform 0.3s ease;
 }
 
 .slider:hover img {
-    transform: scale(1.05); /* 호버 시 이미지 확대 */
+	transform: scale(1.05); /* 호버 시 이미지 확대 */
 }
 
-
-/* 센터 화면 */
+/* 중앙 컨테이너 */
 #mainContent {
-	border: 2px solid #ccc;
-	border-radius: 10px;
+	border: 2px solid #DBBEDF;
+	border-radius: 8px;
 	padding: 20px; /* 내부 여백 추가 */
 }
 
@@ -116,7 +114,7 @@
 	transform: scale(1.03);
 }
 
-#bbs-container {
+/* #bbs-container {
 	width: 100px;
 	margin: auto;
 	justify-content: center;
@@ -145,11 +143,77 @@
 
 .board th {
 	background-color: #F6F2F7;
+} */
+
+/* 게시판 컨테이너 */
+.board-container {
+	border: 1px solid #eee;
+	padding: 15px; 
+	margin-bottom: 20px;
+}
+
+/* 게시판 제목 */
+.board-container .board-title {
+	font-size: 18px;
+	font-weight: bold;
+	color: #333; /* 진한 텍스트 색상 */
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+}
+
+.board-container .board-title i {
+	margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+	color: #6c757d; /* 아이콘 색상 */
+}
+
+/* 게시글 리스트 */
+.board-container .subject-list {
+	padding: 10px;
+	border-bottom: 1px solid #e9ecef; /* 구분선 */
+	font-size: 14px;
+	color: #495057; /* 텍스트 색상 */
+	transition: all 0.3s ease;
+}
+
+.board-container .subject-list:last-child {
+	border-bottom: none; /* 마지막 항목에 구분선 제거 */
+}
+
+.board-container .subject-list a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: inherit; /* 상속된 텍스트 색상 유지 */
+}
+
+.board-container .subject-list a:hover {
+	color: #007bff; /* 링크 호버 시 파란색 */
+	text-decoration: underline; /* 링크 호버 시 밑줄 */
+}
+
+.board-container .subject-list:hover {
+	background-color: #f1f3f5; /* 항목 호버 시 배경 색상 변경 */
+	border-radius: 5px; /* 부드럽게 둥글림 */
+}
+
+/* 더보기 버튼 */
+.board-container .more-link {
+	text-align: end;
+	margin-top: 10px;
+}
+
+.board-container .more-link a {
+	font-size: 14px;
+	color: #007bff; /* 파란색 */
+	text-decoration: none; /* 밑줄 제거 */
+	transition: all 0.3s ease;
+}
+
+.board-container .more-link a:hover {
+	color: #0056b3; /* 더 어두운 파란색으로 변경 */
+	text-decoration: underline; /* 밑줄 추가 */
 }
 
 /* 오른쪽 사이드바 */
-
-
 
 /* 화면 축소 시 중앙화면만 보이게 설정 */
 @media ( max-width : 992px) {

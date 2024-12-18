@@ -25,7 +25,7 @@
 					        <li><hr class="dropdown-divider"></li>
 					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=info">정보게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
-					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/eventBoard/list">이벤트/공지</a></li>
+					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/noticeBoard/list">공지 게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
 					        <li><a class="dropdown-item" href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=student">새내기게시판</a></li>
 					        <li><hr class="dropdown-divider"></li>
@@ -43,8 +43,8 @@
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/grade/list">학점계산기</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/friends/list">친구</a></li>
-					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+					<%-- <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/friends/list">친구</a></li>
+					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li> --%>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/market/list">장터</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/food/list">맛집</a></li>
