@@ -504,4 +504,51 @@ public class NoticeDAO {
 
 		return list;
 	}
+
+
+	public void updateNotice(NoticeDTO dto) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE noticeBoard SET division=?, title=?, content=?, notice=? " + " WHERE CM_num=?";
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, dto.getDivision());
+			pstmt.setString(2, dto.getTitle());
+			pstmt.setString(3, dto.getContent());
+			pstmt.setInt(4, dto.getNotice());
+			pstmt.setLong(5, dto.getCm_num());
+
+			pstmt.executeUpdate();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public void deleteNotice(long noticeNum) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "DELETE FROM noticeBoard WHERE CM_num=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, noticeNum);
+			pstmt.executeUpdate();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
 }

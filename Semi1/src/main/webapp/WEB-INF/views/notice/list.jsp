@@ -43,7 +43,9 @@
 			    <a href="${pageContext.request.contextPath}/noticeBoard/list?division=56" 
 			        class="${division=='56' ? 'active' : ''}">정보통신학과</a>
 			</div>
-            <a href="${pageContext.request.contextPath}/noticeBoard/writeForm" class="write-button">글쓰기</a>
+			<c:if test="${sessionScope.member.role >= 60}">
+			    <a href="${pageContext.request.contextPath}/noticeBoard/writeForm" class="write-button">글쓰기</a>
+			</c:if>
         </div>
 
         <!-- 검색 -->
