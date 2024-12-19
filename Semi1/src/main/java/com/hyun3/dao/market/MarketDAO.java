@@ -37,7 +37,7 @@ public class MarketDAO {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			com.hyun3.util.DBUtil.close(pstmt);
+			DBUtil.close(pstmt);
 		}
 	}
 

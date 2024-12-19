@@ -48,15 +48,18 @@ public class MainController {
 		LessonDAO lessondao = new LessonDAO(); // 학과별
 		try {
 			List<LessonDTO> lessonBoard = lessondao.listBoard(0, 5);
-			mav.addObject("listBoard", lessonBoard);
+			mav.addObject("lessonBoard", lessonBoard);
+
+			mav.addObject("freeBoard", freeBoard);
+			mav.addObject("infoBoard", infoBoard);
+			mav.addObject("studentBoard", studentBoard);
+			mav.addObject("oldbieBoard", oldbieBoard);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		mav.addObject("freeBoard", freeBoard);
-		mav.addObject("infoBoard", infoBoard);
-		mav.addObject("studentBoard", studentBoard);
-		mav.addObject("oldbieBoard", oldbieBoard);
+
 		return mav;
 	}
 

@@ -344,26 +344,22 @@ public class ReportDAO {
 		try {
 			// 게시판 종류에 따라 동적으로 조인하는 쿼리 작성
 			sb.append("SELECT r.RP_NUM, r.RP_TITLE, r.RP_CONTENT, r.RP_REASON, ")
-			  .append("    r.RP_TABLE, r.MB_NUM, r.TARGET_NUM, r.TARGET_MB_NUM, ")
-			  .append("    m1.NICKNAME memberName, m2.NICKNAME postWriter, ")
-			  .append("    CASE r.RP_TABLE ")
-			  .append("        WHEN 'LESSONBOARD' THEN (SELECT TITLE FROM LESSONBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'NOTICEBOARD' THEN (SELECT TITLE FROM NOTICEBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'INFOBOARD' THEN (SELECT TITLE FROM INFOBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'SECRETBOARD' THEN (SELECT TITLE FROM SECRETBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'STUDENTBOARD' THEN (SELECT TITLE FROM STUDENTBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("    END as postTitle, ")
-			  .append("    CASE r.RP_TABLE ")
-			  .append("        WHEN 'LESSONBOARD' THEN (SELECT CONTENT FROM LESSONBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'NOTICEBOARD' THEN (SELECT CONTENT FROM NOTICEBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'INFOBOARD' THEN (SELECT CONTENT FROM INFOBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'SECRETBOARD' THEN (SELECT CONTENT FROM SECRETBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("        WHEN 'STUDENTBOARD' THEN (SELECT CONTENT FROM STUDENTBOARD WHERE CM_NUM = r.TARGET_NUM) ")
-			  .append("    END as postContent ")
-			  .append("FROM REPORT r ")
-			  .append("JOIN MEMBER m1 ON r.MB_NUM = m1.MB_NUM ")
-			  .append("JOIN MEMBER m2 ON r.TARGET_MB_NUM = m2.MB_NUM ")
-			  .append("WHERE r.RP_NUM = ?");
+					.append("    r.RP_TABLE, r.MB_NUM, r.TARGET_NUM, r.TARGET_MB_NUM, ")
+					.append("    m1.NICKNAME memberName, m2.NICKNAME postWriter, ").append("    CASE r.RP_TABLE ")
+					.append("        WHEN 'LESSONBOARD' THEN (SELECT TITLE FROM LESSONBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'NOTICEBOARD' THEN (SELECT TITLE FROM NOTICEBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'INFOBOARD' THEN (SELECT TITLE FROM INFOBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'SECRETBOARD' THEN (SELECT TITLE FROM SECRETBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'STUDENTBOARD' THEN (SELECT TITLE FROM STUDENTBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("    END as postTitle, ").append("    CASE r.RP_TABLE ")
+					.append("        WHEN 'LESSONBOARD' THEN (SELECT CONTENT FROM LESSONBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'NOTICEBOARD' THEN (SELECT CONTENT FROM NOTICEBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'INFOBOARD' THEN (SELECT CONTENT FROM INFOBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'SECRETBOARD' THEN (SELECT CONTENT FROM SECRETBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("        WHEN 'STUDENTBOARD' THEN (SELECT CONTENT FROM STUDENTBOARD WHERE CM_NUM = r.TARGET_NUM) ")
+					.append("    END as postContent ").append("FROM REPORT r ")
+					.append("JOIN MEMBER m1 ON r.MB_NUM = m1.MB_NUM ")
+					.append("JOIN MEMBER m2 ON r.TARGET_MB_NUM = m2.MB_NUM ").append("WHERE r.RP_NUM = ?");
 
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setLong(1, rpNum);
@@ -432,6 +428,50 @@ public class ReportDAO {
 		} finally {
 			DBUtil.close(pstmt);
 		}
+	}
+	
+	// 최근 신고 내역 조회 (메인 대시보드용 - 최근 5개만)
+	public List<ReportDTO> getRecentReports() {
+		List<ReportDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+
+		try {
+			sb.append("SELECT r.RP_num, r.RP_title, r.RP_content, ")
+					.append("    r.RP_reason, r.RP_table, r.target_num, r.target_mb_num, ")
+					.append("    r.MB_num, m1.nickName memberName, m2.nickName postWriter ").append(" FROM Report r ")
+					.append(" JOIN Member m1 ON r.MB_num = m1.MB_num ")
+					.append(" JOIN Member m2 ON r.target_mb_num = m2.MB_num ").append(" ORDER BY r.RP_num DESC ")
+					.append(" FETCH FIRST 5 ROWS ONLY ");
+
+			pstmt = conn.prepareStatement(sb.toString());
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				ReportDTO dto = new ReportDTO();
+
+				dto.setRP_num(rs.getLong("RP_num"));
+				dto.setRP_title(rs.getString("RP_title"));
+				dto.setRP_content(rs.getString("RP_content"));
+				dto.setRP_reason(rs.getString("RP_reason"));
+				dto.setRP_table(rs.getString("RP_table"));
+				dto.setTargetNum(rs.getLong("target_num"));
+				dto.setTargetMbNum(rs.getLong("target_mb_num"));
+				dto.setMb_num(rs.getLong("MB_num"));
+				dto.setMemberName(rs.getString("memberName"));
+				dto.setPostWriter(rs.getString("postWriter"));
+
+				list.add(dto);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+
+		return list;
 	}
 
 }

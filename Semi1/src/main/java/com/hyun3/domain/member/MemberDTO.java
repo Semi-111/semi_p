@@ -18,6 +18,17 @@ public class MemberDTO {
 
 	private int lessonNum; // 이 부분 추가
 
+	private String lessonName;
+	
+	
+	public String getLessonName() {
+		return lessonName;
+	}
+
+	public void setLessonName(String lessonName) {
+		this.lessonName = lessonName;
+	}
+
 	public Long getMb_Num() {
 		return mb_Num;
 	}

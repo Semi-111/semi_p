@@ -22,7 +22,7 @@
 					<p>아이디: ${memberInfo.userId}</p>
 					<p>이름: ${memberInfo.name}</p>
 					<p>닉네임: ${memberInfo.nickName}</p>
-					<p>학과: ${department}</p>
+					<p>학과: ${hak}</p>
 				</div>
 				<div class="logout">
 					<button type="button" class="logoutBtn"
@@ -58,11 +58,21 @@
 					</div>
 					<div>
 						<!-- 비밀번호 변경 -->
-						<a href="/member/changePassword">비밀번호 변경</a>
+						<div>
+							<button type="button"
+								onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
+								변경</button>
+						</div>
 					</div>
 					<div>
 						<!-- 이메일 변경 -->
-						<a href="/member/changeEmail">이메일 변경</a>
+						<button type="button"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일 변경</button>
+					</div>
+					<div>
+						<!-- 번호 변경 -->
+						<button type="button"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">번호 변경</button>
 					</div>
 				</div>
 			</div>

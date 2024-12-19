@@ -130,14 +130,16 @@ public class LectureReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT lr.review_num, at.at_num, s.sb_name, p.pf_name, lr.rating, ");
-			sb.append("    m.nickName, lr.content from member m ");
-			sb.append(" JOIN at_subject at on m.mb_num = at.mb_num ");
-			sb.append(" JOIN lectureReview lr on at.at_num = lr.at_num ");
+			sb.append(" SELECT lr.review_num, at.at_num, m.nickName, ");
+			sb.append("    s.sb_name, p.pf_name, lr.content, lr.rating ");
+			sb.append(" from lectureReview lr ");
+			sb.append(" JOIN at_subject at on lr.at_num = at.at_num ");
+			sb.append(" JOIN member m ON at.mb_num = m.mb_num ");
 			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
 			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
 			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
 			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE m.block = 0 ");
 			sb.append(" ORDER BY lr.reg_date DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
@@ -153,11 +155,11 @@ public class LectureReviewDAO {
 				
 				dto.setReview_Num(rs.getLong("review_num"));
 				dto.setAt_Num(rs.getLong("at_num"));
+				dto.setNickName(rs.getString("nickName"));
 				dto.setSb_Name(rs.getString("sb_name"));
 				dto.setPf_Name(rs.getString("pf_name"));
-				dto.setRating(rs.getInt("rating"));
-				dto.setNickName(rs.getString("nickName"));
 				dto.setContent(rs.getString("content"));
+				dto.setRating(rs.getInt("rating"));
 			
 				list.add(dto);
 				

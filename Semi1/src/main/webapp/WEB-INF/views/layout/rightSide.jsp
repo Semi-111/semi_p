@@ -45,19 +45,41 @@
                 <span>최근 강의평</span>
                 <a href="#">더 보기</a>
             </div>
-            <c:forEach var="dto" items="${listReview}">
-                <div class="review">
+            <c:forEach var="dto" items="listReview">
+	            <div class="review">
 	            	<span class="star">
-                            ${dto.rating}
-                    </span>
-                    <p class="title">
-                            ${dto.sb_Name} : ${dto.pf_Name}
-                    </p>
-                    <p>
-                            ${dto.content}
-                    </p>
-                </div>
+	            		${dto.rating}
+	            	</span>
+	                <p class="title"> 
+	               		${dto.sb_Name} : ${dto.pf_Name}
+	                </p>
+	                <p>
+	                	${dto.content}
+	                </p>
+	            </div>
             </c:forEach>
+            <div class="review">
+            	<span class="star">
+            		⭐⭐⭐⭐⭐
+            	</span>
+            	<p class="title"> 
+               		비드멘토 : 채수원
+                </p>               
+                <p>
+                	솔직히 C+ 나올것 같긴 하지만 아직 수업이 진짜 포기하라고 F 받을까 생각도 했지만
+                </p>
+            </div>
+            <div class="review">
+            	<span class="star">
+            		⭐⭐⭐⭐⭐
+            	</span>
+            	<p class="title"> 
+               		비드멘토 : 채수원
+                </p>               
+                <p>
+                	정말 좋아요! 준비 열심히 해주시고 학생들 서브에 챙겨주시고 친근하게 다가와 주셔서 한 학기 동안 재밌게 들었어요
+                </p>               
+            </div>
         </div>
     </div>
 	
