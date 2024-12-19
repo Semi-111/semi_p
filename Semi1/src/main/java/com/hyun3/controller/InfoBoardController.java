@@ -40,6 +40,7 @@ public class InfoBoardController {
 	public ModelAndView handleBoardList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String boardType = req.getParameter("type");
+//		long cmNum = Long.parseLong(req.getParameter("cmNum"));
 
 		ModelAndView mav = new ModelAndView("board/list"); // 폴더명 / 파일명
 
@@ -113,6 +114,8 @@ public class InfoBoardController {
 
 			formatPostDate(list);
 
+//			int replyCount = dao.dataCountReply(cmNum);
+
 			// 포워딩할 JSP에 전달할 속성
 			mav.addObject("list", list);
 			mav.addObject("page", current_page);
@@ -124,6 +127,7 @@ public class InfoBoardController {
 			mav.addObject("schType", schType);
 			mav.addObject("kwd", kwd);
 			mav.addObject("boardType", boardType);
+//			mav.addObject("replyCount", replyCount);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -226,6 +230,12 @@ public class InfoBoardController {
 
 			ModelAndView mav = new ModelAndView("board/article");
 
+			int replyCount = 0;
+
+			// 게시글에 달린 댓글 수를 세는 메서드
+			replyCount = dao.dataCountReply(cmNum);
+			dto.setReplyCount(replyCount);
+
 			mav.addObject("dto", dto);
 			mav.addObject("page", page);
 			mav.addObject("query", query);
@@ -234,6 +244,7 @@ public class InfoBoardController {
 			mav.addObject("nextDto", nextDto);
 			mav.addObject("boardType", boardType);
 			mav.addObject("isUserLike", isUserLike);
+			mav.addObject("replyCount", replyCount);
 
 			// 포워딩
 			return mav;
@@ -301,8 +312,9 @@ public class InfoBoardController {
 			long cmNum = Long.parseLong(req.getParameter("cmNum"));
 			dto.setCmNum(cmNum);
 
-			InfoBoardDTO oldDto = dao.findByNum(cmNum); // 기존 게시글
-			dto.setFileName(oldDto.getFileName());
+//			InfoBoardDTO oldDto = dao.findByNum(cmNum); // 기존 게시글
+			dto.setFileName(req.getParameter("fileName"));
+//			dto.setFileName(oldDto.getFileName());
 
 			handleFileUpload(req, session, dto); // 이미지 처리
 

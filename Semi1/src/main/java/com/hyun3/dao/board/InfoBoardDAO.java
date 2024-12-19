@@ -1,17 +1,17 @@
 package com.hyun3.dao.board;
 
+import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.board.ReplyDTO;
+import com.hyun3.domain.member.MemberDTO;
+import com.hyun3.util.DBConn;
+import com.hyun3.util.DBUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.hyun3.domain.board.InfoBoardDTO;
-import com.hyun3.domain.board.ReplyDTO;
-import com.hyun3.domain.member.MemberDTO;
-import com.hyun3.util.DBConn;
-import com.hyun3.util.DBUtil;
 
 public class InfoBoardDAO {
 
@@ -100,15 +100,25 @@ public class InfoBoardDAO {
   // 게시글 리스트 가져오기
   public List<InfoBoardDTO> listBoard(String division, int offset, int size) {
     List<InfoBoardDTO> list = new ArrayList<>();
-    String sql = "SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, " +
+    String sql = "SELECT " +
+        "i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, " +
         "i.CA_DATE, i.FILENAME, " +
         "m.USERID, m.NICKNAME, " +
-        "COUNT(l.CM_NUM) AS likeCount " +
+        "NVL(l.likeCount, 0) AS likeCount, " +
+        "NVL(r.replyCount, 0) AS replyCount " +
         "FROM INFOBOARD i " +
         "JOIN member m ON i.MB_NUM = m.MB_NUM " +
-        "LEFT JOIN INFO_LK l ON i.CM_NUM = l.CM_NUM " +
+        "LEFT JOIN ( " +
+        "    SELECT CM_NUM, COUNT(*) AS likeCount " +
+        "    FROM INFO_LK " +
+        "    GROUP BY CM_NUM " +
+        ") l ON i.CM_NUM = l.CM_NUM " +
+        "LEFT JOIN ( " +
+        "    SELECT CM_NUM, COUNT(*) AS replyCount " +
+        "    FROM INFO_CO " +
+        "    GROUP BY CM_NUM " +
+        ") r ON i.CM_NUM = r.CM_NUM " +
         "WHERE i.DIVISION = ? " +
-        "GROUP BY i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, i.CA_DATE, i.FILENAME, m.USERID, m.NICKNAME " +
         "ORDER BY i.CM_NUM DESC " +
         "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 
@@ -127,6 +137,7 @@ public class InfoBoardDAO {
           dto.setCaDate(rs.getString("CA_DATE"));
           dto.setFileName(rs.getString("FILENAME"));
           dto.setBoardLikeCount(rs.getInt("likeCount"));
+          dto.setReplyCount(rs.getInt("replyCount"));
 
           MemberDTO member = new MemberDTO();
           member.setUserId(rs.getString("USERID"));
@@ -142,6 +153,52 @@ public class InfoBoardDAO {
 
     return list;
   }
+
+  public List<InfoBoardDTO> listReplyCount(String division) {
+    List<InfoBoardDTO> list = new ArrayList<>();
+
+    String sql = "SELECT i.CM_NUM, i.TITLE, i.CONTENT, i.VIEWS, i.CA_DATE, i.FILENAME, " +
+        " m.USERID, m.NICKNAME, " +
+        " NVL(r.replyCount, 0) AS replyCount " +
+        " FROM INFOBOARD i " +
+        " JOIN member m ON i.MB_NUM = m.MB_NUM " +
+        " LEFT JOIN ( " +
+        "    SELECT CM_NUM, COUNT(*) AS replyCount " +
+        "    FROM INFO_CO " +
+        "    GROUP BY CM_NUM " +
+        " ) r ON i.CM_NUM = r.CM_NUM " +
+        " WHERE i.DIVISION = ? " +
+        " ORDER BY i.CM_NUM DESC";
+
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setString(1, division);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          InfoBoardDTO dto = new InfoBoardDTO();
+          dto.setCmNum(rs.getInt("CM_NUM"));
+          dto.setTitle(rs.getString("TITLE"));
+          dto.setContent(rs.getString("CONTENT"));
+          dto.setViews(rs.getInt("VIEWS"));
+          dto.setCaDate(rs.getString("CA_DATE"));
+          dto.setFileName(rs.getString("FILENAME"));
+          dto.setReplyCount(rs.getInt("replyCount"));
+
+          MemberDTO member = new MemberDTO();
+          member.setUserId(rs.getString("USERID"));
+          member.setNickName(rs.getString("NICKNAME"));
+          dto.setMember(member);
+
+          list.add(dto);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return list;
+  }
+
 
   // 게시글 검색 포함 리스트
   public List<InfoBoardDTO> listBoard(String division, int offset, int size, String schType, String kwd) {
@@ -282,7 +339,6 @@ public class InfoBoardDAO {
 
     return 0;
   }
-
 
   // 특정 게시글 가져오기
   public InfoBoardDTO findByNum(long cmNum) {
@@ -694,6 +750,7 @@ public class InfoBoardDAO {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
+      DBUtil.close(rs);
       DBUtil.close(ps);
     }
 
@@ -722,6 +779,7 @@ public class InfoBoardDAO {
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
+      DBUtil.close(rs);
       DBUtil.close(ps);
     }
 

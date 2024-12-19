@@ -34,9 +34,9 @@ public class StudentBoardDAO {
   }
 
   // 게시글 추가
-  public void insertBoard(StudentBoardDTO dto, String userId) throws SQLException {
+  public void insertBoard(StudentBoardDTO dto, long mbNum) throws SQLException {
     String sql = "INSERT INTO STUDENTBOARD (CM_NUM, DIVISION, TITLE, CONTENT, CA_DATE, FILENAME, VIEWS, MB_NUM, CT_NUM) " +
-        "VALUES (SEQ_STUDENT_BOARD.nextval, ?, ?, ?, SYSDATE, ?, 0, (SELECT MB_NUM FROM MEMBER WHERE USERID = ?), ?)";
+        "VALUES (SEQ_STUDENT_BOARD.nextval, ?, ?, ?, SYSDATE, ?, 0, ?, ?)";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
       conn.setAutoCommit(false);
@@ -45,7 +45,7 @@ public class StudentBoardDAO {
       ps.setString(2, dto.getTitle());
       ps.setString(3, dto.getContent());
       ps.setString(4, dto.getFileName());
-      ps.setString(5, userId);
+      ps.setLong(5, mbNum);
       ps.setInt(6, dto.getCategoryNum());
 
       ps.executeUpdate();
@@ -59,26 +59,57 @@ public class StudentBoardDAO {
   }
 
   // 게시글 수정
-  public void updateBoard(StudentBoardDTO dto) throws SQLException {
-    String sql = "UPDATE STUDENTBOARD SET TITLE = ?, CONTENT = ?, FILENAME = ?, CT_NUM = ? WHERE CM_NUM = ?";
+  public void updateBoard(StudentBoardDTO dto, long mbNum) throws SQLException {
+	    String sql = "UPDATE STUDENTBOARD SET DIVISION = ?, TITLE = ?, CONTENT = ?, FILENAME = ?, CT_NUM = ? WHERE CM_NUM = ? AND MB_NUM = ?";
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      ps.setString(1, dto.getTitle());
-      ps.setString(2, dto.getContent());
-      ps.setString(3, dto.getFileName());
-      ps.setInt(4, dto.getCategoryNum());
-      ps.setLong(5, dto.getCmNum());
+	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
-      ps.executeUpdate();
-    }
-  }
+	        conn.setAutoCommit(false);
+
+	        ps.setString(1, dto.getDivision());
+	        ps.setString(2, dto.getTitle());
+	        ps.setString(3, dto.getContent());
+	        ps.setString(4, dto.getFileName());
+
+	        // CT_NUM 설정 (null 처리)
+	        if (dto.getCategoryNum() != null) {
+	            ps.setInt(5, dto.getCategoryNum());
+	        } else {
+	            ps.setNull(5, java.sql.Types.INTEGER);
+	        }
+
+	        ps.setLong(6, dto.getCmNum());
+	        ps.setLong(7, mbNum);
+	        ps.executeUpdate();
+	        conn.commit();
+	    } catch (SQLException e) {
+	        if (conn != null) {
+	            try {
+	                conn.rollback();
+	            } catch (SQLException ex) {
+	                ex.printStackTrace();
+	            }
+	        }
+	        throw e;
+	    } finally {
+	        if (conn != null) {
+	            try {
+	                conn.setAutoCommit(true);
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+
 
   // 게시글 삭제
-  public void deleteBoard(long cmNum) throws SQLException {
-    String sql = "DELETE FROM STUDENTBOARD WHERE CM_NUM = ?";
+  public void deleteBoard(long cmNum, long mbNum) throws SQLException {
+    String sql = "DELETE FROM STUDENTBOARD WHERE CM_NUM = ? AND MB_NUM = ?";
 
     try (PreparedStatement ps = conn.prepareStatement(sql)) {
       ps.setLong(1, cmNum);
+      ps.setLong(2, mbNum);
       ps.executeUpdate();
     }
   }

@@ -261,12 +261,14 @@ public class StudentController {
         String category = req.getParameter("category");
         if (category != null && !category.isEmpty()) {
           dto.setCategoryNum(Integer.parseInt(category));
-        }
+        } else {
+			dto.setCategoryName(null);
+		}
       }
 
       handleFileUpload(req, session, dto); // 이미지 처리
 
-      dao.insertBoard(dto, info.getUserId());
+      dao.insertBoard(dto, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -349,7 +351,7 @@ public class StudentController {
 
       handleFileUpload(req, session, dto); // 이미지 처리
 
-      dao.updateBoard(dto);
+      dao.updateBoard(dto, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -398,7 +400,7 @@ public class StudentController {
         }
       }
 
-      dao.deleteBoard(cmNum);
+      dao.deleteBoard(cmNum, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
