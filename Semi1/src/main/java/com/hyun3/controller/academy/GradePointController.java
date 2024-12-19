@@ -41,13 +41,13 @@ public class GradePointController {
 			
 			// 전체 평점
 			
-			double gpa = dao.calculateTotalGPA(userId);
+			double totalGpa = dao.calculateTotalGPA(userId);
 						
 
 			// 전체 취득 학점
 			int totalHakscore = dao.totalHakscore(userId);
 			
-			mav.addObject("totalGpa", gpa);
+			mav.addObject("totalGpa", Math.round(totalGpa * 100.0) / 100.0);
 			mav.addObject("totalHakscore", totalHakscore);
 			
 		} catch (Exception e) {
