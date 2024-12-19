@@ -71,11 +71,15 @@
 							변경</button>
 					</div>
 					<div>
-						<!-- 번호 변경 -->
 						<button type="button" class="changeBtn"
 							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">전화번호
 							변경</button>
 					</div>
+					<div>
+						<button type="button" class="changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/delete'">회원탈퇴</button>
+					</div>
+
 				</div>
 			</div>
 
