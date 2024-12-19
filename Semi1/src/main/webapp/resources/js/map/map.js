@@ -1,54 +1,113 @@
-let map = new naver.maps.Map('map', {
-	center: new naver.maps.LatLng(37.556601, 126.919494),
-	zoom: 18
-});
 
-let markersData = [
-	{ lat: 37.556601, lng: 126.919494, info: 'Marker 1 Information' },
-	{ lat: 37.557601, lng: 126.918494, info: 'Marker 2 Information' },
-	// Add more marker data as needed
-];
 
 let markers = [];
 let infoWindows = [];
 
-markersData.forEach((data, index) => {
-	let marker = new naver.maps.Marker({
-		position: new naver.maps.LatLng(data.lat, data.lng),
-		map: map,
-		icon: {
-			url: '/resources/images/map/marker.png',
-			size: new naver.maps.Size(48, 48),
-			origin: new naver.maps.Point(0, 0),
-			anchor: new naver.maps.Point(25, 25)
-		}
-	});
 
-	let infoWindow = new naver.maps.InfoWindow({
-		content: `<div style="width:150px;text-align:center;padding:10px;">${data.info}</div>`
-	});
 
-	markers.push(marker);
-	infoWindows.push(infoWindow);
 
-	naver.maps.Event.addListener(marker, 'click', function() {
-		if (infoWindow.getMap()) {
-			infoWindow.close();
-		} else {
-			infoWindow.open(map, marker);
-		}
-	});
-});
-
-function toggleSearch() {
-	let searchDiv = document.getElementById('search');
-	if (searchDiv.classList.contains('closed')) {
-		searchDiv.classList.remove('closed');
-	} else {
-		searchDiv.classList.add('closed');
-	}
+function toggleSearchSideBar() {
+    let searchDiv = document.getElementById('search');
+    if (searchDiv.classList.contains('close')) {
+        searchDiv.classList.remove('close');
+    } else {
+        searchDiv.classList.add('close');
+    }
 }
 
+
+$(function (){
+    mapPage2(1, schTerm);
+})
+
+function mapPage2(page,schTerm) {
+
+    let url = path + `/map/moveP`;
+
+    let query = 'page=' + page + "&lat1=" + lat1 + "&lat2=" + lat2 + "&lon1=" + lon1 + "&lon2=" + lon2;
+
+    if (schTerm != null && schTerm !== "none") {
+        schTerm = encodeURIComponent(schTerm);
+        query += "&schTerm=" + schTerm;
+    }
+
+    let search = "#mapContainer";
+
+    const fn = function (data) {
+        $(search).html(data);
+    }
+
+    ajaxFun(url, 'GET', query, 'text', fn);
+}
+
+
+function mapPage(page) {
+
+    let url = path + `/map/moveP`;
+
+    let query = 'page=' + page + "&lat1=" + lat1 + "&lat2=" + lat2 + "&lon1=" + lon1 + "&lon2=" + lon2;
+
+    if (schTerm != null && schTerm !== "none") {
+        schTerm = encodeURIComponent(schTerm);
+        query += "&schTerm=" + schTerm;
+    }
+
+    let search = "#mapContainer";
+
+    const fn = function (data) {
+        $(search).html(data);
+    }
+
+    ajaxFun(url, 'GET', query, 'text', fn);
+}
+
+
+
+
+
+
+function loadDetails(stId) {
+    let url = path + '/map/details';
+    let query = 'stId=' + stId;
+    let page = document.getElementById('page').value;
+
+    query += "&page=" + page;
+
+    let schTerm = $("#schTerm").val();
+    if (schTerm != null && schTerm !== "") {
+        schTerm = encodeURIComponent(schTerm);
+        query += "&schTerm=" + schTerm;
+    }
+
+    let detail = "#mapContainer";
+
+    const fn = function (data) {
+        $(detail).html(data);
+    }
+
+    ajaxFun(url, 'GET', query, 'text', fn);
+
+}
+
+
+// TODO : 검색시 마커 초기화 후 새로운 마커 생성
 function searchPlaces() {
-	// Implement search functionality
+    let schTerm = document.getElementById('schTerm').value;
+    schTerm = encodeURIComponent(schTerm);
+    if (schTerm.trim() === '') {
+        alert('검색어를 입력하세요');
+        return false;
+    }
+
+
+    const mainUrl = path + '/map';
+    const query = '?schTerm=' + schTerm + "&lat1=" + lat1 + "&lat2=" + lat2 + "&lon1=" + lon1 + "&lon2=" + lon2;
+
+    window.location.href = mainUrl+query;
+
+    return false;
 }
+
+
+
+

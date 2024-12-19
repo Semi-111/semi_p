@@ -1,4 +1,4 @@
-package com.hyun3.domain.map_api;
+package com.hyun3.domain.map;
 
 public class StImgDTO implements Comparable<StImgDTO> {
 
