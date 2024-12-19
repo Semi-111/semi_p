@@ -243,6 +243,7 @@ public class MemberController {
 		String message = "";
 		try {
 			MemberDTO dto = new MemberDTO();
+
 			dto.setUserId(req.getParameter("userId"));
 			dto.setPwd(req.getParameter("pwd"));
 			dto.setName(req.getParameter("name"));
@@ -252,13 +253,17 @@ public class MemberController {
 			dto.setEmail(req.getParameter("email"));
 			dto.setTel(req.getParameter("tel"));
 			dto.setStudentNum(Integer.parseInt(req.getParameter("studentNum")));
+			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
+
+
 			dao.insertMember(dto);
 
 			session.setAttribute("mode", "insert");
 			session.setAttribute("Name", dto.getName());
 
 			return new ModelAndView("redirect:/member/complete");
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				message = "아이디 중복으로 회원 가입이 실패 했습니다.";
 			} else if (e.getErrorCode() == 1400) {
@@ -270,7 +275,8 @@ public class MemberController {
 				message = "회원 가입이 실패 했습니다.";
 				// 기타 - 2291:참조키 위반, 12899:폭보다 문자열 입력 값이 큰경우
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			message = "회원 가입이 실패 했습니다.";
 			e.printStackTrace();
 		}

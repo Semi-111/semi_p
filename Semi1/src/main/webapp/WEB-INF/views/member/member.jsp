@@ -68,7 +68,7 @@ h3>img {
 		}
 		
 		str = f.pwd.value;
-		if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,8}$/i.test(str) ) { 
+		if( !/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,8}$/i.test(str) ) {
 			alert("패스워드를 다시 입력하세요. ");
 			f.pwd.focus();
 			return;
@@ -107,7 +107,7 @@ h3>img {
 	        f.tel1.focus();
 	        return;
 	    }
-	    /* (!/^(\d){2,3}$/.test(str)) */
+	    ///* (!/^(\d){2,3}$/.test(str))
 	    
 	    str = f.email.value.trim();
 	    if( !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(str) ) {
@@ -122,6 +122,13 @@ h3>img {
 	        f.studentNum.focus();
 	        return;
 	    }
+
+
+		if(f.lessonNum.value === "0") {
+			alert("학과를 선택하세요.");
+			f.lessonNum.focus();
+			return;
+		}
 	    
 		f.action = "${pageContext.request.contextPath}/member/${mode}";
 		f.submit();
@@ -320,6 +327,23 @@ h3>img {
 									class="form-control" value="${dto.studentNum}"
 									${mode=="update" ? "readonly" : ""} placeholder="학번"> <small
 									class="form-control-plaintext">전체 학번[숫자만]을 입력해주세요.</small>
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<label class="col-sm-2 col-form-label" for="studentNum">학과</label>
+							<div class="col-sm-7">
+								<select name="lessonNum" id="lessonNum" class="form-control" value="${dto.studentNum}"
+								${mode=="update" ? "readonly" : ""}>
+									<option value="0">학과를 선택해주세요</option>
+									<option value="51">경영학과</option>
+									<option value="52">경찰행정</option>
+									<option value="53">디자인과</option>
+									<option value="54">화학공학</option>
+									<option value="55">컴퓨터 응용전자과</option>
+									<option value="56">정보통신학부</option>
+								</select>
+
 							</div>
 						</div>
 
