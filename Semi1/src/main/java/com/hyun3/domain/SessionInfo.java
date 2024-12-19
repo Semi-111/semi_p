@@ -6,8 +6,18 @@ public class SessionInfo {
 	private String name;
 	private String role;
 	private String nickName;
+	private String email;
+	private String image;
 	private int lessonNum;
-	
+
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public int getLessonNum() {
 		return lessonNum;
@@ -55,5 +65,13 @@ public class SessionInfo {
 
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

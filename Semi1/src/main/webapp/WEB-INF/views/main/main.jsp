@@ -40,12 +40,28 @@
 								<div class="profile">
 									<h5>나의 정보</h5>
 									<div class="profile-info">
-										<div class="MyPicture">
-											<img
-												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
-											<!-- 사진 바뀔 수 있도록.. 연동이 문제임 -->
-										</div>
-										<h6>닉네임: ${sessionScope.member.name}</h6>
+<%--										<button class="btn" type="button" onclick="location.href='${pageContext.request.contextPath}/member/myPage'">--%>
+											<div class="MyPicture">
+												<c:if test="${not empty sessionScope.member.image}">
+													<img src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}" >
+												</c:if>
+												<c:if test="${empty sessionScope.member.image}">
+													<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg" >
+												</c:if>
+
+											<%--												<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">--%>
+<%--												<img src="${pageContext.request.contextPath}/uploads/photo/${memberInfo.image}" alt="프로필 이미지" class="profile-image">--%>
+											</div>
+<%--										</button>--%>
+
+<%--										<div class="MyPicture">--%>
+<%--											<img--%>
+<%--												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">--%>
+<%--											<!-- 사진 바뀔 수 있도록.. 연동이 문제임 -->--%>
+<%--										</div>--%>
+
+
+										<h6>닉네임: ${sessionScope.member.nickName}</h6>
 									</div>
 									<div class="profile-buttons">
 										<button type="button"

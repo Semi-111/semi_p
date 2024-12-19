@@ -3,6 +3,7 @@ package com.hyun3.controller;
 import static com.hyun3.mvc.annotation.RequestMethod.GET;
 import static com.hyun3.mvc.annotation.RequestMethod.POST;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -13,13 +14,17 @@ import com.hyun3.domain.SessionInfo;
 import com.hyun3.domain.member.MemberDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.RequestMethod;
 import com.hyun3.mvc.annotation.ResponseBody;
 import com.hyun3.mvc.view.ModelAndView;
 
+import com.hyun3.util.FileManager;
+import com.hyun3.util.MyMultipartFile;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 @Controller
 public class MemberController {
@@ -452,15 +457,15 @@ public class MemberController {
 				session.invalidate();
 
 				ModelAndView mav = new ModelAndView("member/deleteSuccess");
-	            return mav;
+				return mav;
 			}
 
 			/*
 			 * // 회원정보수정 - 회원수정폼으로 이동 ModelAndView mav = new ModelAndView("member/member");
-			 * 
+			 *
 			 * mav.addObject("title", "회원 정보 수정"); mav.addObject("dto", dto);
 			 * mav.addObject("mode", "update");
-			 * 
+			 *
 			 * return mav;
 			 */
 		} catch (Exception e) {
@@ -492,30 +497,71 @@ public class MemberController {
 		return model;
 	}
 
+
+	@RequestMapping(value = "/member/image", method = RequestMethod.POST)
+	public ModelAndView imageUpload(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+
+		ModelAndView mav = new ModelAndView("member/myPage");
+
+		FileManager fileManager = new FileManager();
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + "uploads" + File.separator + "photo";
+
+		Part part = req.getPart("infoimage");
+
+		if (part != null && part.getSize() > 0) {
+			MyMultipartFile uploadedFile = fileManager.doFileUpload(part, pathname);
+
+			if (uploadedFile != null) {
+				String uploadedFilename = uploadedFile.getOriginalFilename();
+				info.setImage(uploadedFilename);
+
+			} else {
+				System.out.println("exit..");
+			}
+		} else {
+			System.out.println("exit..");
+		}
+
+		session.setAttribute("member", info);
+
+		mav.addObject("memberInfo", info);
+		return mav;
+
+	}
+
 	/*
 	 * @RequestMapping(value = "/member/update", method = POST) public ModelAndView
 	 * updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws
 	 * ServletException, IOException { // 회원정보 수정 완료 MemberDAO dao = new
 	 * MemberDAO(); HttpSession session = req.getSession(); SessionInfo info =
 	 * (SessionInfo) session.getAttribute("member");
-	 * 
+	 *
 	 * try { MemberDTO dto = new MemberDTO();
-	 * 
+	 *
 	 * dto.setUserId(req.getParameter("userId"));
 	 * dto.setPwd(req.getParameter("pwd")); dto.setName(req.getParameter("name"));
 	 * dto.setNickName(req.getParameter("nickName"));
 	 * dto.setBirth(req.getParameter("birth"));
 	 * dto.setEmail(req.getParameter("email")); dto.setTel(req.getParameter("tel"));
 	 * dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
-	 * 
+	 *
 	 * dao.updateMember(dto, info.getMb_Num());
-	 * 
+	 *
 	 * session.setAttribute("mode", "update"); session.setAttribute("Name",
 	 * dto.getName());
-	 * 
+	 *
 	 * return new ModelAndView("redirect:/member/complete"); } catch (Exception e) {
 	 * e.printStackTrace(); }
-	 * 
+	 *
 	 * return new ModelAndView("redirect:/"); }
 	 */
 }

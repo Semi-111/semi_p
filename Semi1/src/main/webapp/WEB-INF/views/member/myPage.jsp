@@ -1,95 +1,108 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>TRAINEE - MYPAGE</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/myPage.css">
-
-<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
-<jsp:include page="/WEB-INF/views/layout/header.jsp" />
-
-
+	<meta charset="UTF-8">
+	<title>TRAINEE - MYPAGE</title>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/myPage.css">
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+	<jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
+	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 </head>
 <body>
+<div class="container">
 	<div class="myPage">
-		<form name="myPageForm" id="form" method="post">
-			<div class="first-profile">
-				<h3>내 정보</h3>
-				<div class="myInfo">
-					<p>이름: ${memberInfo.name}</p>
-					<p>닉네임: ${memberInfo.nickName}</p>
-					<p>학과: ${hak}</p>
+		<!-- 이미지 업로드 폼: action을 /member/image로, enctype 설정 필수 -->
+		<form action="${pageContext.request.contextPath}/member/image" method="post" enctype="multipart/form-data">
+			<section class="profile-section">
+				<h2>프로필 이미지</h2>
+				<div class="image-upload">
+					<c:if test="${memberInfo.image != null}">
+						<img src="${pageContext.request.contextPath}/uploads/photo/${memberInfo.image}" alt="프로필 이미지" class="profile-image">
+					</c:if>
+					<c:if test="${memberInfo.image == null}">
+						<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg" alt="기본 프로필 이미지" class="profile-image">
+					</c:if>
+					<input type="file" id="infoimage" name="infoimage" accept="image/*">
+					<button type="submit" class="btn uploadBtn">이미지 업로드</button>
 				</div>
-				<div class="logout">
-					<button type="button" class="logoutBtn"
-						onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
-				</div>
-			</div>
-
-			<div class="second-profile">
-				<h3>계정</h3>
-				<div class="myAccount">
-					<p>아이디 | ${memberInfo.userId}</p>
-
-					<!-- <p>
-						학과 설정 | <select>
-							<option value="dept1">경영학과</option>
-							<option value="dept2">경찰행정과</option>
-							<option value="dept3">디자인학과</option>
-							<option value="dept4">화학공학과</option>
-							<option value="dept5">컴퓨터응용전자과</option>
-							<option value="dept6">정보통신학과</option>
-						</select>
-					</p>
-					<p>
-						학과 처리 내역 |
-						<button type="button" onclick="openModal()">보기</button>
-					</p> -->
-					<%-- 
-					<!-- 모달 창 -->
-					<div id="myModal" style="display: none;">
-						<div class="modal-content">
-							<span class="close" onclick="closeModal()">&times;</span>
-							<p>${memberInfo.CA_day}</p>
-						</div>
-					</div>
-					<div> --%>
-
-					<div>
-						<button type="button" class="changeBtn"
-							onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
-							변경</button>
-					</div>
-					<div>
-						<button type="button" class="changeBtn"
-							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일
-							변경</button>
-					</div>
-					<div>
-						<button type="button" class="changeBtn"
-							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">전화번호
-							변경</button>
-					</div>
-					<div>
-						<button type="button" class="changeBtn"
-							onclick="location.href='${pageContext.request.contextPath}/member/delete'">회원탈퇴</button>
-					</div>
-
-				</div>
-			</div>
-
-			<div class="third-profile">
-				<h3>일정</h3>
-
-			</div>
+			</section>
 		</form>
-		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-		<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
+
+		<!-- 내 정보 섹션 (단순 표시용이므로 form 불필요) -->
+		<section class="profile-section">
+			<h2>내 정보</h2>
+			<div class="profile-info">
+				<div class="info-item">
+					<span class="label">이름:</span>
+					<span class="value">${memberInfo.name}</span>
+				</div>
+				<div class="info-item">
+					<span class="label">닉네임:</span>
+					<span class="value">${memberInfo.nickName}</span>
+				</div>
+				<div class="info-item">
+					<span class="label">학과:</span>
+					<c:choose>
+						<c:when test="${memberInfo.lessonNum == 51}">경영학과</c:when>
+						<c:when test="${memberInfo.lessonNum == 52}">경찰행정</c:when>
+						<c:when test="${memberInfo.lessonNum == 53}">디자인학과</c:when>
+						<c:when test="${memberInfo.lessonNum == 54}">화학공학</c:when>
+						<c:when test="${memberInfo.lessonNum == 55}">컴퓨터응용전자과</c:when>
+						<c:when test="${memberInfo.lessonNum == 56}">정보통신학부</c:when>
+						<c:when test="${memberInfo.lessonNum == 0}">학과 미선택</c:when>
+					</c:choose>
+				</div>
+			</div>
+			<div class="logout">
+				<button type="button" class="btn logoutBtn"
+						onclick="location.href='${pageContext.request.contextPath}/member/logout'">로그아웃</button>
+			</div>
+		</section>
+
+		<!-- 계정 섹션 -->
+		<section class="profile-section">
+			<h2>계정</h2>
+			<div class="account-info">
+				<div class="info-item">
+					<span class="label">아이디:</span>
+					<span class="value">${memberInfo.userId}</span>
+				</div>
+				<div class="info-item">
+					<span class="label">이메일:</span>
+					<span class="value">${memberInfo.email}</span>
+				</div>
+				<div class="actions">
+					<button type="button" class="btn changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호 변경</button>
+					<button type="button" class="btn changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일 변경</button>
+					<button type="button" class="btn changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">전화번호 변경</button>
+				</div>
+			</div>
+		</section>
+
+		<!-- 일정 섹션 -->
+		<section class="profile-section">
+			<h2>일정</h2>
+			<div class="schedule">
+				<p>현재 일정이 없습니다.</p>
+			</div>
+		</section>
+
+		<div>
+			<button type="button" class="changeBtn"
+					onclick="location.href='${pageContext.request.contextPath}/member/delete'">회원탈퇴</button>
+		</div>
+
 	</div>
+</div>
+
+<footer>
+	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
+</footer>
 </body>
 </html>
