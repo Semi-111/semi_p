@@ -219,7 +219,7 @@ public class NoticeDAO {
 		try {
 			sb.append("SELECT n.CM_num, n.division, title, content, ");
 			sb.append(" TO_CHAR(CA_date, 'YYYY-MM-DD') ca_date, ");
-			sb.append(" fileName, views, n.MB_num, m.nickName, n.n.notice ");
+			sb.append(" fileName, views, n.MB_num, m.nickName, n.notice ");
 			sb.append(" FROM noticeBoard n ");
 			sb.append(" JOIN Member m ON n.MB_num = m.MB_num ");
 			sb.append(" WHERE ");
@@ -320,18 +320,15 @@ public class NoticeDAO {
 
 		try {
 			sql = "SELECT n.CM_num, n.division, n.title, n.content, " + " TO_CHAR(n.CA_date, 'YYYY-MM-DD') ca_date, "
-					+ " n.fileName, n.views, n.MB_num, m.nickName " + " FROM noticeBoard n "
-					+ " JOIN Member m ON n.MB_num = m.MB_num " + " WHERE n.CM_num = ?";
+					+ " n.fileName, n.views, n.MB_num, m.nickName, n.notice " // notice 추가
+					+ " FROM noticeBoard n " + " JOIN Member m ON n.MB_num = m.MB_num " + " WHERE n.CM_num = ?";
 
 			pstmt = conn.prepareStatement(sql);
-
 			pstmt.setLong(1, noticeNum);
-
 			rs = pstmt.executeQuery();
 
 			if (rs.next()) {
 				dto = new NoticeDTO();
-
 				dto.setCm_num(rs.getLong("CM_num"));
 				dto.setDivision(rs.getString("division"));
 				dto.setTitle(rs.getString("title"));
@@ -341,6 +338,7 @@ public class NoticeDAO {
 				dto.setViews(rs.getLong("views"));
 				dto.setMb_num(rs.getLong("MB_num"));
 				dto.setNickName(rs.getString("nickName"));
+				dto.setNotice(rs.getInt("notice")); // notice 값도 설정
 			}
 		} finally {
 			if (rs != null) {
@@ -504,7 +502,6 @@ public class NoticeDAO {
 
 		return list;
 	}
-
 
 	public void updateNotice(NoticeDTO dto) throws SQLException {
 		PreparedStatement pstmt = null;

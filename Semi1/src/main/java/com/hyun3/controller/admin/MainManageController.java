@@ -323,50 +323,50 @@ public class MainManageController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/admin/member/detail", method = RequestMethod.GET)
-	public Map<String, Object> memberDetail(HttpServletRequest req) {
-		Map<String, Object> model = new HashMap<>();
-
-		try {
-			long memberNum = Long.parseLong(req.getParameter("memberNum"));
-
-			MembershipDAO dao = new MembershipDAO();
-			MemberDTO dto = dao.findById(memberNum);
-
-			if (dto != null) {
-				model.put("state", "success");
-				model.put("role", dto.getRole());
-				model.put("lessonNum", dto.getLessonNum());
-				model.put("lessonName", dto.getLessonName());
-			} else {
-				model.put("state", "false");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.put("state", "false");
-		}
-
-		return model;
+	@RequestMapping(value = "/admin/member/detail")
+	public Map<String, Object> memberDetail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    Map<String, Object> model = new HashMap<>();
+	    
+	    try {
+	        long memberNum = Long.parseLong(req.getParameter("memberNum"));
+	        
+	        MembershipDAO dao = new MembershipDAO();
+	        MemberDTO dto = dao.findById(memberNum);
+	        
+	        if(dto != null) {
+	            model.put("state", "success");
+	            model.put("role", dto.getRole());
+	            model.put("lessonNum", dto.getLessonNum());
+	            model.put("lessonName", dto.getLessonName());
+	        } else {
+	            model.put("state", "false");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.put("state", "false");
+	    }
+	    
+	    return model;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/admin/member/updateRole", method = RequestMethod.POST)
-	public Map<String, Object> updateRole(HttpServletRequest req) {
-		Map<String, Object> model = new HashMap<>();
-
-		try {
-			long memberNum = Long.parseLong(req.getParameter("memberNum"));
-			String role = req.getParameter("role");
-
-			MembershipDAO dao = new MembershipDAO();
-			dao.updateRole(memberNum, role);
-			model.put("state", "success");
-		} catch (Exception e) {
-			e.printStackTrace();
-			model.put("state", "false");
-		}
-
-		return model;
+	public Map<String, Object> updateRole(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    Map<String, Object> model = new HashMap<>();
+	    
+	    try {
+	        long memberNum = Long.parseLong(req.getParameter("memberNum"));
+	        String role = req.getParameter("role");
+	        
+	        MembershipDAO dao = new MembershipDAO();
+	        dao.updateRole(memberNum, role);
+	        model.put("state", "success");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.put("state", "false");
+	    }
+	    
+	    return model;
 	}
 
 }

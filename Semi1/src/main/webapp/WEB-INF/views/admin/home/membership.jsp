@@ -251,6 +251,10 @@ tr:hover {
 	color: #9ca3af;
 }
 </style>
+<script type="text/javascript">
+let currentMemberNum = 0;
+let currentLessonNum = 0;
+</script>
 </head>
 <body>
 	<div class="container">
@@ -335,19 +339,44 @@ tr:hover {
 		</div>
 
 		<!-- 모달 -->
-		<div class="modal-backdrop" id="modalBackdrop"></div>
-		<div class="modal" id="memberModal">
-			<div class="modal-header">
-				<h3 class="modal-title">회원 상세 정보</h3>
-				<button class="modal-close" onclick="closeMemberModal()">&times;</button>
-			</div>
-			<div class="member-details" id="memberDetailContent">
-				<!-- 상세 정보는 JavaScript로 동적 로드 -->
+		<div class="modal fade" id="memberModal" tabindex="-1" role="dialog"
+			aria-labelledby="memberModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">권한 조정</h3>
+						<button type="button" class="modal-close"
+							onclick="closeMemberModal()">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group mb-3">
+							<label class="fw-bold mb-2">현재 권한</label>
+							<div id="currentRole" class="form-control-plaintext"></div>
+						</div>
+						<div class="form-group mb-3">
+							<label class="fw-bold mb-2">변경할 권한</label> <select id="newRole"
+								class="form-control">
+								<option value="40">일반 학생</option>
+								<option value="51">경영학과 과대표</option>
+								<option value="52">경찰행정학과 과대표</option>
+								<option value="53">디자인학과 과대표</option>
+								<option value="54">음악공연학과 과대표</option>
+								<option value="55">컴퓨터공학전자과 과대표</option>
+								<option value="56">정보통신학과 과대표</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary"
+							onclick="updateRole()">변경하기</button>
+						<button type="button" class="btn btn-secondary"
+							onclick="closeMemberModal()">닫기</button>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<script type="text/javascript">
+		<script type="text/javascript">
         // Ajax 함수 정의
         function ajaxFun(url, method, formData, dataType, fn, file=false) {
             const settings = {
@@ -435,45 +464,55 @@ tr:hover {
             f.submit();
         }
 
-		function openMemberModal(memberNum) {
+        function openMemberModal(memberNum) {
             currentMemberNum = memberNum;
+            const myModal = new bootstrap.Modal(document.getElementById('memberModal'));
             
-            // 회원 정보 가져오기
             const url = '${pageContext.request.contextPath}/admin/member/detail';
             const query = 'memberNum=' + memberNum;
             
             const fn = function(data) {
                 if(data.state === "success") {
-                    document.getElementById('currentRole').textContent = 
-                        data.role === "40" ? "일반 학생" :
-                        `${data.lessonName} 과대표`;
+                    const currentRoleElement = document.getElementById('currentRole');
+                    if (currentRoleElement) {
+                        currentRoleElement.textContent = data.role === "40" ? "일반 학생" : `${data.lessonName} 과대표`;
+                    }
                         
                     currentLessonNum = data.lessonNum;
                     
                     // 소속학과의 과대표 옵션만 선택 가능하도록 설정
                     const roleSelect = document.getElementById('newRole');
-                    for(let option of roleSelect.options) {
-                        if(option.value === "40") continue; // 일반 학생은 항상 선택 가능
-                        option.disabled = (parseInt(option.value) !== parseInt(data.lessonNum) + 51);
+                    if (roleSelect) {
+                        for(let option of roleSelect.options) {
+                            if(option.value === "40") {
+                                option.disabled = false;  // 일반 학생은 항상 선택 가능
+                                continue;
+                            }
+                            // lessonNum이 이미 51~56 사이의 값이므로, 추가로 51을 더하지 않음
+                            option.disabled = (parseInt(option.value) !== currentLessonNum);
+                        }
+                        
+                        // 현재 권한 선택
+                        roleSelect.value = data.role;
                     }
                     
-                    // 현재 권한 선택
-                    roleSelect.value = data.role;
-                    
-                    document.getElementById('modalBackdrop').style.display = 'block';
-                    document.getElementById('memberModal').style.display = 'block';
+                    myModal.show();
                 } else {
                     alert('데이터를 가져오는데 실패했습니다.');
-               }
-           };
+                }
+            };
             
-        ajaxFun(url, "get", query, "json", fn);
-		}
+            ajaxFun(url, "get", query, "json", fn);
+        }
+
 
         function closeMemberModal() {
-            document.getElementById('modalBackdrop').style.display = 'none';
-            document.getElementById('memberModal').style.display = 'none';
+            const myModal = bootstrap.Modal.getInstance(document.getElementById('memberModal'));
+            if (myModal) {
+                myModal.hide();
+            }
         }
+
 
         function login() {
             location.href = '${pageContext.request.contextPath}/member/login';
@@ -481,21 +520,26 @@ tr:hover {
         
         // 역할 변경
         function updateRole() {
-            const newRole = document.getElementById('newRole').value;
-            
-            const url = '${pageContext.request.contextPath}/admin/member/updateRole';
-            const query = 'memberNum=' + currentMemberNum + '&role=' + newRole;
-            
-            const fn = function(data) {
-                if(data.state === "success") {
-                    alert('권한이 변경되었습니다.');
-                    location.reload();
-                } else {
-                    alert('권한 변경에 실패했습니다.');
-                }
-            };
-            
-            ajaxFun(url, "post", query, "json", fn);
-        }
+		    const newRole = document.getElementById('newRole').value;
+		    if(!confirm('권한을 변경하시겠습니까?')) {
+		        return;
+		    }
+		    
+		    const url = '${pageContext.request.contextPath}/admin/member/updateRole';
+		    const query = 'memberNum=' + currentMemberNum + '&role=' + newRole;
+		    
+		    const fn = function(data) {
+		        if(data.state === "success") {
+		            alert('권한이 변경되었습니다.');
+		            location.reload();
+		        } else {
+		            alert('권한 변경에 실패했습니다.' + (data.message ? '\n' + data.message : ''));
+		        }
+		    };
+		    
+		    ajaxFun(url, "post", query, "json", fn);
+		}
+        
+        
     </script>
-</head>
+		</head>

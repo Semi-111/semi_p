@@ -221,13 +221,13 @@ public class MembershipDAO {
 	    MemberDTO dto = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    String sql;
 	    
 	    try {
-	        sql = "SELECT m.mb_num, m.role, m.lessonNum, l.lessonname "
-	            + " FROM member m "
-	            + " LEFT OUTER JOIN lesson l ON m.lessonNum = l.lessonNum "
-	            + " WHERE m.mb_num = ?";
+	        String sql = "SELECT m.mb_num, m.role, m.lessonNum, l.lessonname, "
+	                  + " m.userId, m.nickName, m.block "
+	                  + " FROM member m "
+	                  + " LEFT OUTER JOIN lesson l ON m.lessonNum = l.lessonNum "
+	                  + " WHERE m.mb_num = ?";
 	        
 	        pstmt = conn.prepareStatement(sql);
 	        pstmt.setLong(1, memberNum);
@@ -240,6 +240,9 @@ public class MembershipDAO {
 	            dto.setRole(rs.getString("role"));
 	            dto.setLessonNum(rs.getInt("lessonNum"));
 	            dto.setLessonName(rs.getString("lessonname"));
+	            dto.setUserId(rs.getString("userId"));
+	            dto.setNickName(rs.getString("nickName"));
+	            dto.setBlock(rs.getInt("block"));
 	        }
 	    } finally {
 	        DBUtil.close(rs);
