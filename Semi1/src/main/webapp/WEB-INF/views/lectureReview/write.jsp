@@ -50,7 +50,12 @@
 				<div class="button-group">
 	            	<button type="button" class="submit-button" onclick="submitForm();">
                        ${mode=='update'?'수정완료':'등록하기'}
-                   </button>
+                   	</button>
+                   
+                   	<c:if test="${mode=='update'}">
+                   		<button type="button" class="submit-button" onclick="deleteOk()">삭제</button>
+                   	</c:if>
+                   
                    <button type="button" class="cancel-button" onclick="location.href='${pageContext.request.contextPath}/lectureReview/list'">
                    		취소
                    	</button>
@@ -140,6 +145,14 @@ function submitForm() {
 	
 	f.action = '${pageContext.request.contextPath}/lectureReview/${mode}';
 	f.submit();
+}
+
+function deleteOk() {
+	if(confirm('강의평가를 삭제하시겠습니까 ? ')) {
+		let query = 'reviewNum=${dto.review_Num}';
+		let url = '${pageContext.request.contextPath}/lectureReview/delete?' + query;
+		location.href = url;
+	}
 }
 
 </script>

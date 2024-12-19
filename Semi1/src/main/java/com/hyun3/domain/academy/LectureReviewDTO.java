@@ -19,7 +19,14 @@ public class LectureReviewDTO {
     private String reg_date;	// 작성일
     private int rating;			// 평가 점수
     
+    private int role;
     
+	public int getRole() {
+		return role;
+	}
+	public void setRole(int role) {
+		this.role = role;
+	}
 	public int getIsWritten() {
 		return isWritten;
 	}

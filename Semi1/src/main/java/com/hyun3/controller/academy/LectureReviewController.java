@@ -61,7 +61,7 @@ public class LectureReviewController {
 			int dataCount = dao.dataCount();
 			
 			// 전체 페이지 수
-			int size = 2;
+			int size = 5;
 			int total_page = util.pageCount(dataCount, size);
 			if(current_page > total_page) {
 				current_page = total_page;
@@ -81,7 +81,7 @@ public class LectureReviewController {
 			
 			// 페이징 처리
 			String cp = req.getContextPath();
-			String listUrl = cp + "/lectureReview/list";
+			String listUrl = cp + "/lectureReview/list?=page=" + current_page;
 			
 		
 			
@@ -348,5 +348,29 @@ public class LectureReviewController {
 		return new ModelAndView("redirect:/lectureReview/list?page=" + page);
 	}
 	
+	@RequestMapping(value = "/lectureReview/delete", method = RequestMethod.GET)
+	public ModelAndView delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("lectureReview/write");
+		LectureReviewDAO dao = new LectureReviewDAO();
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+
+		
+		try {
+			long reviewNum = Long.parseLong(req.getParameter("reviewNum"));
+			
+			dao.deleteReview(reviewNum, info.getUserId());
+			
+			mav.addObject("mode", "update");
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return new ModelAndView("redirect:/lectureReview/list");
+	}
 	
 }
