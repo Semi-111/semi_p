@@ -303,3 +303,12 @@ footer {
 .back-link:hover {
 	color: #a855f7;
 }
+
+.btn-list {
+    margin-left: auto;  /* 다른 버튼들과 간격 조절 */
+}
+
+.btn-list i {
+    font-size: 16px;
+}
+
