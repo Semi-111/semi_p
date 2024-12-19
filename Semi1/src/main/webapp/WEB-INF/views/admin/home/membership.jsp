@@ -257,6 +257,7 @@ let currentLessonNum = 0;
 </script>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/views/layout/adminSide.jsp" />
 	<div class="container">
 		<h1 style="margin: 20px 0; font-size: 24px; color: #374151;">회원
 			관리</h1>
