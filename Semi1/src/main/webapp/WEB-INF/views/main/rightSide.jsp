@@ -44,20 +44,7 @@
             <div class="section-header">
                 <span>최근 강의평</span>
                 <a href="#">더 보기</a>
-            </div>
-            <c:forEach var="dto" items="listReview">
-	            <div class="review">
-	            	<span class="star">
-	            		${dto.rating}
-	            	</span>
-	                <p class="title"> 
-	               		${dto.sb_Name} : ${dto.pf_Name}
-	                </p>
-	                <p>
-	                	${dto.content}
-	                </p>
-	            </div>
-            </c:forEach>
+            </div>     
             <div class="review">
             	<span class="star">
             		⭐⭐⭐⭐⭐
