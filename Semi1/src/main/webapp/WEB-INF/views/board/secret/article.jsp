@@ -159,7 +159,6 @@
             let query = {cmNum : cmNum, content : content};
 
             ajaxFun(url, 'post', query, 'json', function(data) {
-                alert(data.state);
                 if(data.state === 'true') {
                     $tb.find('textarea').val('');
                     listPage(1);

@@ -173,7 +173,6 @@
             let query = {cmNum : cmNum, content : content};
 
             const fn = function (data) {
-                alert(data.state);
                 if(data.state === 'true') {
                     $tb.find('textarea').val('');
                     listPage(1);
