@@ -14,9 +14,17 @@ public class ScheduleDTO {
     
     private String score; // 성적(null)
     
-    private String memberId; // 회원 번호. 로그인 세션으로 가져와야함.
+    private Long mb_Num;
 
-    public String getGradee() {
+	public int getStGrade() {
+		return stGrade;
+	}
+
+	public void setStGrade(int stGrade) {
+		this.stGrade = stGrade;
+	}
+
+	public String getGradee() {
 		return gradee;
 	}
 
@@ -24,72 +32,83 @@ public class ScheduleDTO {
 		this.gradee = gradee;
 	}
 
-	public String getScore() {
-		return score;
-	}
-    
-	public void setScore(String score) {
-		this.score = score;
-	}
 	public String getStGradee() {
-    	return stGradee;
-    }
-    public void setStGradee(String stGradee) {
-    	this.stGradee = stGradee;
-    }
+		return stGradee;
+	}
 
-    public String getMemberId() {
-		return memberId;
+	public void setStGradee(String stGradee) {
+		this.stGradee = stGradee;
 	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
-	}
-	public String getTimetableNum() {
-		return timetableNum;
-	}
-	public void setTimetableNum(String timetableNum) {
-		this.timetableNum = timetableNum;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}
-	public String getStudyDay() {
-		return studyDay;
-	}
-	public void setStudyDay(String studyDay) {
-		this.studyDay = studyDay;
-	}
-	public int getStGrade() {
-		return stGrade;
-	}
-	public void setStGrade(int stGrade) {
-		this.stGrade = stGrade;
-	}
+
 	public String getSbNum() {
 		return sbNum;
 	}
+
 	public void setSbNum(String sbNum) {
 		this.sbNum = sbNum;
 	}
+
 	public String getSbName() {
 		return sbName;
 	}
+
 	public void setSbName(String sbName) {
 		this.sbName = sbName;
 	}
+
 	public int getHakscore() {
 		return hakscore;
 	}
+
 	public void setHakscore(int hakscore) {
 		this.hakscore = hakscore;
 	}
+
 	public String getStudytime() {
 		return studytime;
 	}
+
 	public void setStudytime(String studytime) {
-		this.studytime = studytime != null ? studytime : "시간 없음";
+		this.studytime = studytime;
+	}
+
+	public String getStudyDay() {
+		return studyDay;
+	}
+
+	public void setStudyDay(String studyDay) {
+		this.studyDay = studyDay;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getTimetableNum() {
+		return timetableNum;
+	}
+
+	public void setTimetableNum(String timetableNum) {
+		this.timetableNum = timetableNum;
+	}
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}
+
+	public Long getMb_Num() {
+		return mb_Num;
+	}
+
+	public void setMb_Num(Long mb_Num) {
+		this.mb_Num = mb_Num;
 	}
 }

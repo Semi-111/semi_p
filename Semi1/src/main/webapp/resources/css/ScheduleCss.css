@@ -307,9 +307,3 @@
         }
         
         
-        /* selected 클래스가 추가된 수업에 대해 스타일링 */
-.selected {
-    background-color: #A566FF;  /* 클릭된 행에 보라색 배경색을 추가 */
-    color: white;  /* 클릭된 행의 글자 색을 흰색으로 변경 */
-}
-
