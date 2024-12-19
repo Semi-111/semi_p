@@ -27,23 +27,15 @@
 		<!-- 상단 네비게이션과 글쓰기 버튼 -->
 		<div class="board-header">
 			<div class="board-nav">
-				<a href="${pageContext.request.contextPath}/market/list"
-					class="${empty param.category ? 'active' : ''}">전체</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=1"
-					class="${param.category=='1' ? 'active' : ''}">삽니다</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=2"
-					class="${param.category=='2' ? 'active' : ''}">팝니다</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=3"
-					class="${param.category=='3' ? 'active' : ''}">룸</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=4"
-					class="${param.category=='4' ? 'active' : ''}">책</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=5"
-					class="${param.category=='5' ? 'active' : ''}">옷</a> <a
-					href="${pageContext.request.contextPath}/market/list?category=6"
-					class="${param.category=='6' ? 'active' : ''}">기타</a>
+				<a href="${pageContext.request.contextPath}/market/list" class="${empty param.category ? 'active' : ''}">전체</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=1" class="${param.category=='1' ? 'active' : ''}">삽니다</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=2" class="${param.category=='2' ? 'active' : ''}">팝니다</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=3" class="${param.category=='3' ? 'active' : ''}">룸</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=4" class="${param.category=='4' ? 'active' : ''}">책</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=5" class="${param.category=='5' ? 'active' : ''}">옷</a> 
+				<a href="${pageContext.request.contextPath}/market/list?category=6" class="${param.category=='6' ? 'active' : ''}">기타</a>
 			</div>
-			<a href="${pageContext.request.contextPath}/market/write"
-				class="write-button">글쓰기</a>
+			<a href="${pageContext.request.contextPath}/market/write" class="write-button">글쓰기</a>
 		</div>
 
 		<!-- 검색 -->
