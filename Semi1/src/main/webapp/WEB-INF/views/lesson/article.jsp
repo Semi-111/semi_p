@@ -103,9 +103,9 @@ console.log("title:", "${dto.title}");
 				</c:if>
                 <button class="btn btn-gray" onclick="location.href='${pageContext.request.contextPath}/lessonBoard/list?${query}';">목록</button>
             </div>
-
+			
             <jsp:include page="reply.jsp" />
-
+			
             <div class="post-navigation">
                 <c:if test="${not empty prevDto}">
                     <div class="post-navigation-item">

@@ -1,8 +1,22 @@
 package com.hyun3.controller;
 
-import static com.hyun3.mvc.annotation.RequestMethod.GET;
-import static com.hyun3.mvc.annotation.RequestMethod.POST;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.hyun3.dao.board.InfoBoardDAO;
+import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.board.ReplyDTO;
+import com.hyun3.mvc.annotation.Controller;
+import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.ResponseBody;
+import com.hyun3.mvc.view.ModelAndView;
+import com.hyun3.util.FileManager;
+import com.hyun3.util.MyMultipartFile;
+import com.hyun3.util.MyUtil;
+import com.hyun3.util.MyUtilBootstrap;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,41 +30,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hyun3.dao.board.InfoBoardDAO;
-import com.hyun3.domain.SessionInfo;
-import com.hyun3.domain.board.InfoBoardDTO;
-import com.hyun3.domain.board.ReplyDTO;
-import com.hyun3.mvc.annotation.Controller;
-import com.hyun3.mvc.annotation.RequestMapping;
-import com.hyun3.mvc.annotation.ResponseBody;
-import com.hyun3.mvc.view.ModelAndView;
-import com.hyun3.util.FileManager;
-import com.hyun3.util.MyMultipartFile;
-import com.hyun3.util.MyUtil;
-import com.hyun3.util.MyUtilBootstrap;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
+import static com.hyun3.mvc.annotation.RequestMethod.*;
+import static java.nio.charset.StandardCharsets.*;
 
 @Controller
 public class InfoBoardController {
 
-	@RequestMapping(value = "/bbs/secretBoard/list")
-	public ModelAndView 메서드명(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-		return new ModelAndView("board/test");
-	}
-
 	@RequestMapping("/bbs/infoBoard/list")
-	// http://localhost:9090/bbs/infoBoard/list?type=free - 자유게시판
-	// http://localhost:9090/bbs/infoBoard/list?type=info - 정보게시판
-	// 일반유저 - 40 최종관리자 - 60
 	public ModelAndView handleBoardList(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		String boardType = req.getParameter("type");
+//		long cmNum = Long.parseLong(req.getParameter("cmNum"));
 
 		ModelAndView mav = new ModelAndView("board/list"); // 폴더명 / 파일명
 
@@ -124,6 +114,8 @@ public class InfoBoardController {
 
 			formatPostDate(list);
 
+//			int replyCount = dao.dataCountReply(cmNum);
+
 			// 포워딩할 JSP에 전달할 속성
 			mav.addObject("list", list);
 			mav.addObject("page", current_page);
@@ -135,6 +127,7 @@ public class InfoBoardController {
 			mav.addObject("schType", schType);
 			mav.addObject("kwd", kwd);
 			mav.addObject("boardType", boardType);
+//			mav.addObject("replyCount", replyCount);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -237,6 +230,12 @@ public class InfoBoardController {
 
 			ModelAndView mav = new ModelAndView("board/article");
 
+			int replyCount = 0;
+
+			// 게시글에 달린 댓글 수를 세는 메서드
+			replyCount = dao.dataCountReply(cmNum);
+			dto.setReplyCount(replyCount);
+
 			mav.addObject("dto", dto);
 			mav.addObject("page", page);
 			mav.addObject("query", query);
@@ -245,6 +244,7 @@ public class InfoBoardController {
 			mav.addObject("nextDto", nextDto);
 			mav.addObject("boardType", boardType);
 			mav.addObject("isUserLike", isUserLike);
+			mav.addObject("replyCount", replyCount);
 
 			// 포워딩
 			return mav;
@@ -312,8 +312,9 @@ public class InfoBoardController {
 			long cmNum = Long.parseLong(req.getParameter("cmNum"));
 			dto.setCmNum(cmNum);
 
-			InfoBoardDTO oldDto = dao.findByNum(cmNum); // 기존 게시글
-			dto.setFileName(oldDto.getFileName());
+//			InfoBoardDTO oldDto = dao.findByNum(cmNum); // 기존 게시글
+			dto.setFileName(req.getParameter("fileName"));
+//			dto.setFileName(oldDto.getFileName());
 
 			handleFileUpload(req, session, dto); // 이미지 처리
 
@@ -586,8 +587,7 @@ public class InfoBoardController {
 		}
 
 
-	private static void handleFileUpload(HttpServletRequest req, HttpSession session, InfoBoardDTO dto)
-			throws IOException, ServletException {
+	private static void handleFileUpload(HttpServletRequest req, HttpSession session, InfoBoardDTO dto) throws IOException, ServletException {
 		String filename = null;
 
 		FileManager fileManager = new FileManager();
@@ -610,13 +610,11 @@ public class InfoBoardController {
 					oldFile.delete();
 				}
 			}
-		}
 
-		// 파일이 없으면 null로 설정
-		if (filename != null && !filename.isEmpty()) {
-			dto.setFileName(filename); // 새 파일 이름 설정
-		} else {
-			dto.setFileName(null); // 파일이 없으면 null로 설정
+			// 파일 이름 설정
+			if (filename != null && !filename.isEmpty()) {
+				dto.setFileName(filename); // 새 파일 이름 설정
+			}
 		}
 	}
 

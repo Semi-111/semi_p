@@ -2,28 +2,44 @@ function deleteStudentBoard() {
     if (!confirm('게시글을 삭제하시겠습니까?')) {
         return false;
     }
-    location.href = '${pageContext.request.contextPath}/bbs/studentBoard/delete?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
+    location.href = contextPath + '/bbs/studentBoard/delete?type=' + boardType + '&cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
 }
 
 function updateStudentBoard() {
     if(! confirm('게시글을 수정하시겠습니까?')) {
         return false;
     }
-    location.href = '${pageContext.request.contextPath}/bbs/studentBoard/update?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
+    location.href = contextPath + '/bbs/studentBoard/update?type=' + boardType + '&cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
 }
 
 function deleteInfoBoard() {
-        if(!confirm('게시글을 삭제하시겠습니까?')) {
-            return false;
-        }
-        location.href = '${pageContext.request.contextPath}/bbs/infoBoard/delete?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
+    if (!confirm('게시글을 삭제하시겠습니까?')) {
+        return false;
+    }
+    location.href = contextPath + '/bbs/infoBoard/delete?type=' + boardType + '&cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
 }
 
 function updateInfoBoard() {
-    if(! confirm('게시글을 수정하시겠습니까?')) {
+    if (!confirm('게시글을 수정하시겠습니까?')) {
         return false;
     }
-    location.href = '${pageContext.request.contextPath}/bbs/infoBoard/update?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
+    location.href = contextPath + '/bbs/infoBoard/update?type=' + boardType + '&cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
+}
+
+function updateSecretBoard() {
+    if (!confirm('게시글을 수정하시겠습니까?')) {
+        return false;
+    }
+
+    location.href = contextPath + '/bbs/secretBoard/update?cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
+}
+
+function deleteSecretBoard() {
+    if (!confirm('게시글을 삭제하시겠습니까?')) {
+        return false;
+    }
+
+    location.href = contextPath + '/bbs/secretBoard/delete?cmNum=' + encodeURIComponent(cmNum) + '&page=' + encodeURIComponent(page);
 }
 
 

@@ -3,8 +3,7 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
 
 <div class="reply-info">
-	<span class="reply-count">댓글 ${replyCount}개</span>
-	<span>[목록, ${pageNo}/${total_page} 페이지]</span>
+
 </div>
 
 <table class="table table-borderless">

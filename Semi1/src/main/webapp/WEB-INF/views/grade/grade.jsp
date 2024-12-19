@@ -30,7 +30,7 @@
 	            </div>
 	            <div class="stat-item">
 	                <div class="stat-label">취득 학점</div>
-	                <div class="stat-value">${totalCredits}<span class="stat-max">/150</span></div>
+	                <div class="stat-value">${totalHakscore}<span class="stat-max">/150</span></div>
 	            </div>
 	        </div>
 	        
@@ -58,7 +58,7 @@
 	    <div class="grade-table">
 	        <div class="grade-header">
 	            <div class="grade-title">학년 학기</div>
-	            <button class="submit-btn">시간표 불러오기</button>
+	            <button type="button" class="submit-btn">성적 등록하기</button>
 	        </div>
 	        <div class="grade-sub">
 	        	평점<span class="gpa highlight">0.0</span> 취득<span class="credits highlight">0</span>
@@ -154,10 +154,53 @@ $(function () {
      	ajaxFun(htmlUrl, 'GET', htmlQuery, 'text', function (data) {
      		let tbody = $("#semester-data");
      	    tbody.html(data); // 반환된 HTML을 테이블에 삽입
+     	    	    
 		});
         
 	});
 });
+
+
+// 성적 등록 버튼 클릭 이벤트
+$('.submit-btn').click(function() {	
+    let formData = [];
+	
+    $('tr[data-atnum]').each(function() {		
+		let atNum = $(this).attr('data-atnum'); // 교과목 ID
+        let grade = $(this).find('.grade-select').val(); // 선택된 성적 값
+	       
+        formData.push({ atNum: atNum, grade: grade }); // 데이터 추가
+
+	});
+	
+	
+	// 데이터 변환: a=101&b=A+&a=102&b=B 형태
+    const queryString = formData.map(function(item) {
+    	return 'atNum=' + encodeURIComponent(item.atNum) + '&grade=' + encodeURIComponent(item.grade);
+	}).join('&');
+	
+	
+	let url = '${pageContext.request.contextPath}/grade/updateGrade';
+	
+	const fn = function(data) {
+		if(data.status === "true") {
+			alert('성적이 성공적으로 업데이트되었습니다.');
+			
+			$('.stat-value').eq(0).text(data.totalGpa + "/4.5"); // 전체 평점
+            $('.stat-value').eq(1).text(data.totalHakscore + "/150"); // 취득 학점
+            $('.gpa').text(data.semesterPoints); // 학기별 성적
+            $('.credits').text(data.semesterCredits); // 학기별 학점
+			
+			fetchGradeData();          // 평점 및 취득 학점 갱신
+            fetchGradeDistribution();  // 그래프 갱신
+		} else
+			alert('성적 업데이트에 실패했습니다.');
+	};
+	
+	ajaxFun(url, 'POST', queryString, 'json', fn)
+		
+});
+
 
 
 
@@ -265,42 +308,47 @@ function fetchGradeData() {
 
 
 
-
-let gradeDistributionChart; // Chart.js 인스턴스
+let gradeDistributionChart = null;
 
 function createOrUpdateGradeChart(gradeLabels, gradePercentages) {
     const ctx = document.getElementById("gradeChart").getContext("2d");
 
-    // 1. 원하는 순서 정의
-    const customOrder = ["A+", "A0", "B+", "B0", "C+", "C0", "P", "F"];
+    // 1. 원하는 성적 순서 정의
+    const customOrder = ["A+", "A0", "B+", "B0", "C+", "C0", "D+", "D0", "F"];
 
     // 2. 라벨과 데이터를 customOrder 기준으로 정렬
     const sortedData = gradeLabels
         .map((label, index) => ({
             label, // 성적 라벨 (예: A+, B+)
-            percentage: gradePercentages[index], // 해당 라벨의 비율 데이터
+            percentage: gradePercentages[index] // 해당 라벨의 비율 데이터
         }))
-        .sort((a, b) => customOrder.indexOf(a.label) - customOrder.indexOf(b.label)); // customOrder 기준으로 정렬
+        .sort((a, b) => customOrder.indexOf(a.label) - customOrder.indexOf(b.label)); // 정렬 기준
 
-    // 정렬된 데이터에서 라벨과 비율을 분리
+    // 3. 정렬된 데이터에서 라벨과 비율을 분리
     const sortedLabels = sortedData.map((item) => item.label);
     const sortedPercentages = sortedData.map((item) => item.percentage);
 
+    // 데이터가 비어있을 경우 기본값 설정
+    if (!sortedLabels || sortedLabels.length === 0) {
+        sortedLabels = customOrder; // 기본 성적 라벨
+        sortedPercentages = new Array(customOrder.length).fill(0); // 비율 0%로 채움
+    }
+
     if (gradeDistributionChart) {
         // 기존 차트 업데이트
-        gradeDistributionChart.data.labels = sortedLabels; // 정렬된 라벨
-        gradeDistributionChart.data.datasets[0].data = sortedPercentages; // 정렬된 데이터
+        gradeDistributionChart.data.labels = sortedLabels;
+        gradeDistributionChart.data.datasets[0].data = sortedPercentages;
         gradeDistributionChart.update();
     } else {
         // 새 차트 생성
         gradeDistributionChart = new Chart(ctx, {
-            type: "bar", // 막대형 차트
+            type: "bar",
             data: {
-                labels: sortedLabels, // 정렬된 Y축 라벨 (성적: A+, A0, ...)
+                labels: sortedLabels, // 정렬된 라벨
                 datasets: [
                     {
-                        label: "성적 비율 (%)", // 범례 라벨
-                        data: sortedPercentages, // 정렬된 X축 데이터
+                        label: "성적 비율 (%)",
+                        data: sortedPercentages,
                         backgroundColor: [
                             "rgba(255, 99, 132, 0.5)", // A+
                             "rgba(255, 159, 64, 0.5)", // A0
@@ -308,65 +356,65 @@ function createOrUpdateGradeChart(gradeLabels, gradePercentages) {
                             "rgba(54, 162, 235, 0.5)", // B0
                             "rgba(153, 102, 255, 0.5)", // C+
                             "rgba(201, 203, 207, 0.5)", // C0
-                            "rgba(100, 149, 237, 0.5)", // P
-                            "rgba(128, 128, 128, 0.5)", // F
+                            "rgba(255, 206, 86, 0.5)", // D+
+                            "rgba(255, 99, 71, 0.5)",  // D0
+                            "rgba(128, 128, 128, 0.5)" // F
                         ],
                         borderColor: [
-                            "rgba(255, 99, 132, 1)", // A+
-                            "rgba(255, 159, 64, 1)", // A0
-                            "rgba(75, 192, 192, 1)", // B+
-                            "rgba(54, 162, 235, 1)", // B0
+                            "rgba(255, 99, 132, 1)",  // A+
+                            "rgba(255, 159, 64, 1)",  // A0
+                            "rgba(75, 192, 192, 1)",  // B+
+                            "rgba(54, 162, 235, 1)",  // B0
                             "rgba(153, 102, 255, 1)", // C+
                             "rgba(201, 203, 207, 1)", // C0
-                            "rgba(100, 149, 237, 1)", // P
-                            "rgba(128, 128, 128, 1)", // F
+                            "rgba(255, 206, 86, 1)",  // D+
+                            "rgba(255, 99, 71, 1)",   // D0
+                            "rgba(128, 128, 128, 1)" // F
                         ],
-                        borderWidth: 1, // 막대 테두리 두께
-                    },
-                ],
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
-                indexAxis: "y", // 가로 막대형 차트
+                indexAxis: "y",
                 responsive: true,
                 plugins: {
                     legend: {
-                        display: false, // 범례 숨김
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
                             label: function (tooltipItem) {
-                                return tooltipItem.raw + "%"; // 툴팁에 % 추가
-                            },
-                        },
-                    },
+                                return tooltipItem.raw + "%";
+                            }
+                        }
+                    }
                 },
                 scales: {
                     x: {
                         beginAtZero: true,
-                        max: 100, // X축 최대값 설정 (비율 기준 100%)
+                        max: 100,
                         ticks: {
-                            stepSize: 20, // X축 간격 20%
+                            stepSize: 20,
                             callback: function (value) {
-                                return value + "%"; // X축에 % 표시
-                            },
-                        },
-                        grid: {
-                            color: "rgba(200, 200, 200, 0.3)", // X축 그리드 색상
-                        },
+                                return value + "%";
+                            }
+                        }
                     },
                     y: {
                         ticks: {
-                            color: "black", // Y축 텍스트 색상
+                            color: "black"
                         },
                         grid: {
-                            display: false, // Y축 그리드 숨기기
-                        },
-                    },
-                },
-            },
+                            display: false
+                        }
+                    }
+                }
+            }
         });
     }
 }
+
 
 
 //AJAX로 데이터 가져오기

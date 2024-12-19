@@ -1,40 +1,67 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('file');
-    const preview = document.querySelector('.preview-image');
+window.previewImage = function(input) {
+    const preview = document.getElementById('preview');
+    const fileNameElem = document.getElementById('fileName');
 
-    if (fileInput) {
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            const fileName = file.name || '';
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
 
-            const existingFileName = fileInput.parentNode.querySelector('.file-name');
-            if (existingFileName) {
-                existingFileName.remove();
+        reader.onload = function(e) {
+            // 이미지 미리보기
+            if (preview) {
+                let img = preview.querySelector('img');
+                if (!img) {
+                    img = document.createElement('img');
+                    preview.appendChild(img);
+                }
+                img.src = e.target.result;
+                preview.style.display = 'flex';
             }
 
-            if (fileName) {
-                const fileNameDisplay = document.createElement('p');
-                fileNameDisplay.classList.add('file-name');
-                fileNameDisplay.textContent = `선택된 파일: ${fileName}`;
-                fileInput.parentNode.appendChild(fileNameDisplay);
+            // 파일 이름 표시
+            if (fileNameElem) {
+                fileNameElem.textContent = `선택된 파일: ${file.name}`;
             }
+        };
 
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    let img = preview.querySelector('img');
-                    if (!img) {
-                        img = document.createElement('img');
-                        preview.appendChild(img);
-                    }
-                    img.src = e.target.result;
-                    preview.style.display = 'flex';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-                preview.innerHTML = '';
-            }
-        });
+        reader.readAsDataURL(file);
+    } else {
+        // 파일 선택 취소 시 미리보기 및 파일 이름 초기화
+        if (preview) {
+            preview.style.display = 'none';
+            preview.innerHTML = '';
+        }
+        if (fileNameElem) {
+            fileNameElem.textContent = '선택된 파일 없음';
+        }
     }
-});
+};
+
+// 게시글 수정 처리 함수
+window.updateBoard = function() {
+    const form = document.writeForm;
+    let str;
+
+    // 제목 검사
+    str = form.title.value.trim();
+    if (!str) {
+        alert('제목을 입력하세요.');
+        form.title.focus();
+        return false;
+    }
+
+    // 내용 검사
+    str = form.content.value.trim();
+    if (!str) {
+        alert('내용을 입력하세요.');
+        form.content.focus();
+        return false;
+    }
+
+    // mode가 'update'일 때만 action 재설정
+    if (form.cmNum && form.page) { // cmNum과 page가 존재하면 수정 모드
+        form.action = `${contextPath}/bbs/infoBoard/update?type=${encodeURIComponent(boardType)}&cmNum=${encodeURIComponent(cmNum)}&page=${encodeURIComponent(page)}`;
+    }
+
+    form.submit();
+};

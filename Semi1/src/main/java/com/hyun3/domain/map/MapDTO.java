@@ -1,4 +1,4 @@
-package com.hyun3.domain.map_api;
+package com.hyun3.domain.map;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ public class MapDTO  implements Comparable<MapDTO> {
     private String ctGroup;
     private String divisionCode;
     private String ctName;
+
+
 
     private List<StImgDTO> stImgDTO;
     private List<BlogDTO> blogDTO;

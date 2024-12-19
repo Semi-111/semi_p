@@ -36,19 +36,18 @@ public class MemberController {
 	public ModelAndView loginSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// 로그인 처리
-		    
+
 		// 세션 객체
 		HttpSession session = req.getSession();
 
 		MemberDAO dao = new MemberDAO();
 
 		// 클라이언트가 보낸 아이디/패스워드
-		//req.setCharacterEncoding("UTF-8"); // 요청 데이터의 인코딩 설정
 		String userId = req.getParameter("userId");
 		String pwd = req.getParameter("pwd");
 
 		MemberDTO dto = dao.loginMember(userId, pwd);
-		
+
 		if (dto != null) {
 			// 로그인 성공한 경우
 			// 세션에 아이디, 이름, 권한등을 저장
@@ -111,16 +110,131 @@ public class MemberController {
 		// 세션에서 사용자 정보 가져오기
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		/*
-		 * -- 만약 상단바에 마이페이지 배치할 경우, 아래코드 필요 if (info == null) { // 로그인하지 않은 경우 로그인 페이지로
-		 * 리다이렉트 return new ModelAndView("redirect:/member/login"); }
-		 */
 		// 사용자 정보를 ModelAndView에 추가
 		ModelAndView mav = new ModelAndView("member/myPage");
 		mav.addObject("memberInfo", info);
 
 		return mav;
 	}
+
+	// 비밀번호 변경 폼
+		@RequestMapping(value = "/member/changePwd", method = GET)
+		public ModelAndView changePasswordForm(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException {
+			HttpSession session = req.getSession();
+
+			// 세션에서 사용자 정보 가져오기
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			// 비밀번호 변경 폼
+			ModelAndView mav = new ModelAndView("member/changePwd");
+			mav.addObject("memberInfo", info);
+
+			return mav;
+		}
+
+		// 비밀번호 변경 처리
+		@RequestMapping(value = "/member/changePwd", method = POST)
+		public ModelAndView changePasswordSubmit(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException, SQLException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
+
+			String pwd = req.getParameter("pwd");
+			String newPwd = req.getParameter("newPwd");
+			String confirmPwd = req.getParameter("confirmPwd");
+
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = dao.findById(info.getUserId());
+
+			if (dto == null) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+				return mav;
+			}
+
+			// 현재 비밀번호 확인
+			if (!dto.getPwd().equals(pwd)) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "현재 비밀번호가 일치하지 않습니다.");
+				return mav;
+			}
+
+			if (!newPwd.equals(confirmPwd)) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+				return mav;
+			}
+
+			// 비밀번호 변경 처리
+			dto.setPwd(newPwd);
+			dao.updateMember(dto, info.getMb_Num());
+
+			return new ModelAndView("redirect:/member/myPage");
+		}
+
+		// 이메일 변경 폼
+		@RequestMapping(value = "/member/changeEmail", method = GET)
+		public ModelAndView changeEmailForm(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException {
+			HttpSession session = req.getSession();
+
+			// 세션에서 사용자 정보 가져오기
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			// 이메일 변경 폼
+			ModelAndView mav = new ModelAndView("member/changeEmail");
+			mav.addObject("memberInfo", info);
+
+			return mav;
+		}
+
+		// 이메일 변경 처리
+		@RequestMapping(value = "/member/changeEmail", method = POST)
+		public ModelAndView changeEmailSubmit(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException, SQLException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
+
+			String email = req.getParameter("email");
+			String newEmail = req.getParameter("newEmail");
+			String confirmEmail = req.getParameter("confirmEmail");
+
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = dao.findById(info.getUserId());
+
+			if (dto == null) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+				return mav;
+			}
+
+			// 현재 이메일 확인
+			if (!dto.getEmail().equals(email)) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "현재 이메일과 일치하지 않습니다.");
+				return mav;
+			}
+
+			if (!newEmail.equals(confirmEmail)) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "새 이메일과 확인 이메일이 일치하지 않습니다.");
+				return mav;
+			}
+
+			dto.setEmail(newEmail);
+			dao.updateMember(dto, info.getMb_Num());
+
+			return new ModelAndView("redirect:/member/myPage");
+		}
 
 	@RequestMapping(value = "/member/noAuthorized", method = GET)
 	public ModelAndView noAuthorized(HttpServletRequest req, HttpServletResponse resp)
@@ -151,6 +265,7 @@ public class MemberController {
 		String message = "";
 		try {
 			MemberDTO dto = new MemberDTO();
+
 			dto.setUserId(req.getParameter("userId"));
 			dto.setPwd(req.getParameter("pwd"));
 			dto.setName(req.getParameter("name"));
@@ -160,6 +275,8 @@ public class MemberController {
 			dto.setEmail(req.getParameter("email"));
 			dto.setTel(req.getParameter("tel"));
 			dto.setStudentNum(Integer.parseInt(req.getParameter("studentNum")));
+			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
+
 			dao.insertMember(dto);
 
 			session.setAttribute("mode", "insert");
@@ -262,6 +379,7 @@ public class MemberController {
 		// 회원정보 수정 완료
 		MemberDAO dao = new MemberDAO();
 		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		try {
 			MemberDTO dto = new MemberDTO();
@@ -275,7 +393,7 @@ public class MemberController {
 			dto.setTel(req.getParameter("tel"));
 			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
 
-			dao.updateMember(dto);
+			dao.updateMember(dto, info.getMb_Num());
 
 			session.setAttribute("mode", "update");
 			session.setAttribute("Name", dto.getName());

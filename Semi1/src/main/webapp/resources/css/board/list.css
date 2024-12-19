@@ -126,12 +126,11 @@ body {
     padding: 20px;
 }
 
-/*!* 헤더 스타일 *!*/
-/*header {*/
-/*    background: white;*/
-/*    border-bottom: 1px solid #e1e1e1;*/
-/*    position: relative;*/
-/*}*/
+/*header {
+    background: white;
+    border-bottom: 1px solid #e1e1e1;
+    position: relative;
+}*/
 
 nav {
     max-width: 1200px;
@@ -288,6 +287,7 @@ nav {
 .board-title {
     font-size: 24px;
     margin: 20px 0;
+    font-weight: bold;
 }
 
 /* 메인 콘텐츠 레이아웃 */
@@ -329,13 +329,44 @@ nav {
     margin-bottom: 10px;
 }
 
+/* 메타 정보 */
 .post-meta {
-    font-size: 0.9rem;
-    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 14px;
+    color: #666;
+    flex-wrap: wrap;
 }
 
-.post-meta span {
-    margin-right: 15px;
+.post-meta span,
+.post-meta i {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 아이콘들을 한 영역으로 묶는 컨테이너 */
+.post-meta-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* 조회수, 좋아요, 댓글 아이콘 스타일 */
+.post-meta .fa-eye {
+    font-size: 16px;
+    color: #4a90e2;
+}
+
+.post-meta .fa-heart {
+    font-size: 16px;
+    color: #ff6b6b;
+}
+
+.post-meta .fa-comment-dots {
+    font-size: 16px;
+    color: #6c757d;
 }
 
 .post-image {
@@ -353,7 +384,6 @@ nav {
     object-fit: cover;
 }
 
-
 .sidebar {
     background: white;
     border-radius: 8px;
@@ -367,20 +397,6 @@ nav {
     font-weight: bold;
     margin-bottom: 15px;
 }
-
-/*footer {*/
-/*    background-color: #f9fafb;*/
-/*    padding: 2rem 1rem;*/
-/*    margin-top: 40px;*/
-/*    border-top: 1px solid #eee;*/
-/*}*/
-
-/*.footer-content {*/
-/*    max-width: 1200px;*/
-/*    margin: 0 auto;*/
-/*    font-size: 12px;*/
-/*    color: #666;*/
-/*}*/
 
 /* 페이징 스타일 */
 .pagination {
@@ -414,10 +430,6 @@ nav {
     color: white;
 }
 
-.board-title {
-    font-weight: bold;
-}
-
 .category-tabs {
     display: flex;
     gap: 20px;
@@ -446,3 +458,32 @@ nav {
     background-color: #f5f5f5;
 }
 
+.post-meta-icons span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 1;
+    font-size: 14px;
+    color: #666;
+}
+
+.post-meta i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+
+
+
+/* 반응형 처리 */
+@media (max-width: 600px) {
+    .post-meta {
+        flex-direction: column; /* 작은 화면에서 세로 정렬 */
+        align-items: flex-start;
+    }
+
+    .post-meta-icons {
+        order: 2;
+        margin-top: 10px;
+    }
+}

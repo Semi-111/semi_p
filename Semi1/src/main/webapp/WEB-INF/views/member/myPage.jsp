@@ -19,10 +19,10 @@
 			<div class="first-profile">
 				<h3>내 정보</h3>
 				<div class="myInfo">
-					<p>이름 | ${sessionScope.member.name}</p>
-					<%-- <p>이름: ${memberInfo.name}</p> --%>
-					<%-- <p>닉네임 | ${memberInfo.nickName}</p> --%>
-					<%-- <p>학번 | ${memberInfo.hak}</p> --%>
+					<p>아이디: ${memberInfo.userId}</p>
+					<p>이름: ${memberInfo.name}</p>
+					<p>닉네임: ${memberInfo.nickName}</p>
+					<p>학과: ${hak}</p>
 				</div>
 				<div class="logout">
 					<button type="button" class="logoutBtn"
@@ -56,16 +56,30 @@
 							<%-- <p>${memberInfo.CA_day}</p> --%>
 						</div>
 					</div>
-
-					<%-- <p>이메일 변경 | ${memberInfo.email}</p>
-					<p>생일 변경 | ${memberInfo.birth}</p>
-					<p>전화번호 변경 | ${memberInfo.tel}</p> --%>
+					<div>
+						<!-- 비밀번호 변경 -->
+						<div>
+							<button type="button"
+								onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
+								변경</button>
+						</div>
+					</div>
+					<div>
+						<!-- 이메일 변경 -->
+						<button type="button"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일 변경</button>
+					</div>
+					<div>
+						<!-- 번호 변경 -->
+						<button type="button"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">번호 변경</button>
+					</div>
 				</div>
 			</div>
 
 			<div class="third-profile">
 				<h3>일정</h3>
-				
+
 			</div>
 		</form>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />

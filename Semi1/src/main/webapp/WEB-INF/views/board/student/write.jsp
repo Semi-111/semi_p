@@ -9,10 +9,17 @@
     <c:when test="${mode == 'write'}">게시글 작성</c:when>
     <c:otherwise>게시글 수정</c:otherwise>
   </c:choose></title>
+    <script>
+        const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
+        const boardType = '<c:out value="${boardType}" />';
+        const cmNum = '<c:out value="${dto.cmNum}" />';
+        const page = '<c:out value="${page}" />';
+    </script>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/write.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="${pageContext.request.contextPath}/resources/js/board/list.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/board/wrtie.js"></script>
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+
 </head>
 <body>
 <header>
@@ -28,21 +35,23 @@
       <input type="hidden" name="type" value="${type}" />
       <input type="hidden" name="page" value="${page}" />
 
-<c:choose>
-  <c:when test="${boardType == 'student'}">
-        <div class="form-group">
-          <label for="category">학번:</label>
-          <select name="category" id="category" required class="form-control">
-          <option value="">학번을 선택하세요</option>
-          <!-- 학번 카테고리 추가 -->
-          <option value="7" <c:if test="${7 == dto.categoryNum}">selected</c:if>>25학번</option>
-          <option value="8" <c:if test="${8 == dto.categoryNum}">selected</c:if>>24학번</option>
-          <option value="9" <c:if test="${9 == dto.categoryNum}">selected</c:if>>23학번</option>
-          <option value="10" <c:if test="${10 == dto.categoryNum}">selected</c:if>>22학번</option>
-          </select>
-        </div>
-  </c:when>
-</c:choose>
+    <c:choose>
+        <c:when test="${type == 'student'}">
+            <div class="form-group">
+                <label for="category">학번:</label>
+                <select name="category" id="category" required class="form-control"> <!-- name 속성 변경 -->
+                    <option value="">학번을 선택하세요</option>
+                    <!-- 학번 카테고리 추가 -->
+                    <option value="7" <c:if test="${7 == dto.categoryNum}">selected</c:if>>25학번</option>
+                    <option value="8" <c:if test="${8 == dto.categoryNum}">selected</c:if>>24학번</option>
+                    <option value="9" <c:if test="${9 == dto.categoryNum}">selected</c:if>>23학번</option>
+                    <option value="10" <c:if test="${10 == dto.categoryNum}">selected</c:if>>22학번</option>
+                </select>
+            </div>
+        </c:when>
+    </c:choose>
+
+
 
       <div class="form-group">
         <label for="title">제목:</label>

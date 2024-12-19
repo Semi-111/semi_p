@@ -8,18 +8,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${boardType}게시판</title>
+    <title>${boardType == "free" ? "자유" : "정보"}게시판</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/article1.css">
     <script src="${pageContext.request.contextPath}/resources/js/board/article.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
     <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+    <script>
+        const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
+        const boardType = '<c:out value="${boardType}" />';
+        const cmNum = '<c:out value="${dto.cmNum}" />';
+        const page = '<c:out value="${page}" />';
+    </script>
 </head>
 <body>
 <header>
     <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 </header>
 
-<div class="post-container">
+<div class="post-container"><!-- post-container 시작 -->
     <a href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=${boardType}&cmNum=${dto.cmNum}&page=${page}" class="back-link">← 목록으로</a>
 
     <div class="post-detail">
@@ -55,7 +61,9 @@
                     &nbsp;&nbsp;<span id="boardLikeCount">${(dto.boardLikeCount != null && dto.boardLikeCount > 0) ? dto.boardLikeCount : 0}</span>
                 </button>
                 <button class="btn btn-gray">
-                    공유하기
+                <span class="reply-count">
+                    <i class="far fa-comment-dots" style="margin-right:5px;"></i>${replyCount}
+                </span>
                 </button>
             </div>
 
@@ -68,69 +76,43 @@
             </c:if>
         </div>
     </div>
-</div>
 
-<%--<div class="comments-section">--%>
-<%--    <div class="comments-header">--%>
-<%--        <span>댓글 <span class="comments-count">5</span></span>--%>
-<%--        <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'">새로고침</button>--%>
-<%--    </div>--%>
-<%--    <div class="comment-write">--%>
-<%--        <textarea class="comment-textarea" placeholder="댓글을 입력하세요"></textarea>--%>
-<%--        <button class="btn btn-purple" style="width: 100%">댓글 작성</button>--%>
-<%--    </div>--%>
-<%--    <div class="comment-list">--%>
-<%--        <div class="comment-item">--%>
-<%--            <div class="comment-header">--%>
-<%--                <span class="comment-author">익명1</span>--%>
-<%--                <span class="comment-date">2024.12.06 12:30</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-text">--%>
-<%--                <span>댓글입니다.</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-actions">--%>
-<%--                <span class="comment-action">답글</span>--%>
-<%--                <span class="comment-action">신고</span>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="comment-item">--%>
-<%--            <div class="comment-header">--%>
-<%--                <span class="comment-author">학과사무실</span>--%>
-<%--                <span class="comment-date">2024.12.06 13:15</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-text">--%>
-<%--                <span>댓글입니다.</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-actions">--%>
-<%--                <span class="comment-action">답글</span>--%>
-<%--                <span class="comment-action">신고</span>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
+    <!-- reply 영역을 post-container 내부로 이동 -->
+    <div class="reply">
+        <form name="replyForm" method="post">
+            <div class='form-header'>
+                <div style="flex: 1;">
+                    <span class="bold">댓글</span>
+                    <span class="instructions"> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+                </div>
+                <!-- 새로고침 아이콘 -->
+                <button type="button" class="btn-refresh"
+                        onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'"
+                        title="새로고침">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
 
-<div class="reply">
-    <form name="replyForm" method="post">
-        <div class='form-header'>
-            <span class="bold">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
-        </div>
+            <table class="table table-borderless reply-form">
+                <tr>
+                    <td>
+                        <textarea class="form-control" name="content" placeholder="댓글을 작성해주세요."></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <button type="button" class="btn btn-light btnSendReply">댓글 등록</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
 
-        <table class="table table-borderless reply-form">
-            <tr>
-                <td>
-                    <textarea class="form-control" name="content"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td align="right">
-                    <button type="button" class="btn btn-light btnSendReply">댓글 등록</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+        <div id="listReply"></div>
+    </div>
+    <!-- reply 영역 종료 -->
 
-    <div id="listReply"></div>
-</div>
+</div><!-- post-container 종료 -->
+
 
 <footer>
     <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
@@ -177,7 +159,7 @@
     // 댓글 등록
     $(function () {
         $('.btnSendReply').click(function (){
-            const $tb = $(this).closest('table'); // 답글로 인해서 closest를 찾는다
+            const $tb = $(this).closest('table');
             let content = $tb.find('textarea').val().trim();
 
             if(! content) {
@@ -188,8 +170,7 @@
             let cmNum = '${dto.cmNum}';
             let url = '${pageContext.request.contextPath}/bbs/infoBoard/replyInsert';
 
-            let query = {cmNum : cmNum, content : content}; // 객체로 처리하면 인코딩 x
-            // formData를 객체로 처리하면 content를 인코딩하면 안된다.
+            let query = {cmNum : cmNum, content : content};
 
             const fn = function (data) {
                 alert(data.state);
@@ -206,9 +187,9 @@
 
 
     function listPage(page) {
-        let cmNum = '${dto.cmNum}'; // cmNum 가져오기
+        let cmNum = '${dto.cmNum}';
         let url = '${pageContext.request.contextPath}/bbs/infoBoard/listReply';
-        let query = 'cmNum=' + cmNum + '&pageNo=' + page; // 쌍따옴표 없이 설정
+        let query = 'cmNum=' + cmNum + '&pageNo=' + page;
         let selector = '#listReply';
 
         const fn = function (data) {
@@ -218,11 +199,10 @@
         ajaxFun(url, 'get', query, 'text', fn);
     }
 
-    /* --------------------- */
-    // 답글 버튼
     $(function () {
+        // 답글 버튼
         $('#listReply').on('click', '.btnReplyAnswerLayout', function (){
-            let replyNum = $(this).attr('data-replyNum'); // 동적으로 추가 된건 자식을 찾아서 부모를 찾아야한다.
+            let replyNum = $(this).attr('data-replyNum');
             const $trAnswer = $(this).closest('tr').next();
             let isVisible = $trAnswer.is(':visible');
 
@@ -299,7 +279,7 @@
     // 댓글 삭제
     $(function () {
         $('#listReply').on('click', '.deleteReply', function () {
-            if( ! confirm('게시글을 삭제 하시겠습니까')) {
+            if( ! confirm('댓글을 삭제 하시겠습니까')) {
                 return false;
             }
 
@@ -318,7 +298,6 @@
     });
 
     // 댓글의 답글 삭제
-    // 댓글 삭제
     $(function () {
         $('#listReply').on('click', '.deleteReplyAnswer', function () {
             if( ! confirm('댓글을 삭제 하시겠습니까')) {

@@ -18,7 +18,22 @@ public class GradePointDTO {
 	private double gradePoint; // 평균학점(4.5)
 	private int gradeCount; // 성적별 갯수
 	
+	private long at_Num; // 수강번호
+	private int totalHakscore; // 취득학점
 	
+	
+	public int getTotalHakscore() {
+		return totalHakscore;
+	}
+	public void setTotalHakscore(int totalHakscore) {
+		this.totalHakscore = totalHakscore;
+	}
+	public long getAt_Num() {
+		return at_Num;
+	}
+	public void setAt_Num(long at_Num) {
+		this.at_Num = at_Num;
+	}
 	public int getGradeCount() {
 		return gradeCount;
 	}

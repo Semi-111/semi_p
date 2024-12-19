@@ -6,11 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>2024학년도 1학기 수강신청 안내 - Trainee</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/base.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/market/article.css">
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
+
 </head>
 <head>
 <title>게시글 상세 - Trainee</title>
@@ -70,6 +72,10 @@
 				        <button class="btn btn-red" onclick="deletePost()">삭제</button>
 				    </c:if>
 				    <button class="btn btn-red">신고</button>
+				    <button type="button" class="btn btn-gray" 
+				        onclick="location.href='${pageContext.request.contextPath}/market/list?${query}'">
+				        <i class="bi bi-list"></i> 목록
+				    </button>
 				</div>
 				
 			</div>

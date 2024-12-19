@@ -1,8 +1,8 @@
 package com.hyun3.dao.map;
 
-import com.hyun3.domain.map_api.BlogDTO;
-import com.hyun3.domain.map_api.MapDTO;
-import com.hyun3.domain.map_api.StImgDTO;
+import com.hyun3.domain.map.BlogDTO;
+import com.hyun3.domain.map.MapDTO;
+import com.hyun3.domain.map.StImgDTO;
 import com.hyun3.util.DBConn;
 import com.hyun3.util.DBUtil;
 
@@ -15,22 +15,104 @@ import java.util.List;
 
 public class MapDAO {
     private Connection conn = DBConn.getConnection();
-    private PreparedStatement pstmt = null;
-    private ResultSet rs = null;
     private String sql;
 
-    public List<MapDTO> selectStoreData() {
+
+    public List<MapDTO> selectMapData(double lat1, double lon1, double lat2, double lon2, int start, int size) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
         List<MapDTO> resultList = new ArrayList<>();
         try {
-            sql = "SELECT ST_ID,ST_NAME FROM MAP";
+            sql = " WITH ThumbnailCTE AS (" +
+                    " SELECT ST_ID, THUMBNAIL," +
+                    " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
+                    " FROM ST_IMG) " +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, TEL ,THUMBNAIL,LAT,LON " +
+                    " FROM MAP m " +
+                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
+                    " WHERE t.rn = 1 " +
+                    " AND LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ?" +
+                    " ORDER BY ST_ID" +
+                    " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+
             pstmt = conn.prepareStatement(sql);
 
-            rs = pstmt.executeQuery();
+            pstmt.setDouble(1, lat1);
+            pstmt.setDouble(2, lat2);
+            pstmt.setDouble(3, lon1);
+            pstmt.setDouble(4, lon2);
+            pstmt.setInt(5, start);
+            pstmt.setInt(6, size);
 
+            rs = pstmt.executeQuery();
             while (rs.next()) {
                 MapDTO mapDTO = new MapDTO();
                 mapDTO.setStId(rs.getLong("ST_ID"));
                 mapDTO.setStName(rs.getString("ST_NAME"));
+                mapDTO.setAddress(rs.getString("ADDRESS"));
+                mapDTO.setTel(rs.getString("TEL"));
+                mapDTO.setLat(rs.getDouble("LAT"));
+                mapDTO.setLon(rs.getDouble("LON"));
+                mapDTO.setDivisionCode(rs.getString("THUMBNAIL"));
+
+                resultList.add(mapDTO);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+        }
+
+        return resultList;
+    }
+
+
+    public List<MapDTO> selectMapData(double lat1, double lon1, double lat2, double lon2, int start, int size, String schTerm) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<MapDTO> resultList = new ArrayList<>();
+        try {
+            sql = " WITH ThumbnailCTE AS (" +
+                    " SELECT ST_ID, THUMBNAIL," +
+                    " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
+                    " FROM ST_IMG) " +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, TEL ,THUMBNAIL,LAT,LON " +
+                    " FROM MAP m " +
+                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
+                    " WHERE t.rn = 1 " +
+                    " AND LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ?" +
+                    " AND (m.ST_NAME LIKE ? OR m.CT_NAME LIKE ?)" +
+                    " ORDER BY ST_ID" +
+                    " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+
+            pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, lat1);
+            pstmt.setDouble(2, lat2);
+            pstmt.setDouble(3, lon1);
+            pstmt.setDouble(4, lon2);
+            pstmt.setString(5, "%" + schTerm + "%");
+            pstmt.setString(6, "%" + schTerm + "%");
+            pstmt.setInt(7, start);
+            pstmt.setInt(8, size);
+
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                MapDTO mapDTO = new MapDTO();
+                mapDTO.setStId(rs.getLong("ST_ID"));
+                mapDTO.setStName(rs.getString("ST_NAME"));
+                mapDTO.setAddress(rs.getString("ADDRESS"));
+                mapDTO.setTel(rs.getString("TEL"));
+                mapDTO.setLat(rs.getDouble("LAT"));
+                mapDTO.setLon(rs.getDouble("LON"));
+                mapDTO.setDivisionCode(rs.getString("THUMBNAIL"));
 
                 resultList.add(mapDTO);
             }
@@ -38,18 +120,44 @@ public class MapDAO {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DBUtil.close(pstmt);
             DBUtil.close(rs);
+            DBUtil.close(pstmt);
         }
 
         return resultList;
     }
 
-    public List<MapDTO> testData() {
-        List<MapDTO> resultList = new ArrayList<>();
+
+    public List<MapDTO> selectMainMapData(double lat1, double lon1, double lat2, double lon2, String schTerm) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<MapDTO> result = new ArrayList<>();
+
         try {
-            sql = "SELECT ST_ID,ST_NAME FROM MAP";
+            sql = " WITH ThumbnailCTE AS (" +
+                    " SELECT ST_ID, THUMBNAIL," +
+                    " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
+                    " FROM ST_IMG) " +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, LAT, TEL, LON ,THUMBNAIL" +
+                    " FROM MAP m " +
+                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
+                    " WHERE t.rn = 1 " +
+                    " AND LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ? ";
+            if (!schTerm.equals("none")) {
+                sql += " AND (m.ST_NAME LIKE ? OR m.CT_NAME LIKE ?) ";
+            }
             pstmt = conn.prepareStatement(sql);
+
+            pstmt.setDouble(1, lat1);
+            pstmt.setDouble(2, lat2);
+            pstmt.setDouble(3, lon1);
+            pstmt.setDouble(4, lon2);
+            if (!schTerm.equals("none")) {
+                pstmt.setString(5, "%" + schTerm + "%");
+                pstmt.setString(6, "%" + schTerm + "%");
+            }
 
             rs = pstmt.executeQuery();
 
@@ -57,187 +165,241 @@ public class MapDAO {
                 MapDTO mapDTO = new MapDTO();
                 mapDTO.setStId(rs.getLong("ST_ID"));
                 mapDTO.setStName(rs.getString("ST_NAME"));
-                resultList.add(mapDTO);
+                mapDTO.setAddress(rs.getString("ADDRESS"));
+                mapDTO.setTel(rs.getString("TEL"));
+                mapDTO.setLat(rs.getDouble("LAT"));
+                mapDTO.setLon(rs.getDouble("LON"));
+                mapDTO.setDivisionCode(rs.getString("THUMBNAIL"));
+
+
+                result.add(mapDTO);
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DBUtil.close(pstmt);
             DBUtil.close(rs);
-        }
-
-        return resultList;
-    }
-
-    public void inputStoreData(List<MapDTO> dto) throws SQLException {
-
-        try {
-            conn.setAutoCommit(false);
-
-            sql="INSERT INTO MAP(ST_ID, ST_NAME, ADDRESS, TEL, LAT, LON, CT_GROUP, CT_NAME, ST_DIVISION_CODE) "+
-                "VALUES (SEQ_MAP.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";
-            pstmt = conn.prepareStatement(sql);
-
-            for (MapDTO mapDTO : dto) {
-                pstmt.setString(1,mapDTO.getStName());
-                pstmt.setString(2,mapDTO.getAddress());
-                pstmt.setString(3,mapDTO.getTel());
-                pstmt.setDouble(4,mapDTO.getLat());
-                pstmt.setDouble(5,mapDTO.getLon());
-                pstmt.setString(6,mapDTO.getCtGroup());
-                pstmt.setString(7,mapDTO.getCtName());
-                pstmt.setString(8,mapDTO.getDivisionCode());
-                pstmt.addBatch();
-            }
-
-            pstmt.executeBatch();
-            conn.commit();
-
-        }catch (Exception e) {
-            conn.rollback();
-            e.printStackTrace();
-        }finally {
-            conn.setAutoCommit(true);
             DBUtil.close(pstmt);
         }
 
-
-
+        return result;
 
     }
 
 
-    public List<BlogDTO> selectBlogData(long storeID) {
-        List<BlogDTO> resultList = new ArrayList<>();
+    public int mapCount(double lat1, double lon1, double lat2, double lon2) {
+        int result = 0;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql;
+
         try {
-            sql = "SELECT BLOG_NAME,BLOG_URL FROM BLOG WHERE ST_ID = ?";
+            sql = "SELECT COUNT(*) cnt "
+                    + " FROM MAP " +
+                    " WHERE LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ?";
+
             pstmt = conn.prepareStatement(sql);
 
-            pstmt.setLong(1,storeID);
+            pstmt.setDouble(1, lat1);
+            pstmt.setDouble(2, lat2);
+            pstmt.setDouble(3, lon1);
+            pstmt.setDouble(4, lon2);
 
             rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                BlogDTO blogDTO = new BlogDTO();
-
-                blogDTO.setBlogName(rs.getString("BLOG_NAME"));
-                blogDTO.setBlogUrl(rs.getString("BLOG_URL"));
-
-                resultList.add(blogDTO);
+            if (rs.next()) {
+                result = rs.getInt("cnt");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DBUtil.close(pstmt);
             DBUtil.close(rs);
-        }
-
-        return resultList;
-    }
-
-    public void inputBlog(List<BlogDTO> dto,long storeID) throws SQLException {
-
-        try {
-            conn.setAutoCommit(false);
-
-            sql="INSERT INTO BLOG(BLOG_NUM, BLOG_TITLE, BLOG_CONTENT, BLOG_NAME, BLOG_URL, REG_DATE, ST_ID) "+
-                "VALUES (SEQ_BLOG.nextval, ?, ?, ?, ?, ?, ?)";
-
-
-            pstmt = conn.prepareStatement(sql);
-
-            for (BlogDTO blogDTO : dto) {
-                pstmt.setString(1,blogDTO.getBlogTitle());
-                pstmt.setString(2,blogDTO.getBlogContent());
-                pstmt.setString(3,blogDTO.getBlogName());
-                pstmt.setString(4,blogDTO.getBlogUrl());
-                pstmt.setString(5,blogDTO.getBlogDate());
-                pstmt.setLong(6,storeID);
-                pstmt.addBatch();
-            }
-
-            pstmt.executeBatch();
-
-            conn.commit();
-
-        }catch (Exception e) {
-            conn.rollback();
-            e.printStackTrace();
-
-        }finally {
-            conn.setAutoCommit(true);
             DBUtil.close(pstmt);
         }
 
-
-
+        return result;
     }
 
 
-    public void inputImg(List<StImgDTO> dto, long storeID) throws SQLException {
+    public int mapCount(double lat1, double lon1, double lat2, double lon2, String schTerm) {
+        int result = 0;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String sql;
 
         try {
-            conn.setAutoCommit(false);
-
-            sql="INSERT INTO ST_IMG(IMG_NUM, IMG_URL, IMG_TITLE, THUMBNAIL, ST_ID) "+
-                    "VALUES (SEQ_ST_IMG.nextval, ?, ?, ?, ?)";
-
+            sql = "SELECT COUNT(*) cnt "
+                    + " FROM MAP " +
+                    " WHERE LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ? " +
+                    " AND (ST_NAME LIKE ? OR CT_NAME LIKE ?)";
 
             pstmt = conn.prepareStatement(sql);
 
-            for (StImgDTO stImgDTO : dto) {
-                pstmt.setString(1,stImgDTO.getImgUrl());
-                pstmt.setString(2,stImgDTO.getImgTitle());
-                pstmt.setString(3,stImgDTO.getThumbnail());
-                pstmt.setLong(4,storeID);
-                pstmt.addBatch();
-            }
-
-            pstmt.executeBatch();
-
-            conn.commit();
-
-        }catch (Exception e) {
-            conn.rollback();
-            e.printStackTrace();
-
-        }finally {
-            conn.setAutoCommit(true);
-            DBUtil.close(pstmt);
-        }
-
-    }
-
-    public List<StImgDTO> selectImgData(long storeID) {
-        List<StImgDTO> resultList = new ArrayList<>();
-        try {
-            sql = "SELECT IMG_URL,IMG_TITLE FROM ST_IMG WHERE ST_ID = ?";
-            pstmt = conn.prepareStatement(sql);
-
-            pstmt.setLong(1,storeID);
+            pstmt.setDouble(1, lat1);
+            pstmt.setDouble(2, lat2);
+            pstmt.setDouble(3, lon1);
+            pstmt.setDouble(4, lon2);
+            pstmt.setString(5, "%" + schTerm + "%");
+            pstmt.setString(6, "%" + schTerm + "%");
 
             rs = pstmt.executeQuery();
+            if (rs.next()) {
+                result = rs.getInt("cnt");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+        }
 
+        return result;
+    }
+
+
+    public MapDTO getDetails(long stId) throws SQLException {
+        String sql = "SELECT * FROM MAP WHERE ST_ID = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setLong(1, stId);
+        ResultSet rs = pstmt.executeQuery();
+
+        MapDTO details = null;
+        if (rs.next()) {
+            details = new MapDTO();
+            details.setStId(rs.getLong("ST_ID"));
+            details.setStName(rs.getString("ST_NAME"));
+            details.setAddress(rs.getString("ADDRESS"));
+            details.setTel(rs.getString("TEL"));
+            details.setCtName(rs.getString("CT_NAME"));
+
+        }
+
+        rs.close();
+        pstmt.close();
+        return details;
+
+    }
+
+public List<BlogDTO> getBlog(long stId, int size, int start) {
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+    List<BlogDTO> result = new ArrayList<>();
+    try {
+        sql = "SELECT BLOG_NUM,BLOG_NAME,BLOG_TITLE,BLOG_CONTENT,BLOG_URL,  " +
+                " TO_CHAR(REG_DATE, 'YYYY-MM-DD') REG_DATE "+
+                " FROM BLOG WHERE ST_ID = ?" +
+              " ORDER BY BLOG_NUM" +
+              " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        pstmt = conn.prepareStatement(sql);
+        pstmt.setLong(1, stId);
+        pstmt.setInt(2, start);
+        pstmt.setInt(3, size);
+        rs = pstmt.executeQuery();
+        while (rs.next()) {
+            BlogDTO blogDTO = new BlogDTO();
+            blogDTO.setBlogNum(rs.getLong("BLOG_NUM"));
+            blogDTO.setBlogName(rs.getString("BLOG_NAME"));
+            blogDTO.setBlogTitle(rs.getString("BLOG_TITLE"));
+            blogDTO.setBlogContent(rs.getString("BLOG_CONTENT"));
+            blogDTO.setBlogUrl(rs.getString("BLOG_URL"));
+            blogDTO.setBlogDate(rs.getString("REG_DATE"));
+
+
+            result.add(blogDTO);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        DBUtil.close(rs);
+        DBUtil.close(pstmt);
+    }
+
+    return result;
+}
+    public List<StImgDTO> getImg(long id,int start, int size) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<StImgDTO> result = new ArrayList<>();
+
+        try {
+            sql = "SELECT * FROM ST_IMG WHERE ST_ID = ?" +
+                    " ORDER BY IMG_NUM " +
+                    " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, id);
+            pstmt.setInt(2, start);
+            pstmt.setInt(3, size);
+            rs = pstmt.executeQuery();
             while (rs.next()) {
-                StImgDTO imgDTO = new StImgDTO();
+                StImgDTO stImgDTO = new StImgDTO();
+                stImgDTO.setImgNum(rs.getLong("IMG_NUM"));
+                stImgDTO.setThumbnail(rs.getString("THUMBNAIL"));
+                stImgDTO.setImgUrl(rs.getString("IMG_URL"));
+                stImgDTO.setImgTitle(rs.getString("IMG_TITLE"));
 
-                imgDTO.setImgUrl("IMG_URL");
-                imgDTO.setImgTitle("IMG_TITLE");
-                resultList.add(imgDTO);
+
+                result.add(stImgDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
+        }
+
+        return result;
+    }
+
+    public int blogData(long  id) {
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+        try {
+            sql = "SELECT COUNT(*) cnt FROM BLOG WHERE ST_ID = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, id);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getInt("cnt");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+    }
+
+    return result;
+    }
+
+    public int imgData(long id){
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int result = 0;
+        try {
+            sql = "SELECT COUNT(*) cnt FROM ST_IMG WHERE ST_ID = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, id);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                result = rs.getInt("cnt");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DBUtil.close(pstmt);
             DBUtil.close(rs);
+            DBUtil.close(pstmt);
         }
 
-        return resultList;
+        return result;
     }
-
 
 
 }

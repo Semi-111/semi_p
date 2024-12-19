@@ -19,7 +19,7 @@ $(function() {
     var lectureCount = $('.lecture-detail .lecture-list').length;
     
     // 하나당 높이가 60이므로 총 높이 계산
-    var totalHeight = lectureCount * 60 + 80;
+    var totalHeight = lectureCount * 60 + 100;
 
     // .sidebar의 높이를 동적으로 설정
     $('.sidebar').css("height", totalHeight + "px");	

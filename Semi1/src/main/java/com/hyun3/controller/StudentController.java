@@ -1,8 +1,23 @@
 package com.hyun3.controller;
 
-import static com.hyun3.mvc.annotation.RequestMethod.GET;
-import static com.hyun3.mvc.annotation.RequestMethod.POST;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.hyun3.dao.board.StudentBoardDAO;
+import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.board.InfoBoardDTO;
+import com.hyun3.domain.board.ReplyDTO;
+import com.hyun3.domain.board.StudentBoardDTO;
+import com.hyun3.mvc.annotation.Controller;
+import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.ResponseBody;
+import com.hyun3.mvc.view.ModelAndView;
+import com.hyun3.util.FileManager;
+import com.hyun3.util.MyMultipartFile;
+import com.hyun3.util.MyUtil;
+import com.hyun3.util.MyUtilBootstrap;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,22 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hyun3.dao.board.StudentBoardDAO;
-import com.hyun3.domain.SessionInfo;
-import com.hyun3.domain.board.StudentBoardDTO;
-import com.hyun3.mvc.annotation.Controller;
-import com.hyun3.mvc.annotation.RequestMapping;
-import com.hyun3.mvc.annotation.ResponseBody;
-import com.hyun3.mvc.view.ModelAndView;
-import com.hyun3.util.FileManager;
-import com.hyun3.util.MyMultipartFile;
-import com.hyun3.util.MyUtilBootstrap;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
+import static com.hyun3.mvc.annotation.RequestMethod.GET;
+import static com.hyun3.mvc.annotation.RequestMethod.POST;
+import static java.nio.charset.StandardCharsets.*;
 
 @Controller
 public class StudentController {
@@ -260,15 +262,13 @@ public class StudentController {
         if (category != null && !category.isEmpty()) {
           dto.setCategoryNum(Integer.parseInt(category));
         } else {
-          dto.setCategoryNum(11); // 카테고리 없음
-        }
-      } else {
-        dto.setCategoryNum(11); // oldbie 게시판은 카테고리 없음
+			dto.setCategoryName(null);
+		}
       }
 
       handleFileUpload(req, session, dto); // 이미지 처리
 
-      dao.insertBoard(dto, info.getUserId());
+      dao.insertBoard(dto, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -346,16 +346,12 @@ public class StudentController {
         String category = req.getParameter("category");
         if (category != null && !category.isEmpty()) {
           dto.setCategoryNum(Integer.parseInt(category));
-        } else {
-          dto.setCategoryNum(0); // 카테고리 없음
         }
-      } else {
-        dto.setCategoryNum(0); // oldbie 게시판은 카테고리 없음
       }
 
       handleFileUpload(req, session, dto); // 이미지 처리
 
-      dao.updateBoard(dto);
+      dao.updateBoard(dto, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -404,7 +400,7 @@ public class StudentController {
         }
       }
 
-      dao.deleteBoard(cmNum);
+      dao.deleteBoard(cmNum, info.getMb_Num());
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -451,6 +447,190 @@ public class StudentController {
     return model;
   }
 
+
+  // 게시글 공감 저장 - AJAX : JSON
+  @ResponseBody
+  @RequestMapping(value = "/bbs/studentBoard/replyInsert", method = POST)
+  public Map<String, Object> insertReply(HttpServletRequest req, HttpServletResponse resp) {
+    Map<String, Object> model = new HashMap<>();
+    String state = "false";
+
+    StudentBoardDAO dao = new StudentBoardDAO();
+    HttpSession session = req.getSession();
+
+    try {
+      SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+      ReplyDTO dto = new ReplyDTO();
+
+      dto.setContent(req.getParameter("content"));
+      dto.setCmNum(Long.parseLong(req.getParameter("cmNum"))); // 게시글번호
+      dto.setMbNum(info.getMb_Num());
+
+      dao.insertReply(dto);
+      state = "true";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    model.put("state", state);
+    return model;
+  }
+
+
+  // 댓글 리스트 - AJAX : Text
+  @RequestMapping(value = "/bbs/studentBoard/listReply", method = GET)
+  public ModelAndView listReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // 넘어오는 파라미터 : cmNum, pageNo
+
+    StudentBoardDAO dao = new StudentBoardDAO();
+    MyUtil util = new MyUtilBootstrap();
+
+    HttpSession session = req.getSession();
+
+    try {
+      SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+      String cmNumStr = req.getParameter("cmNum");
+
+      if(cmNumStr == null || cmNumStr.trim().isEmpty()) {
+        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "cmNum parameter is missing");
+        return null;
+      }
+
+      long cmNum;
+      try {
+        cmNum = Long.parseLong(cmNumStr);
+      } catch (NumberFormatException e) {
+        System.err.println("Invalid cmNum parameter: " + cmNumStr);
+        e.printStackTrace();
+        return null;
+      }
+
+      String pageNo = req.getParameter("pageNo");
+      int current_page = 1;
+      if (pageNo != null) {
+        try {
+          current_page = Integer.parseInt(pageNo);
+        } catch (NumberFormatException e) {
+          System.err.println("Invalid pageNo parameter: " + pageNo);
+          e.printStackTrace();
+          return null;
+        }
+      }
+
+      int size = 5;
+      int total_page = 0;
+      int replyCount = 0;
+
+      // 게시글에 달린 댓글 수를 세는 메서드
+      replyCount = dao.dataCountReply(cmNum);
+      total_page = util.pageCount(replyCount, size);
+      if (current_page > total_page) {
+        current_page = total_page;
+      }
+
+      int offset = (current_page - 1) * size;
+      if (offset < 0) offset = 0;
+
+      // 댓글 리스트 가져오기
+      List<ReplyDTO> list = dao.listReply(cmNum, offset, size);
+
+      // 엔터를 <br>로 변환
+      for (ReplyDTO dto : list) {
+        dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+      }
+
+      String paging = util.pagingMethod(current_page, total_page, "listPage");
+
+      ModelAndView mav = new ModelAndView("board/listReply");
+
+      mav.addObject("listReply", list);
+      mav.addObject("pageNo", current_page);
+      mav.addObject("replyCount", replyCount);
+      mav.addObject("total_page", total_page);
+      mav.addObject("paging", paging);
+      mav.addObject("cmNum", cmNum); // cmNum을 모델에 추가
+
+      return mav;
+    } catch (Exception e) {
+      e.printStackTrace();
+      resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE, "Invalid Parameters");
+      throw e;
+    }
+  }
+
+
+  @RequestMapping(value = "/bbs/studentBoard/listReplyAnswer", method = GET)
+  public ModelAndView listReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    StudentBoardDAO dao = new StudentBoardDAO();
+    try {
+      long cmNum = Long.parseLong(req.getParameter("cmNum"));
+      HttpSession session = req.getSession();
+      SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+      List<ReplyDTO> list = dao.listReplyAnswer(cmNum);
+
+      for (ReplyDTO dto : list) {
+        dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+      }
+
+      ModelAndView mav = new ModelAndView("bbs/listReplyAnswer");
+      mav.addObject("listReplyAnswer", list);
+
+      return mav;
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/bbs/studentBoard/countReplyAnswer", method = POST)
+  public Map<String, Object> countReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    Map<String, Object> model = new HashMap<>();
+
+    StudentBoardDAO dao = new StudentBoardDAO();
+    int count = 0;
+
+    try {
+      long cmNum = Long.parseLong(req.getParameter("cmNum"));
+      count = dao.dataCountReplyAnswer(cmNum);
+    } catch (Exception e) {
+      e.printStackTrace();
+      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    }
+
+    model.put("count", count);
+    return model;
+  }
+
+
+  @ResponseBody
+  @RequestMapping(value = "/bbs/studentBoard/deleteReply", method = POST)
+  public Map<String, Object> deleteReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    Map<String, Object> model = new HashMap<>();
+    StudentBoardDAO dao = new StudentBoardDAO();
+
+    HttpSession session = req.getSession();
+    SessionInfo info = (SessionInfo) session.getAttribute("member");
+    String state = "false";
+
+    try {
+      long cmNum = Long.parseLong(req.getParameter("cmNum"));
+
+      dao.deleteReply(cmNum, info.getMb_Num(), info.getRole());
+
+      state = "true";
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    model.put("state", state);
+    return model;
+  }
+
   // 파일 업로드 처리
   private static void handleFileUpload(HttpServletRequest req, HttpSession session, StudentBoardDTO dto) throws IOException, ServletException {
     String filename = null;
@@ -475,15 +655,14 @@ public class StudentController {
           oldFile.delete();
         }
       }
-    }
 
-    // 파일이 없으면 null로 설정
-    if (filename != null && !filename.isEmpty()) {
-      dto.setFileName(filename); // 새 파일 이름 설정
-    } else {
-      dto.setFileName(null); // 파일이 없으면 null로 설정
+      // 파일 이름 설정
+      if (filename != null && !filename.isEmpty()) {
+        dto.setFileName(filename); // 새 파일 이름 설정
+      }
     }
   }
+
 
   // 세션에서 멤버 정보 가져오기
   private static SessionInfo getMember(HttpServletRequest req) {

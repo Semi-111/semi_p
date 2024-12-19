@@ -16,9 +16,10 @@ public class StudentBoardDTO {
 
   private int replyCount;
   private int boardLikeCount;
+  private Integer categoryNum;        // 카테고리 번호
+
 
   private String categoryName;    // 카테고리명 (학번)
-  private int categoryNum;        // 카테고리 번호
 
   private MemberDTO member;       // 작성자 정보 (MemberDTO)
 
@@ -26,7 +27,19 @@ public class StudentBoardDTO {
     return cmNum;
   }
 
-  public void setCmNum(long cmNum) {
+
+  public Integer getCategoryNum() {
+	return categoryNum;
+}
+
+public void setCategoryNum(Integer categoryNum) {
+	this.categoryNum = categoryNum;
+}
+
+
+
+
+public void setCmNum(long cmNum) {
     this.cmNum = cmNum;
   }
 
@@ -110,13 +123,6 @@ public class StudentBoardDTO {
     this.categoryName = categoryName;
   }
 
-  public int getCategoryNum() {
-    return categoryNum;
-  }
-
-  public void setCategoryNum(int categoryNum) {
-    this.categoryNum = categoryNum;
-  }
 
   public MemberDTO getMember() {
     return member;

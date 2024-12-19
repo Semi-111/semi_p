@@ -1,0 +1,127 @@
+.article-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 30px;
+}
+
+.article-header {
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.article-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.article-info {
+    color: #666;
+    font-size: 14px;
+    display: flex;
+    gap: 20px;
+}
+
+.article-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.article-content {
+    min-height: 300px;
+    margin-bottom: 30px;
+}
+
+.image-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.content {
+    line-height: 1.8;
+    color: #333;
+}
+
+.article-footer {
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+
+.article-footer .table {
+    margin-bottom: 20px;
+}
+
+.article-footer .table td {
+    padding: 10px 0;
+}
+
+.article-footer a {
+    color: #666;
+}
+
+.article-footer a:hover {
+    color: #a855f7;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-list {
+    background-color: #a855f7;
+    color: white;
+    padding: 8px 25px;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.btn-list:hover {
+    background-color: #9333ea;
+    color: white;
+}
+
+.badge {
+    font-size: 0.8em;
+    padding: 5px 10px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .article-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .article-title {
+        font-size: 18px;
+    }
+
+    .article-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

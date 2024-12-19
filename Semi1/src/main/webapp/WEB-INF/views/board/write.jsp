@@ -7,68 +7,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/write.css">
-  <script src="${pageContext.request.contextPath}/resources/js/board/wrtie.js"></script>
 
   <title>게시글 작성</title>
   <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
-
-<%--  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      window.previewImage = function (input) {
-        var preview = document.getElementById('preview');
-        var fileName = document.getElementById('fileName');
-
-        if (input.files && input.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function (e) {
-            if (preview) {
-              preview.src = e.target.result;
-              preview.style.display = 'block';
-            }
-            if (fileName) {
-              fileName.textContent = input.files[0].name;
-            }
-          };
-          reader.readAsDataURL(input.files[0]);
-        } else {
-          if (preview) {
-            preview.style.display = 'none';
-            preview.src = '';
-          }
-          if (fileName) {
-            fileName.textContent = '선택된 파일 없음';
-          }
-        }
-      };
-    });
-
-
-    function updateBoard() {
-      const f = document.writeForm;
-      let str;
-
-      str = f.title.value.trim();
-      if(!str) {
-        alert('제목을 입력하세요.');
-        f.title.focus();
-        return false;
-      }
-
-      str = f.content.value.trim();
-      if(!str) {
-        alert('내용을 입력하세요.');
-        f.content.focus();
-        return false;
-      }
-
-      // mode가 update일 때만 action 재설정
-      <c:if test="${mode == 'update'}">
-      f.action = '${pageContext.request.contextPath}/bbs/infoBoard/update?type=${boardType}&cmNum=${dto.cmNum}&page=${page}';
-      </c:if>
-
-      f.submit();
-    }
-  </script>--%>
+  <script>
+    const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
+    const boardType = '<c:out value="${boardType}" />';
+    const cmNum = '<c:out value="${dto.cmNum}" />';
+    const page = '<c:out value="${page}" />';
+  </script>
+  <script src="${pageContext.request.contextPath}/resources/js/board/wrtie.js"></script>
 </head>
 <body>
 <header>
@@ -103,8 +51,8 @@
           <span id="fileName" class="file-name">선택된 파일 없음</span>
         </div>
         <c:if test="${dto.fileName != null}">
-<%--          <img id="preview" class="preview-image" src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="이미지 미리보기" style="display:block;">--%>
           <img id="preview" class="preview-image" src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="이미지 미리보기">
+          <p>현재 파일: <a href="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}">${dto.fileName}</a></p>
         </c:if>
       </div>
 

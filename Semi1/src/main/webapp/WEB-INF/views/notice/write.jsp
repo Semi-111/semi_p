@@ -66,17 +66,27 @@
 
         <div class="write-form">
             <form name="noticeForm" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="category">카테고리</label>
-                    <select id="category" name="category" required>
-                        <option value="">경영</option>
-                        <option value="">경찰행정</option>
-                        <option value="">디자인</option>
-                        <option value="">화학</option>
-                        <option value="">컴퓨터응용전자</option>
-                        <option value="">정보통신</option>
-                    </select>
-                </div>
+                <!-- write.jsp 수정 -->
+				<div class="form-group">
+				    <label for="category">카테고리</label>
+				    <select id="category" name="category" required>
+				        <c:if test="${sessionScope.member.role >= 60}">
+				            <!-- 관리자는 전체 카테고리 선택 가능 -->
+				            <option value="0">전체</option>
+				            <c:forEach var="lesson" items="${lessonList}">
+				                <option value="${lesson.lessonNum}">${lesson.lessonName}</option>
+				            </c:forEach>
+				        </c:if>
+				        <c:if test="${sessionScope.member.role < 60}">
+				            <!-- 과대표는 자신의 role과 일치하는 학과만 선택 가능 -->
+				            <c:forEach var="lesson" items="${lessonList}">
+				                <c:if test="${lesson.lessonNum == sessionScope.member.role}">
+				                    <option value="${lesson.lessonNum}">${lesson.lessonName}</option>
+				                </c:if>
+				            </c:forEach>
+				        </c:if>
+				    </select>
+				</div>
 
                 <div class="form-group">
                     <label for="notice">공지 구분</label>
@@ -101,8 +111,7 @@
                         </span>
                     </div>
                     <c:if test="${not empty dto.fileName}">
-                        <img id="preview" class="preview-image"
-                            src="#/uploads/notice/${dto.fileName}"
+                        <img id="preview" class="preview-image" src="${pageContext.request.contextPath}/uploads/notice/${dto.fileName}""
                             style="display: block;">
                     </c:if>
                     <c:if test="${empty dto.fileName}">
@@ -119,11 +128,11 @@
                 <div class="button-group">
                     <button type="button" class="submit-button" onclick="submitForm();">
                         ${mode=="update"?"수정완료":"등록하기"}</button>
-                    <a href="#/notice/list" class="cancel-button">취소</a>
+                     <a href="${pageContext.request.contextPath}/noticeBoard/list" class="cancel-button">취소</a>
                 </div>
 
                 <c:if test="${mode=='update'}">
-                    <input type="hidden" name="noticeNum" value="${dto.noticeNum}">
+                    <input type="hidden" name="noticeNum" value="${dto.cm_num}">
                     <input type="hidden" name="page" value="${page}">
                 </c:if>
             </form>
