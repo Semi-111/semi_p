@@ -17,8 +17,7 @@
 	href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/main.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 

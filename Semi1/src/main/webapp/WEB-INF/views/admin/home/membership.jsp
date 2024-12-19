@@ -7,6 +7,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trainee Admin - 회원 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin/main.css">
     <style>
         * {
             margin: 0;
@@ -232,79 +235,76 @@
     <div class="container">
         <h1 style="margin: 20px 0; font-size: 24px; color: #374151;">회원 관리</h1>
 
-        <div class="search-area">
+        <form name="searchForm" action="${pageContext.request.contextPath}/admin/home/membership" method="get" class="search-area">
             <div class="search-row">
-                <select>
-                    <option>전체 회원</option>
-                    <option>활성 회원</option>
-                    <option>정지된 회원</option>
-                    <option>탈퇴 회원</option>
+                <select name="schType">
+                    <option value="all" ${schType=="all"?"selected":""}>전체</option>
+                    <option value="userId" ${schType=="userId"?"selected":""}>아이디</option>
+                    <option value="nickName" ${schType=="nickName"?"selected":""}>닉네임</option>
                 </select>
-                <input type="text" placeholder="이름, 이메일, 아이디 검색">
-                <button class="btn btn-primary">검색</button>
-                <button class="btn btn-success">
+                <input type="text" name="kwd" value="${kwd}" placeholder="검색어를 입력하세요">
+                <button type="button" class="btn btn-primary" onclick="searchList()">검색</button>
+                <button type="button" class="btn btn-success" onclick="exportToExcel()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
                     </svg>
                     엑셀 내보내기
                 </button>
             </div>
-        </div>
+        </form>
 
         <div class="table-container">
             <div class="action-buttons">
-                <button class="btn btn-primary">선택 활성화</button>
-                <button class="btn btn-primary">선택 정지</button>
-                <button class="btn btn-danger">선택 삭제</button>
+                <button class="btn btn-primary" onclick="updateSelectedStatus('active')">선택 활성화</button>
+                <button class="btn btn-primary" onclick="updateSelectedStatus('block')">선택 정지</button>
+                <button class="btn btn-danger" onclick="deleteSelected()">선택 삭제</button>
             </div>
 
             <table>
                 <thead>
                     <tr>
-                        <th><input type="checkbox" class="custom-checkbox"></th>
+                        <th><input type="checkbox" class="custom-checkbox" onclick="checkAll(this)"></th>
                         <th>회원ID</th>
-                        <th>이름</th>
-                        <th>이메일</th>
+                        <th>아이디</th>
+                        <th>닉네임</th>
                         <th>가입일</th>
-                        <th>최근 접속일</th>
+                        <th>소속학과</th>
+                        <th>권한</th>
                         <th>상태</th>
                         <th>관리</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input type="checkbox" class="custom-checkbox"></td>
-                        <td>#12345</td>
-                        <td>김트레이니</td>
-                        <td>kim@trainee.com</td>
-                        <td>2024-12-01</td>
-                        <td>2024-12-06</td>
-                        <td><span class="status-badge status-active">활성</span></td>
-                        <td>
-                            <button class="btn btn-primary" onclick="openMemberModal()">상세</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" class="custom-checkbox"></td>
-                        <td>#12344</td>
-                        <td>이트레이니</td>
-                        <td>lee@trainee.com</td>
-                        <td>2024-12-01</td>
-                        <td>2024-12-05</td>
-                        <td><span class="status-badge status-inactive">정지</span></td>
-                        <td>
-                            <button class="btn btn-primary" onclick="openMemberModal()">상세</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="dto" items="${list}">
+                        <tr>
+                            <td><input type="checkbox" class="custom-checkbox" name="members" value="${dto.mb_Num}"></td>
+                            <td>${dto.mb_Num}</td>
+                            <td>${dto.userId}</td>
+                            <td>${dto.nickName}</td>
+                            <td>${dto.ca_Day}</td>
+                            <td>${dto.lessonName}</td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${dto.role == '60'}">관리자</c:when>
+                                    <c:when test="${dto.role >= '51' && dto.role <= '56'}">과대표</c:when>
+                                    <c:otherwise>일반회원</c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <span class="status-badge ${dto.block == 0 ? 'status-active' : 'status-inactive'}">
+                                    ${dto.block == 0 ? '활성' : '정지'}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="openMemberModal(${dto.mb_Num})">상세</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                 </tbody>
             </table>
 
-            <div class="pagination">
-                <button>이전</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>다음</button>
+            <div class="page-navigation">
+                ${paging}
             </div>
         </div>
 
@@ -315,40 +315,84 @@
                 <h3 class="modal-title">회원 상세 정보</h3>
                 <button class="modal-close" onclick="closeMemberModal()">&times;</button>
             </div>
-            <div class="member-details" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                <div class="detail-item">
-                    <div style="color: #666; font-size: 12px; margin-bottom: 4px;">회원 ID</div>
-                    <div style="font-size: 14px;">#12345</div>
-                </div>
-                <div class="detail-item">
-                    <div style="color: #666; font-size: 12px; margin-bottom: 4px;">이름</div>
-                    <div style="font-size: 14px;">김트레이니</div>
-                </div>
-                <div class="detail-item">
-                    <div style="color: #666; font-size: 12px; margin-bottom: 4px;">이메일</div>
-                    <div style="font-size: 14px;">kim@trainee.com</div>
-                </div>
-                <div class="detail-item">
-                    <div style="color: #666; font-size: 12px; margin-bottom: 4px;">가입일</div>
-                    <div style="font-size: 14px;">2024-12-01</div>
-                </div>
-            </div>
-            <div style="text-align: right; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-                <button class="btn btn-primary">활성화</button>
-                <button class="btn btn-danger">정지</button>
+            <div class="member-details" id="memberDetailContent">
+                <!-- 상세 정보는 JavaScript로 동적 로드 -->
             </div>
         </div>
     </div>
 
     <script>
-        function openMemberModal() {
+        function searchList() {
+            const f = document.searchForm;
+            f.submit();
+        }
+
+        function checkAll(source) {
+            const checkboxes = document.getElementsByName('members');
+            for(let i=0; i<checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+
+        function updateSelectedStatus(status) {
+            const selectedMembers = getSelectedMembers();
+            if(selectedMembers.length === 0) {
+                alert('회원을 선택하세요.');
+                return;
+            }
+
+            if(! confirm(status === 'active' ? '선택한 회원을 활성화하시겠습니까?' : '선택한 회원을 정지하시겠습니까?')) {
+            	// 여기서 회원 정지 함수 실행? -> 아닌 것 같다.
+                return;
+            }
+
+            // AJAX 요청 구현
+            // ajaxFun을 이용.
+        }
+
+        function deleteSelected() {
+            const selectedMembers = getSelectedMembers();
+            if(selectedMembers.length === 0) {
+                alert('삭제할 회원을 선택하세요.');
+                return;
+            }
+
+            if(!confirm('선택한 회원을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            // AJAX 요청 구현
+        }
+
+        function getSelectedMembers() {
+            const checkboxes = document.getElementsByName('members');
+            const selectedMembers = [];
+            for(let i=0; i<checkboxes.length; i++) {
+                if(checkboxes[i].checked) {
+                    selectedMembers.push(checkboxes[i].value);
+                }
+            }
+            return selectedMembers;
+        }
+
+        function openMemberModal(memberNum) {
             document.getElementById('modalBackdrop').style.display = 'block';
             document.getElementById('memberModal').style.display = 'block';
+            // AJAX로 회원 상세 정보 로드
+            loadMemberDetails(memberNum);
         }
 
         function closeMemberModal() {
             document.getElementById('modalBackdrop').style.display = 'none';
             document.getElementById('memberModal').style.display = 'none';
+        }
+
+        function loadMemberDetails(memberNum) {
+            // AJAX로 회원 상세 정보를 가져와서 모달에 표시하는 로직 구현
+        }
+
+        function exportToExcel() {
+            // 엑셀 내보내기 로직 구현
         }
     </script>
 </body>
