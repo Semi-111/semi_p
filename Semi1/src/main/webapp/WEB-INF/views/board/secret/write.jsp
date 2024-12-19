@@ -7,16 +7,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/write.css">
-
-  <title>게시글 작성</title>
-  <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
   <script>
     const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
-    const boardType = '<c:out value="${boardType}" />';
+    const boardType = 'secretBoard';
     const cmNum = '<c:out value="${dto.cmNum}" />';
     const page = '<c:out value="${page}" />';
   </script>
-  <script src="${pageContext.request.contextPath}/resources/js/board/wrtie.js"></script>
+  <script src="${pageContext.request.contextPath}/resources/js/board/secret/write.js"></script>
+
+  <title>게시글 작성</title>
+  <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 </head>
 <body>
 <header>
@@ -24,14 +24,12 @@
 </header>
 
 <div class="container">
-  <c:set var="boardType" value="${param.type}" />
+  <c:set var="boardType" value="${boardType}" />
 
   <div class="write-form">
     <form name="writeForm" method="post"
-          action="${pageContext.request.contextPath}/bbs/infoBoard/${mode == 'update' ? 'update' : 'write'}"
+          action="${pageContext.request.contextPath}/bbs/secretBoard/${mode == 'update' ? 'update' : 'write'}"
           enctype="multipart/form-data">
-
-      <input type="hidden" name="type" value="${boardType}">
 
       <c:if test="${mode == 'update'}">
         <input type="hidden" name="cmNum" value="${dto.cmNum}">
@@ -49,10 +47,11 @@
           <label for="image">파일 선택</label>
           <input type="file" id="image" name="file" accept="image/*" onchange="previewImage(this);">
           <span id="fileName" class="file-name">선택된 파일 없음</span>
+
         </div>
         <c:if test="${dto.fileName != null}">
-          <img id="preview" class="preview-image" src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="이미지 미리보기">
           <p>현재 파일: <a href="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}">${dto.fileName}</a></p>
+          <img id="preview" class="preview-image" src="${pageContext.request.contextPath}/uploads/photo/${oldFile}" alt="이미지 미리보기">
         </c:if>
       </div>
 
@@ -70,7 +69,7 @@
             <button type="submit" class="submit-button">등록하기</button>
           </c:otherwise>
         </c:choose>
-        <a href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=${boardType}" class="cancel-button">취소</a>
+        <a href="${pageContext.request.contextPath}/bbs/secretBoard/list" class="cancel-button">취소</a>
       </div>
     </form>
   </div>

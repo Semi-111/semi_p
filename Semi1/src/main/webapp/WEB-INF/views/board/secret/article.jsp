@@ -1,32 +1,33 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${boardType}게시판</title>
+    <title>비밀게시판</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/board/article1.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/board/article.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
     <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
     <script>
         const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
-        const boardType = '<c:out value="${boardType}" />';
         const cmNum = '<c:out value="${dto.cmNum}" />';
         const page = '<c:out value="${page}" />';
     </script>
+
 </head>
 <body>
-
 <header>
     <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 </header>
 
 <div class="post-container">
-    <a href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=${boardType}&page=${page}" class="back-link">← 목록으로</a>
+    <a href="${pageContext.request.contextPath}/bbs/secretBoard/list?page=${page}" class="back-link">← 목록으로</a>
+
     <div class="post-detail">
         <div class="post-header">
             <h1 class="post-title">${dto.title}</h1>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="post-info">
                     <span>조회 ${dto.views}</span>
-                    <span>댓글 5</span>
+                    <span>댓글 ${dataCount}</span> <!-- 댓글 개수 동적으로 표시 -->
                 </div>
             </div>
         </div>
@@ -52,28 +53,28 @@
             </div>
         </c:if>
 
-        <div class="post-actions" style="display: flex; justify-content: space-between; align-items: center;">
-            <div class="action-left" style="display: flex; align-items: center; gap: 10px;">
+        <div class="post-actions">
+            <div class="action-left">
                 <button type="button" class="btn btn-gray btnSendBoardLike" title="좋아요">
+                    <!-- isUserLike가 true면 채워진 하트, 아니면 빈 하트 -->
                     <i class="${isUserLike ? 'fa-solid fa-heart liked' : 'fa-regular fa-heart'} heart-icon"></i>
                     &nbsp;&nbsp;<span id="boardLikeCount">${(dto.boardLikeCount != null && dto.boardLikeCount > 0) ? dto.boardLikeCount : 0}</span>
                 </button>
-                <button class="btn btn-gray">공유하기</button>
+                <button class="btn btn-gray">
+                    공유하기
+                </button>
             </div>
 
             <c:if test="${sessionScope.member.mb_Num == dto.mbNum || sessionScope.member.role eq '60'}">
-                <div class="action-right" style="display: flex; align-items: center; gap: 10px;">
-                    <button class="btn btn-purple" onclick="updateStudentBoard();">수정</button>
-                    <button class="btn btn-red" onclick="deleteStudentBoard();">삭제</button>
+                <div class="action-right">
+                    <button class="btn btn-purple" onclick="updateSecretBoard()">수정</button>
+                    <button class="btn btn-red" onclick="deleteSecretBoard();">삭제</button>
                     <button class="btn btn-red">신고</button>
                 </div>
             </c:if>
         </div>
     </div>
 </div>
-
-<%--<button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/bbs/studentBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'">새로고침</button>--%>
-
 
 <div class="reply">
     <form name="replyForm" method="post">
@@ -85,7 +86,7 @@
             </div>
             <!-- 새로고침 아이콘 -->
             <button type="button" class="btn-refresh"
-                    onclick="location.href='${pageContext.request.contextPath}/bbs/studentBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'"
+                    onclick="location.href='${pageContext.request.contextPath}/bbs/secretBoard/article?cmNum=${dto.cmNum}&page=${page}'"
                     title="새로고침">
                 <i class="fas fa-sync-alt"></i>
             </button>
@@ -107,6 +108,7 @@
 
     <div id="listReply"></div>
 </div>
+
 <footer>
     <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
@@ -118,31 +120,38 @@
 
         $('.btnSendBoardLike').click(function () {
             const $i = $(this).find('i.heart-icon');
-            let userLiked = $i.hasClass('fa-solid');
+            let userLiked = $i.hasClass('fa-solid'); // fa-solid fa-heart 라면 좋아요 상태
             let msg = userLiked ? '공감을 취소 하시겠습니까?' : '이 글에 공감하시겠습니까?';
-            if (!confirm(msg)) return;
+            if (!confirm(msg)) return false;
 
-            let url = '${pageContext.request.contextPath}/bbs/studentBoard/insertBoardLike';
-            let query = 'cm_Num=${dto.cmNum}&userLiked=' + userLiked;
+            // AJAX 요청 URL 수정
+            let url = '${pageContext.request.contextPath}/bbs/secretBoard/insertBoardLike';
+            let query = 'cm_Num=${dto.cmNum}&userLiked=' + userLiked; // userLiked는 true/false 문자열로 전달
 
-            ajaxFun(url, 'post', query, 'json', function (data) {
-                if (data.state === 'true') {
-                    $('#boardLikeCount').text(data.boardLikeCount || 0);
+            const fn = function (data) {
+                let state = data.state;
+                if (state === 'true') {
+                    let count = data.boardLikeCount || 0;
+                    $('#boardLikeCount').text(count);
+
                     if (userLiked) {
+                        // 좋아요 취소: 채워진 하트 → 빈 하트
                         $i.removeClass('fa-solid fa-heart').addClass('fa-regular fa-heart').removeClass('liked');
                     } else {
+                        // 좋아요 추가: 빈 하트 → 채워진 하트
                         $i.removeClass('fa-regular fa-heart').addClass('fa-solid fa-heart liked');
                     }
-                } else if (data.state === 'liked') {
+                } else if (state === 'liked') {
                     alert('게시글 공감은 한 번만 가능합니다.');
                 } else {
-                    alert('게시글 공감 처리에 실패했습니다.');
+                    alert('게시글 공감 여부 처리가 실패했습니다.');
                 }
-            });
+            };
+
+            ajaxFun(url, 'post', query, 'json', fn);
         });
     });
 
-    /*댓글*/
     // 댓글 등록
     $(function () {
         $('.btnSendReply').click(function (){
@@ -155,7 +164,8 @@
             }
 
             let cmNum = '${dto.cmNum}';
-            let url = '${pageContext.request.contextPath}/bbs/studentBoard/replyInsert';
+            // AJAX 요청 URL 수정
+            let url = '${pageContext.request.contextPath}/bbs/secretBoard/replyInsert';
 
             let query = {cmNum : cmNum, content : content}; // 객체로 처리하면 인코딩 x
             // formData를 객체로 처리하면 content를 인코딩하면 안된다.
@@ -176,7 +186,8 @@
 
     function listPage(page) {
         let cmNum = '${dto.cmNum}'; // cmNum 가져오기
-        let url = '${pageContext.request.contextPath}/bbs/studentBoard/listReply';
+        // AJAX 요청 URL 수정
+        let url = '${pageContext.request.contextPath}/bbs/secretBoard/listReply';
         let query = 'cmNum=' + cmNum + '&pageNo=' + page; // 쌍따옴표 없이 설정
         let selector = '#listReply';
 
@@ -222,7 +233,8 @@
                 return false;
             }
 
-            let url = '${pageContext.request.contextPath}/bbs/studentBoard/replyInsert';
+            // AJAX 요청 URL 수정
+            let url = '${pageContext.request.contextPath}/bbs/secretBoard/replyInsert';
             let formData = {cmNum : cmNum, content : content};
 
             const fn = function (data) {
@@ -240,7 +252,8 @@
 
     // 댓글별 답글 리스트
     function listReplyAnswer(parentNum) {
-        let url = '${pageContext.request.contextPath}/bbs/listReplyAnswer'
+        // AJAX 요청 URL 수정
+        let url = '${pageContext.request.contextPath}/bbs/secretBoard/listReplyAnswer'
         let query = 'parentNum=' + parentNum;
         let selector = '#listReplyAnswer' + parentNum;
 
@@ -253,7 +266,8 @@
 
     // 댓글별 답글 개수
     function countReplyAnswer(parentNum) {
-        let url = '${pageContext.request.contextPath}/bbs/countReplyAnswer'
+        // AJAX 요청 URL 수정
+        let url = '${pageContext.request.contextPath}/bbs/secretBoard/countReplyAnswer'
         let query = 'parentNum=' + parentNum;
 
         const fn = function (data) {
@@ -268,14 +282,15 @@
     // 댓글 삭제
     $(function () {
         $('#listReply').on('click', '.deleteReply', function () {
-            if( ! confirm('게시글을 삭제 하시겠습니까')) {
+            if( ! confirm('댓글을 삭제 하시겠습니까?')) {
                 return false;
             }
 
             let cmNum = $(this).attr('data-replyNum');
-            let page = $(this).attr('data-pageNo');
+            let page = '${page}'; // 'page' 변수는 컨트롤러에서 전달됨
 
-            let url = '${pageContext.request.contextPath}/bbs/studentBoard/deleteReply';
+            // AJAX 요청 URL 수정
+            let url = '${pageContext.request.contextPath}/bbs/secretBoard/deleteReply';
             let query = 'cmNum=' + cmNum;
 
             const fn = function (data) {
@@ -287,17 +302,17 @@
     });
 
     // 댓글의 답글 삭제
-    // 댓글 삭제
     $(function () {
         $('#listReply').on('click', '.deleteReplyAnswer', function () {
-            if( ! confirm('댓글을 삭제 하시겠습니까')) {
+            if( ! confirm('댓글을 삭제 하시겠습니까?')) {
                 return false;
             }
 
             let cmNum = $(this).attr('data-replyNum');
             let parentNum = $(this).attr('data-parentNum');
 
-            let url = '${pageContext.request.contextPath}/bbs/studentBoard/deleteReply';
+            // AJAX 요청 URL 수정
+            let url = '${pageContext.request.contextPath}/bbs/secretBoard/deleteReply';
             let query = 'cmNum=' + cmNum;
 
             const fn = function (data) {
@@ -307,6 +322,7 @@
             ajaxFun(url, 'post', query, 'json', fn);
         });
     });
+
 </script>
 
 </body>

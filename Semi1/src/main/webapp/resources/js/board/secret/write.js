@@ -1,3 +1,4 @@
+// 이미지 미리보기 및 파일 이름 표시 함수
 window.previewImage = function(input) {
     const preview = document.getElementById('preview');
     const fileNameElem = document.getElementById('fileName');
@@ -9,12 +10,7 @@ window.previewImage = function(input) {
         reader.onload = function(e) {
             // 이미지 미리보기
             if (preview) {
-                let img = preview.querySelector('img');
-                if (!img) {
-                    img = document.createElement('img');
-                    preview.appendChild(img);
-                }
-                img.src = e.target.result;
+                preview.src = e.target.result;
                 preview.style.display = 'flex';
             }
 
@@ -29,7 +25,7 @@ window.previewImage = function(input) {
         // 파일 선택 취소 시 미리보기 및 파일 이름 초기화
         if (preview) {
             preview.style.display = 'none';
-            preview.innerHTML = '';
+            preview.src = '';
         }
         if (fileNameElem) {
             fileNameElem.textContent = '선택된 파일 없음';
@@ -60,7 +56,7 @@ window.updateBoard = function() {
 
     // mode가 'update'일 때만 action 재설정
     if (form.cmNum && form.page) { // cmNum과 page가 존재하면 수정 모드
-        form.action = `${contextPath}/bbs/infoBoard/update?type=${encodeURIComponent(boardType)}&cmNum=${encodeURIComponent(cmNum)}&page=${encodeURIComponent(page)}`;
+        form.action = `${contextPath}/bbs/${encodeURIComponent(boardType)}/update?type=${encodeURIComponent(boardType)}&cmNum=${encodeURIComponent(cmNum)}&page=${encodeURIComponent(page)}`;
     }
 
     form.submit();

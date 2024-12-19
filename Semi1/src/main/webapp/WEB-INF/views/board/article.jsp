@@ -13,6 +13,12 @@
     <script src="${pageContext.request.contextPath}/resources/js/board/article.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
     <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
+    <script>
+        const contextPath = '<c:out value="${pageContext.request.contextPath}" />';
+        const boardType = '<c:out value="${boardType}" />';
+        const cmNum = '<c:out value="${dto.cmNum}" />';
+        const page = '<c:out value="${page}" />';
+    </script>
 </head>
 <body>
 <header>
@@ -70,55 +76,26 @@
     </div>
 </div>
 
-<%--<div class="comments-section">--%>
-<%--    <div class="comments-header">--%>
-<%--        <span>댓글 <span class="comments-count">5</span></span>--%>
-<%--        <button class="btn btn-purple" onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'">새로고침</button>--%>
-<%--    </div>--%>
-<%--    <div class="comment-write">--%>
-<%--        <textarea class="comment-textarea" placeholder="댓글을 입력하세요"></textarea>--%>
-<%--        <button class="btn btn-purple" style="width: 100%">댓글 작성</button>--%>
-<%--    </div>--%>
-<%--    <div class="comment-list">--%>
-<%--        <div class="comment-item">--%>
-<%--            <div class="comment-header">--%>
-<%--                <span class="comment-author">익명1</span>--%>
-<%--                <span class="comment-date">2024.12.06 12:30</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-text">--%>
-<%--                <span>댓글입니다.</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-actions">--%>
-<%--                <span class="comment-action">답글</span>--%>
-<%--                <span class="comment-action">신고</span>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="comment-item">--%>
-<%--            <div class="comment-header">--%>
-<%--                <span class="comment-author">학과사무실</span>--%>
-<%--                <span class="comment-date">2024.12.06 13:15</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-text">--%>
-<%--                <span>댓글입니다.</span>--%>
-<%--            </div>--%>
-<%--            <div class="comment-actions">--%>
-<%--                <span class="comment-action">답글</span>--%>
-<%--                <span class="comment-action">신고</span>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
-
 <div class="reply">
     <form name="replyForm" method="post">
         <div class='form-header'>
-            <span class="bold">댓글</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+            <!-- 텍스트와 새로고침 버튼 배치를 위해 flex 사용 -->
+            <div style="flex: 1;">
+                <span class="bold">댓글</span>
+                <span class="instructions"> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가해 주세요.</span>
+            </div>
+            <!-- 새로고침 아이콘 -->
+            <button type="button" class="btn-refresh"
+                    onclick="location.href='${pageContext.request.contextPath}/bbs/infoBoard/article?type=${boardType}&cmNum=${dto.cmNum}&page=${page}'"
+                    title="새로고침">
+                <i class="fas fa-sync-alt"></i>
+            </button>
         </div>
 
         <table class="table table-borderless reply-form">
             <tr>
                 <td>
-                    <textarea class="form-control" name="content"></textarea>
+                    <textarea class="form-control" name="content" placeholder="댓글을 작성해주세요."></textarea>
                 </td>
             </tr>
             <tr>
@@ -131,6 +108,7 @@
 
     <div id="listReply"></div>
 </div>
+
 
 <footer>
     <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
