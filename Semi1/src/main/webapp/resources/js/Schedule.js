@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
 	document.addEventListener('DOMContentLoaded', function () {
 	    const tableBody = document.querySelector('#timetable tbody');
 	    
@@ -144,7 +143,6 @@ function isCellColored(col, startTime, duration) {
 
     return false; // 색상이 없으면 false 반환
 }
-
 
 const subjectColors = {
     "프로그래밍기초": "#FFD8D8",
@@ -376,42 +374,33 @@ function removeTimeSlots(col, startTime, duration) {
 	}
 
 	
-	
-	
-	// 수업 저장 버튼 클릭 이벤트 처리
-	function saveTimetable() {
-		const semester = document.getElementById('semesterSelect').value;  // 선택된 학기
-		const selectedSubjects = [];  // 선택된 수업들을 저장할 배열
 
-		   // 시간표에서 선택된 수업을 배열에 추가
-		    $('#timetable tbody tr.selected').each(function() {
-		        const subject = {
-		            grade: $(this).data('grade_year'),  // 학년
-		            semester: semester,  // 선택된 학기 값
-		            sbNum: $(this).data('dt_sb_num'),  // 과목 번호 (속성 이름은 sbnum)
-		        };
-		        selectedSubjects.push(subject);  // 배열에 수업 추가
-		    });
+	// 학년과 학기 선택 시 시간표 가져오기
+	document.getElementById('semesterSelect').addEventListener('change', function() {
+	    const semester = this.value;
+		console.log(semester);
+		console.log("change");
+	    const [gradeYear, semesterCode] = semester.split(" ");  // 학년, 학기 분리
 
-		    // 선택된 수업이 없으면 경고
-		    if (selectedSubjects.length === 0) {
-		        alert('선택된 수업이 없습니다.');
-		        return;  // 수업이 선택되지 않으면 함수 종료
-		    }
+	    $.ajax({
+	        url: '/GetTimetable',  // 시간표를 가져오는 서버 URL
+	        type: 'GET',
+	        data: {
+	            gradeYear: gradeYear,  // 학년
+	            semester: semesterCode,  // 학기
+	            memberId: sessionMemberId  // 로그인한 회원 ID
+	        },
+	        success: function(response) {
+	            // 성공적으로 데이터를 받으면 시간표 그리기
+	            loadTimetable(response);
+	        },
+	        error: function(xhr, status, error) {
+	            console.error("시간표 데이터를 가져오는 데 실패했습니다:", status, error);
+	        }
+	    });
+	});
+}
 
-		    // 선택된 수업이 있으면 서버로 AJAX 요청
-		    $.ajax({
-		        url: '/SaveTimetableServlet',  // 서버 URL
-		        type: 'POST',
-		        contentType: 'application/json',
-		        data: JSON.stringify({ subjects: selectedSubjects }),
-		        success: function(response) {
-		            alert('시간표 저장 성공!');
-		            location.reload();  // 저장 후 페이지 새로고침
-		        },
-		        error: function() {
-		            alert('시간표 저장 실패!');
-		        }
-		    });
-		}
-	}
+
+
+
