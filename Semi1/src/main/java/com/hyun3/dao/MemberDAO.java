@@ -120,7 +120,7 @@ public class MemberDAO {
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			sb.append("SELECT m.mb_Num, m.userId, m.nickName, m.role, ");
+			sb.append("SELECT m.mb_Num, m.userId, m.pwd, m.nickName, m.role, ");
 			sb.append("       m.ca_Day, m.modifyDay, m.lessonNum, ");
 			sb.append("       dt.name, dt.email, TO_CHAR(dt.birthday, 'YYYY-MM-DD') birthday, ");
 			sb.append("       dt.tel, dt.studentnum ");
@@ -139,6 +139,7 @@ public class MemberDAO {
 				// member 테이블 데이터 설정
 				dto.setMb_Num(rs.getLong("mb_Num"));
 				dto.setUserId(rs.getString("userId"));
+				dto.setPwd(rs.getString("pwd"));
 				dto.setNickName(rs.getString("nickName"));
 				dto.setRole(rs.getString("role"));
 				dto.setCa_Day(rs.getString("ca_Day"));
@@ -149,11 +150,6 @@ public class MemberDAO {
 				dto.setName(rs.getString("name"));
 
 				dto.setEmail(rs.getString("email"));
-				/*
-				 * if (dto.getEmail() != null) { String[] emailParts =
-				 * dto.getEmail().split("@"); if (emailParts.length == 2) {
-				 * dto.setEmail1(emailParts[0]); dto.setEmail2(emailParts[1]); } }
-				 */
 
 				dto.setBirth(rs.getString("birthday"));
 
@@ -180,6 +176,7 @@ public class MemberDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 
+		/*
 		try {
 			/*
 			 * sql = "UPDATE member SET pwd=?, modifyDay=SYSDATE WHERE userId = ?"; pstmt =
@@ -200,7 +197,8 @@ public class MemberDAO {
 			 * 
 			 * pstmt.executeUpdate();
 			 */
-
+			
+			/*
 			sql = "SELECT mb_Num FROM member WHERE userId = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
@@ -225,6 +223,32 @@ public class MemberDAO {
 		} finally {
 			DBUtil.close(pstmt);
 		}
+		*/
+		
+		try {
+	        // member 테이블의 비밀번호 업데이트
+	        sql = "UPDATE member SET pwd = ?, modifyDay = SYSDATE WHERE userId = ?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, dto.getPwd());
+	        pstmt.setString(2, dto.getUserId());
+	        pstmt.executeUpdate();
+	        
+	        pstmt.close();
+	        pstmt = null;
+	        
+	        sql = "UPDATE dt_member SET email=?, birthday=TO_DATE(?, 'YYYY-MM-DD'), tel=? WHERE userId=?";
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, dto.getEmail());
+	        pstmt.setString(1, dto.getBirth());
+	        pstmt.setString(1, dto.getTel());
+	        pstmt.executeUpdate();
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DBUtil.close(pstmt);
+	    }
 	}
 
 	public void updateMemberLevel(String userId, int role) throws SQLException {
