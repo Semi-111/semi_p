@@ -1,0 +1,97 @@
+@charset "UTF-8";
+
+/* 오른쪽 사이드바 */
+.sideMenu {
+	position: fixed;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.sidebar {
+    width: 320px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.section {
+    margin-top: 20px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #0078ff;
+}
+
+.section-header a {
+    text-decoration: none;
+    font-size: 12px;
+    color: #777;
+}
+
+.section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section ul li {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.section ul li span {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.review {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.review p {
+    margin: 5px 0;
+}
+
+.review strong {
+    color: #333;
+}
+
+.review p:nth-child(1) {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+
+/* 화면 축소 시 중앙화면만 보이게 설정 */
+@media ( max-width : 992px) {
+	#leftSide, #rightSide {
+		display: none;
+	}
+	#mainContent {
+		flex: 1;
+		max-width: 100%;
+	}
+}
+
+/* 메인 페이지 외의 화면에서 오른쪽 사이드 고정 */
+body.page-other #rightSide {
+	display: block !important;
+}
