@@ -18,13 +18,17 @@
 			<section class="profile-section">
 				<h2>프로필 이미지</h2>
 				<div class="image-upload">
-					<c:if test="${memberInfo.image != null}">
-						<img src="${pageContext.request.contextPath}/uploads/photo/${memberInfo.image}" alt="프로필 이미지" class="profile-image">
+					<c:if test="${not empty sessionScope.member.image}">
+<%--						<img src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}" alt="프로필 이미지">--%>
+<%--						<img src="${pageContext.request.contextPath}/resources/images/loading.gif	" alt="프로필 이미지">--%>
+						<img src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}" alt="프로필 이미지">
+<%--						<img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" alt="게시글 이미지">--%>
+
 					</c:if>
-					<c:if test="${memberInfo.image == null}">
-						<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg" alt="기본 프로필 이미지" class="profile-image">
+					<c:if test="${empty sessionScope.member.image}">
+						<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg" alt="기본 프로필 이미지">
 					</c:if>
-					<input type="file" id="infoimage" name="infoimage" accept="image/*">
+					<input type="file" id="infoimage" name="infoimage" accept="image/*" class="form-control">
 					<button type="submit" class="btn uploadBtn">이미지 업로드</button>
 				</div>
 			</section>
@@ -35,23 +39,22 @@
 			<h2>내 정보</h2>
 			<div class="profile-info">
 				<div class="info-item">
-					<span class="label">이름:</span>
+					<span class="label">이름</span>
 					<span class="value">${memberInfo.name}</span>
 				</div>
 				<div class="info-item">
-					<span class="label">닉네임:</span>
+					<span class="label">닉네임</span>
 					<span class="value">${memberInfo.nickName}</span>
 				</div>
 				<div class="info-item">
-					<span class="label">학과:</span>
+					<span class="label">학과</span>
 					<c:choose>
 						<c:when test="${memberInfo.lessonNum == 51}">경영학과</c:when>
-						<c:when test="${memberInfo.lessonNum == 52}">경찰행정</c:when>
+						<c:when test="${memberInfo.lessonNum == 52}">경찰행정과</c:when>
 						<c:when test="${memberInfo.lessonNum == 53}">디자인학과</c:when>
-						<c:when test="${memberInfo.lessonNum == 54}">화학공학</c:when>
+						<c:when test="${memberInfo.lessonNum == 54}">화학공학과</c:when>
 						<c:when test="${memberInfo.lessonNum == 55}">컴퓨터응용전자과</c:when>
 						<c:when test="${memberInfo.lessonNum == 56}">정보통신학부</c:when>
-						<c:when test="${memberInfo.lessonNum == 0}">학과 미선택</c:when>
 					</c:choose>
 				</div>
 			</div>
@@ -66,11 +69,11 @@
 			<h2>계정</h2>
 			<div class="account-info">
 				<div class="info-item">
-					<span class="label">아이디:</span>
+					<span class="label">아이디</span>
 					<span class="value">${memberInfo.userId}</span>
 				</div>
 				<div class="info-item">
-					<span class="label">이메일:</span>
+					<span class="label">이메일</span>
 					<span class="value">${memberInfo.email}</span>
 				</div>
 				<div class="actions">
@@ -100,9 +103,7 @@
 	</div>
 </div>
 
-<footer>
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
-</footer>
 </body>
 </html>

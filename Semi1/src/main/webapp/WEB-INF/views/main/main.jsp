@@ -40,27 +40,19 @@
 								<div class="profile">
 									<h5>나의 정보</h5>
 									<div class="profile-info">
-<%--										<button class="btn" type="button" onclick="location.href='${pageContext.request.contextPath}/member/myPage'">--%>
-											<div class="MyPicture">
-												<c:if test="${not empty sessionScope.member.image}">
-													<img src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}" >
-												</c:if>
-												<c:if test="${empty sessionScope.member.image}">
-													<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg" >
-												</c:if>
+										<div class="MyPicture">
 
-											<%--												<img src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">--%>
-<%--												<img src="${pageContext.request.contextPath}/uploads/photo/${memberInfo.image}" alt="프로필 이미지" class="profile-image">--%>
-											</div>
-<%--										</button>--%>
+											<c:if test="${not empty sessionScope.member.image}">
+												<img
+													src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}">
+											</c:if>
 
-<%--										<div class="MyPicture">--%>
-<%--											<img--%>
-<%--												src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">--%>
-<%--											<!-- 사진 바뀔 수 있도록.. 연동이 문제임 -->--%>
-<%--										</div>--%>
+											<c:if test="${empty sessionScope.member.image}">
+												<img
+													src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
+											</c:if>
 
-
+										</div>
 										<h6>닉네임: ${sessionScope.member.nickName}</h6>
 									</div>
 									<div class="profile-buttons">
@@ -95,23 +87,19 @@
 							<div class="weather"></div>
 						</div>
 					</div>
-					<div class="row slider-container">
+					<div class="row ad-container">
 						<div class="col">
-							<div class="slider">
+							<div class="ad">
 								<img
 									src="${pageContext.request.contextPath}/resources/images/indexUI/ad1.jpg">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
 							</div>
 						</div>
 					</div>
-					<div class="row slider-container">
+					<div class="row ad-container">
 						<div class="col">
-							<div class="slider">
+							<div class="ad">
 								<img
-									src="${pageContext.request.contextPath}/resources/images/indexUI/ad3.jpg">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/indexUI/ad4.jpg">
+									src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
 							</div>
 						</div>
 					</div>
@@ -120,9 +108,9 @@
 				<!-- 중앙 화면 -->
 				<div class="col-7 col-lg-7" id="mainContent">
 					<div class="survey">
-						<a href="/survey-page-url" target="_blank"> <img
-							src="${pageContext.request.contextPath}/resources/images/indexUI/survey1.png"
-							alt="설문조사 이미지" class="survey-image">
+						<a href="${pageContext.request.contextPath}/main/survey"> <img
+							src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg"
+							class="survey-image">
 						</a>
 					</div>
 

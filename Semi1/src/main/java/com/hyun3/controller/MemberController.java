@@ -5,6 +5,8 @@ import static com.hyun3.mvc.annotation.RequestMethod.POST;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -497,7 +499,6 @@ public class MemberController {
 		return model;
 	}
 
-
 	@RequestMapping(value = "/member/image", method = RequestMethod.POST)
 	public ModelAndView imageUpload(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -514,6 +515,8 @@ public class MemberController {
 		FileManager fileManager = new FileManager();
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root + "uploads" + File.separator + "photo";
+		System.out.println("root = " + root);
+		System.out.println("pathname = " + pathname);
 
 		Part part = req.getPart("infoimage");
 
@@ -521,47 +524,24 @@ public class MemberController {
 			MyMultipartFile uploadedFile = fileManager.doFileUpload(part, pathname);
 
 			if (uploadedFile != null) {
-				String uploadedFilename = uploadedFile.getOriginalFilename();
-				info.setImage(uploadedFilename);
+				String originalFilename = uploadedFile.getOriginalFilename();
+				String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8).replace("+", "%20");
 
+				info.setImage(encodedFilename);
+				System.out.println("확인: " + info.getImage());
 			} else {
 				System.out.println("exit..");
 			}
 		} else {
-			System.out.println("exit..");
+			System.out.println("why..");
 		}
 
 		session.setAttribute("member", info);
 
 		mav.addObject("memberInfo", info);
 		return mav;
-
 	}
 
-	/*
-	 * @RequestMapping(value = "/member/update", method = POST) public ModelAndView
-	 * updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws
-	 * ServletException, IOException { // 회원정보 수정 완료 MemberDAO dao = new
-	 * MemberDAO(); HttpSession session = req.getSession(); SessionInfo info =
-	 * (SessionInfo) session.getAttribute("member");
-	 *
-	 * try { MemberDTO dto = new MemberDTO();
-	 *
-	 * dto.setUserId(req.getParameter("userId"));
-	 * dto.setPwd(req.getParameter("pwd")); dto.setName(req.getParameter("name"));
-	 * dto.setNickName(req.getParameter("nickName"));
-	 * dto.setBirth(req.getParameter("birth"));
-	 * dto.setEmail(req.getParameter("email")); dto.setTel(req.getParameter("tel"));
-	 * dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
-	 *
-	 * dao.updateMember(dto, info.getMb_Num());
-	 *
-	 * session.setAttribute("mode", "update"); session.setAttribute("Name",
-	 * dto.getName());
-	 *
-	 * return new ModelAndView("redirect:/member/complete"); } catch (Exception e) {
-	 * e.printStackTrace(); }
-	 *
-	 * return new ModelAndView("redirect:/"); }
-	 */
+
+
 }

@@ -16,6 +16,7 @@ import com.hyun3.domain.lesson.LessonDTO;
 import com.hyun3.domain.notice.NoticeDTO;
 import com.hyun3.mvc.annotation.Controller;
 import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.RequestMethod;
 import com.hyun3.mvc.view.ModelAndView;
 
 import jakarta.servlet.ServletException;
@@ -69,4 +70,10 @@ public class MainController {
 		return mav;
 	}
 
+	@RequestMapping(value = "/main/survey", method = RequestMethod.GET)
+	public ModelAndView surveyForm(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
+		ModelAndView mav = new ModelAndView("main/survey");
+		return mav;
+	}
 }

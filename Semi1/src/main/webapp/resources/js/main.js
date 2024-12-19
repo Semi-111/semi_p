@@ -7,4 +7,3 @@ if (window.location.pathname === '/Semi1' || window.location.pathname === '/') {
 	// 메인 페이지가 아닐 경우 오른쪽 화면을 보이게 설정
 	document.getElementById('rightScreen').classList.remove('d-none');
 }*/
-
