@@ -43,14 +43,14 @@
 			    <a href="${pageContext.request.contextPath}/noticeBoard/list?division=56" 
 			        class="${division=='56' ? 'active' : ''}">정보통신학과</a>
 			</div>
-			<c:if test="${sessionScope.member.role >= 60}">
+			<c:if test="${sessionScope.member.role >= 51}">
 			    <a href="${pageContext.request.contextPath}/noticeBoard/writeForm" class="write-button">글쓰기</a>
 			</c:if>
         </div>
 
         <!-- 검색 -->
         <div class="search-box">
-            <form name="searchForm" action="#/notice/list" method="get">
+        <form name="searchForm" action="${pageContext.request.contextPath}/noticeBoard/list" method="get">
                 <div style="display: flex; gap: 10px; justify-content: center;">
                     <select name="schType" class="form-select">
                         <option value="all" ${schType=="all"?"selected":""}>제목+내용</option>
@@ -64,6 +64,7 @@
                 </div>
             </form>
         </div>
+
 
         <!-- 메인 콘텐츠 -->
         <div class="main-content">
@@ -79,7 +80,7 @@
 					        <!-- 일반 공지 뱃지 -->
 					        <span class="badge bg-primary">공지</span>
 					        
-					        <a href="${pageContext.request.contextPath}/noticeBoard/article?noticeNum=${dto.cm_num}&page=${current_page}">
+					        <a href="${pageContext.request.contextPath}/noticeBoard/article?noticeNum=${dto.cm_num}&page=${page}">
 					            ${dto.title}
 					        </a>
 					    </h3>
@@ -96,38 +97,33 @@
                     <div class="page-navigation">
                         <!-- 처음 페이지 -->
                         <c:if test="${current_page > 1}">
-                            <a href="#${empty query ? '?' : '&'}page=1"
-                                class="page-link" title="처음">⌈</a>
+                            <a href="${listUrl}${empty query ? '?' : '&'}page=1" class="page-link" title="처음">⌈</a>
                         </c:if>
 
-                        <!-- 이전 페이지 -->
-                        <c:if test="${current_page > 1}">
-                            <a href="#${empty query ? '?' : '&'}page=${current_page-1}" 
-                                class="page-link" title="이전">〈</a>
-                        </c:if>
-
-                        <!-- 페이지 -->
-                        <c:forEach var="page" begin="1" end="${total_page}">
-                            <c:if test="${current_page == page}">
-                                <span class="page-link active">${page}</span>
-                            </c:if>
-                            <c:if test="${current_page != page}">
-                                <a href="#${empty query ? '?' : '&'}page=${page}" 
-                                    class="page-link">${page}</a>
-                            </c:if>
-                        </c:forEach>
-
-                        <!-- 다음 페이지 -->
-                        <c:if test="${current_page < total_page}">
-                            <a href="#${empty query ? '?' : '&'}page=${current_page+1}" 
-                                class="page-link" title="다음">〉</a>
-                        </c:if>
-
-                        <!-- 마지막 페이지 -->
-                        <c:if test="${current_page < total_page}">
-                            <a href="#${empty query ? '?' : '&'}page=${total_page}" 
-                                class="page-link" title="마지막">⌋</a>
-                        </c:if>
+						<!-- 이전 페이지 -->
+						<c:if test="${current_page > 1}">
+						    <a href="${listUrl}${empty query ? '?' : '&'}page=${current_page-1}" class="page-link" title="이전">〈</a>
+						</c:if>
+						
+						<!-- 페이지 -->
+						<c:forEach var="page" begin="1" end="${total_page}">
+						    <c:if test="${current_page == page}">
+						        <span class="page-link active">${page}</span>
+						    </c:if>
+						    <c:if test="${current_page != page}">
+						        <a href="${listUrl}${empty query ? '?' : '&'}page=${page}" class="page-link">${page}</a>
+						    </c:if>
+						</c:forEach>
+						
+						<!-- 다음 페이지 -->
+						<c:if test="${current_page < total_page}">
+						    <a href="${listUrl}${empty query ? '?' : '&'}page=${current_page+1}" class="page-link" title="다음">〉</a>
+						</c:if>
+						
+						<!-- 마지막 페이지 -->
+						<c:if test="${current_page < total_page}">
+						    <a href="${listUrl}${empty query ? '?' : '&'}page=${total_page}" class="page-link" title="마지막">⌋</a>
+						</c:if>
                     </div>
                 </div>
             </div>

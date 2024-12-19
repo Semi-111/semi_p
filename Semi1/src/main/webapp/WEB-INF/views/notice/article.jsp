@@ -68,17 +68,28 @@
                     </td>
                 </tr>
             </table>
-
+            
             <div class="buttons">
 			    <button type="button" class="btn btn-list" onclick="location.href='${pageContext.request.contextPath}/noticeBoard/list?${query}';">목록</button>
-			    <c:if test="${sessionScope.member.role >= 60}">
-			        <button type="button" class="btn btn-update" onclick="location.href='${pageContext.request.contextPath}/noticeBoard/update?noticeNum=${dto.cm_num}&page=${page}';">수정</button>
-			        <button type="button" class="btn btn-delete" onclick="if(confirm('게시글을 삭제하시겠습니까?')) { location.href='${pageContext.request.contextPath}/noticeBoard/delete?noticeNum=${dto.cm_num}&page=${page}'; }">삭제</button>
-			    </c:if>
+			    <!-- 수정/삭제 버튼 표시 조건 -->
+			    <!-- 수정/삭제 버튼 표시 조건 -->
+			<c:if test="${sessionScope.member.role >= 60 || dto.division eq sessionScope.member.role}">
+			    <button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/noticeBoard/update?noticeNum=${dto.cm_num}&page=${page}';">수정</button>
+			    <button type="button" class="btn btn-light" onclick="deleteBoard();">삭제</button>
+			</c:if>
 			</div>
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+function deleteBoard() {
+    if(confirm('게시글을 삭제하시겠습니까?')) {
+        location.href='${pageContext.request.contextPath}/noticeBoard/delete?noticeNum=${dto.cm_num}&page=${page}';
+    }
+}
+</script>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>

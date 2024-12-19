@@ -122,7 +122,7 @@ public class NoticeBoardController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		// 관리자가 아니면 리스트로 리다이렉트
-		if (info == null || Integer.parseInt(info.getRole()) < 60) {
+		if (info == null || Integer.parseInt(info.getRole()) < 50) {
 			return new ModelAndView("redirect:/noticeBoard/list");
 		}
 
@@ -149,9 +149,9 @@ public class NoticeBoardController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		// 관리자가 아니면 리스트로 리다이렉트
-	    if (info == null || Integer.parseInt(info.getRole()) < 60) {
-	        return new ModelAndView("redirect:/noticeBoard/list");
-	    }
+		if (info == null || Integer.parseInt(info.getRole()) < 50) {
+			return new ModelAndView("redirect:/noticeBoard/list");
+		}
 
 		// 파일을 저장할 경로
 		String root = session.getServletContext().getRealPath("/");
@@ -177,7 +177,6 @@ public class NoticeBoardController {
 			dto.setMb_num(info.getMb_Num());
 
 			// 중요공지 체크박스 처리
-			System.out.println("notice value: " + notice); // 디버깅용
 			dto.setNotice(notice != null && notice.equals("1") ? 1 : 0);
 
 			// 파일 처리
@@ -208,6 +207,7 @@ public class NoticeBoardController {
 		MyUtil util = new MyUtilBootstrap();
 
 		String page = req.getParameter("page");
+
 		String query = "page=" + page;
 
 		try {
@@ -252,44 +252,51 @@ public class NoticeBoardController {
 
 		return new ModelAndView("redirect:/noticeBoard/list?" + query);
 	}
-	
+
 	// 게시글 수정 폼
 	@RequestMapping(value = "/noticeBoard/update", method = RequestMethod.GET)
 	public ModelAndView updateForm(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    
-	    // 관리자가 아니면 리스트로 리다이렉트
-	    if (info == null || Integer.parseInt(info.getRole()) < 60) {
-	        return new ModelAndView("redirect:/noticeBoard/list");
-	    }
-	    
-	    NoticeDAO dao = new NoticeDAO();
-	    String page = req.getParameter("page");
-	    
-	    try {
-	        long noticeNum = Long.parseLong(req.getParameter("noticeNum"));
-	        NoticeDTO dto = dao.findById(noticeNum);
-	        
-	        if (dto == null) {
-	            return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
-	        }
-	        
-	        List<LessonDTO> lessonList = dao.getLessonList();
-	        
-	        ModelAndView mav = new ModelAndView("notice/write");
-	        mav.addObject("dto", dto);
-	        mav.addObject("lessonList", lessonList);
-	        mav.addObject("page", page);
-	        mav.addObject("mode", "update");
-	        
-	        return mav;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
+			throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		// 로그인 체크
+		if (info == null) {
+			return new ModelAndView("redirect:/member/login");
+		}
+
+		NoticeDAO dao = new NoticeDAO();
+		String page = req.getParameter("page");
+
+		try {
+			long noticeNum = Long.parseLong(req.getParameter("noticeNum"));
+			NoticeDTO dto = dao.findById(noticeNum);
+
+			if (dto == null) {
+				return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
+			}
+
+			// 권한 체크
+			// 1. 관리자는 모든 글 수정 가능
+			// 2. 과대표는 자신의 role과 일치하는 학과의 글만 수정 가능
+			if (Integer.parseInt(info.getRole()) < 60 && !dto.getDivision().equals(String.valueOf(info.getRole()))) {
+				return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
+			}
+
+			List<LessonDTO> lessonList = dao.getLessonList();
+
+			ModelAndView mav = new ModelAndView("notice/write");
+			mav.addObject("dto", dto);
+			mav.addObject("lessonList", lessonList);
+			mav.addObject("page", page);
+			mav.addObject("mode", "update");
+
+			return mav;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
 	}
 
 	// 게시글 수정
@@ -298,56 +305,61 @@ public class NoticeBoardController {
 	        throws ServletException, IOException {
 	    HttpSession session = req.getSession();
 	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    
-	    // 관리자가 아니면 리스트로 리다이렉트
-	    if (info == null || Integer.parseInt(info.getRole()) < 60) {
-	        return new ModelAndView("redirect:/noticeBoard/list");
-	    }
-	    
 	    String page = req.getParameter("page");
 	    NoticeDAO dao = new NoticeDAO();
-	    
+
 	    try {
+	        long noticeNum = Long.parseLong(req.getParameter("noticeNum"));
+	        NoticeDTO originalDto = dao.findById(noticeNum);
+
+	        // 권한 체크
+	     // 권한 체크
+	        if (info == null || 
+	            (Integer.parseInt(info.getRole()) < 60 && !originalDto.getDivision().equals(String.valueOf(info.getRole())))) {
+	            return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
+	        }
+
 	        NoticeDTO dto = new NoticeDTO();
-	        
-	        dto.setCm_num(Long.parseLong(req.getParameter("noticeNum")));
+	        dto.setCm_num(noticeNum);
 	        dto.setDivision(req.getParameter("category"));
 	        dto.setTitle(req.getParameter("title"));
 	        dto.setContent(req.getParameter("content"));
-	        
 	        String notice = req.getParameter("notice");
 	        dto.setNotice(notice != null && notice.equals("1") ? 1 : 0);
-	        
+
 	        dao.updateNotice(dto);
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
-	    
+
 	    return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
 	}
 
 	// 게시글 삭제
 	@RequestMapping(value = "/noticeBoard/delete")
-	public ModelAndView delete(HttpServletRequest req, HttpServletResponse resp)
-	        throws ServletException, IOException {
-	    HttpSession session = req.getSession();
-	    SessionInfo info = (SessionInfo) session.getAttribute("member");
-	    
-	    // 관리자가 아니면 리스트로 리다이렉트
-	    if (info == null || Integer.parseInt(info.getRole()) < 60) {
-	        return new ModelAndView("redirect:/noticeBoard/list");
-	    }
-	    
-	    String page = req.getParameter("page");
-	    NoticeDAO dao = new NoticeDAO();
-	    
-	    try {
-	        long noticeNum = Long.parseLong(req.getParameter("noticeNum"));
-	        dao.deleteNotice(noticeNum);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
+	public ModelAndView delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		String page = req.getParameter("page");
+		NoticeDAO dao = new NoticeDAO();
+
+		try {
+			long noticeNum = Long.parseLong(req.getParameter("noticeNum"));
+			NoticeDTO dto = dao.findById(noticeNum);
+
+			
+			if (dto != null) {
+				// 관리자이거나 자신의 학과 게시글인 경우만 삭제 가능
+				if (Integer.parseInt(info.getRole()) == 60 || dto.getDivision().equals(String.valueOf(info.getRole()))) {
+					dao.deleteNotice(noticeNum);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ModelAndView("redirect:/noticeBoard/list?page=" + page);
 	}
 }

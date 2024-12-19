@@ -20,21 +20,7 @@
     <title>Trainee Admin</title>
 </head>
 <body>
-    <aside class="admin-sidebar">
-        <div class="admin-logo">
-            <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="트레이니 어드민">
-        </div>
-        <ul class="admin-menu">
-            <li><a href="#" class="active">대시보드</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/home/membership">회원 관리</a></li>
-            <li><a href="#">게시판 관리</a></li>
-            <li><a href="${pageContext.request.contextPath}/admin/home/report">신고 관리</a></li>
-            <li><a href="#">공지사항</a></li>
-            <li><a href="#">통계</a></li>
-            <li><a href="#">설정</a></li>
-        </ul>
-    </aside>
-
+	<jsp:include page="/WEB-INF/views/layout/adminSide.jsp" />
     <main class="admin-main">
         <h1 class="board-title">관리자 대시보드</h1>
         
