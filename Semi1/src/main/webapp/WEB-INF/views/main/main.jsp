@@ -71,7 +71,9 @@
 					</div>
 					<div class="row">
 						<div class="col">
-							<div class="weather">날씨 API</div>
+							<div class="weather">
+
+							</div>
 						</div>
 					</div>
 					<div class="row slider-container">
@@ -275,6 +277,51 @@
 			</div>
 		</div>
 	</form>
+
+	<script type="text/javascript">
+		$(function () {
+			const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Seoul&appid=88ab27b7f970936f979a5be2c9dc8df1&units=metric';
+			const weatherTransfer = {
+				'Snow': '눈',
+				'Rain': '비',
+				'Clear': '맑음',
+				'Clouds': '구름'
+			};
+			const now = new Date();
+			const today = now.toISOString().split('T')[0];
+
+			$.getJSON(apiUrl, function (data) {
+				let found = false;
+
+				$.each(data.list, function (i, item) {
+					const date = item.dt_txt.split(' ')[0];
+
+					if (date === today && !found) {
+						const temp = item.main.temp;
+						const humidity = item.main.humidity;
+						const speed = item.wind.speed;
+						const weather = weatherTransfer[item.weather[0].main] || '기타';
+						const icon = item.weather[0].icon;
+
+
+						$('<h4/>', {
+							text: date + ' (' + ['일', '월', '화', '수', '목', '금', '토'][new Date(date).getDay()] + ')',
+							css: { 'font-size': '16px', 'padding-left': '13px' }
+						}).appendTo('.weather');
+
+						$('<ul/>', {
+							'class': 'weather-list',
+							html: '<li> 온도 : ' + temp
+									+ '<br>습도 : ' + humidity + '<br>바람: ' + speed + '<br>날씨: ' + weather + ' <img src="http://openweathermap.org/img/w/' + icon + '.png"></li>',
+							css: { 'font-size': '14px' }
+						}).appendTo('.weather');
+
+						found = true;
+					}
+				});
+			});
+		});
+	</script>
 
 	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />

@@ -61,12 +61,6 @@
 	object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
 }
 
-/* 날씨 */
-.weather {
-	border: 2px dotted purple;
-	height: 150px;
-	margin-bottom: 30px;
-}
 
 /* 슬라이더 설정 */
 .slider-container {
