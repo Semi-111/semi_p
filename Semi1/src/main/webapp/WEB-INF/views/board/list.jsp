@@ -63,8 +63,15 @@
             <p>${fn:substring(dto.content, 0, 30)}...</p>
             <div class="post-meta">
               <span>${dto.member.nickName}</span>
-              <span>조회수: ${dto.views}</span>
-              <span>좋아요: ${dto.boardLikeCount}</span>
+              <div class="post-meta-icons">
+                <span><i class="fa-solid fa-eye"></i> ${dto.views}</span>
+                <c:if test="${dto.boardLikeCount > 0}">
+                  <span><i class="${isUserLike ? 'fa-solid fa-heart liked' : 'fa-regular fa-heart'}"></i> ${dto.boardLikeCount}</span>
+                </c:if>
+                <c:if test="${dto.replyCount > 0}">
+                  <span><i class="far fa-comment-dots"></i> ${dto.replyCount}</span>
+                </c:if>
+              </div>
               <span>${dto.formattedCaDate}</span>
             </div>
           </div>
