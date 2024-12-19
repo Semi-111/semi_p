@@ -6,97 +6,230 @@
 }
 
 header {
-	top: 0;
+    position: sticky;
+    top: 0;
     width: 100%;
     background: white;
     border-bottom: 1px solid #DBBEDF;
+    z-index: 1000;
 }
 
 .header-container {
-    display: flex;
-    justify-content: space-between; /* 로고, 네비게이션, 아이콘을 배치 */
+    display: flex !important;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    flex-wrap: nowrap !important;
+}
+
+.logo {
+    flex: 0 0 auto;
+    min-width: 50px;
+    padding: 0 15px;
 }
 
 .logo img {
     max-height: 50px;
-    margin-left: 200px;
+    width: auto;
 }
 
 /* 네비게이션 메뉴 */
 nav {
+    flex: 1 1 auto;
     display: flex;
     justify-content: center;
-    flex-grow: 1;
+    margin: 0 20px;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .nav-links {
     width: 100%;
-    text-align: center;
+    max-width: 800px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    display: flex;
+    align-items: center;
 }
 
-/* 네비게이션 항목 */
-.nav-links ul {
-    list-style: none;
+.nav-links::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-links .nav {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap !important;
     gap: 1rem;
+    min-width: max-content;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 .nav-links .nav-item {
-    position: relative;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-/* 드롭다운 메뉴 스타일 */
-.nav-links .nav-item .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 5px 0;
-    width: max-content;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.3s ease;
+/* Bootstrap 네비게이션 스타일 오버라이드 */
+.nav-underline .nav-link {
+    color: #666 !important;
+    padding: 10px 8px !important;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+    white-space: nowrap;
 }
 
-/* 메뉴 아이템에 커서 올리면 서서히 나타나도록 */
-.nav-links .nav-item:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-}
-
-/* 메뉴 링크 스타일 */
-.nav-links .nav-item .nav-link {
-    color: #666;
-    text-decoration: none;
-    padding: 10px 15px;
-}
-
-.nav-links .nav-item .nav-link:hover {
-    color: #a855f7;
+.nav-underline .nav-link:hover,
+.nav-underline .nav-link.active {
+    color: #a855f7 !important;
     font-weight: bold;
 }
 
-.nav-item1{
-	pointer-events: none;
+/* 드롭다운 메뉴 스타일 */
+.dropdown-menu {
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
 }
 
+.dropdown-item {
+    color: #666;
+    padding: 8px 15px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #a855f7;
+}
+
+/* 상단 아이콘 */
 .top-icons {
+    flex: 0 0 auto;
     display: flex;
-    justify-content: flex-end; /* 아이콘을 오른쪽 정렬 */
-    margin-right: 200px;
+    gap: 15px;
+    padding: 0 15px;
+    min-width: max-content;
 }
 
 .top-icons i {
     font-size: 20px;
     color: #666;
     cursor: pointer;
-    margin-left: 15px;
+    transition: color 0.2s ease;
 }
 
 .top-icons i:hover {
     color: #a855f7;
 }
+
+/* 반응형 스타일 */
+@media screen and (max-width: 1200px) {
+    .header-container {
+        padding: 10px;
+    }
+
+    .nav-underline .nav-link {
+        font-size: 0.9rem;
+        padding: 8px 6px !important;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .nav-links .nav {
+        gap: 0.5rem;
+    }
+
+    .nav-underline .nav-link {
+        font-size: 0.85rem;
+        padding: 8px 4px !important;
+    }
+
+    .logo {
+        padding: 0 10px;
+    }
+
+    nav {
+        margin: 0 10px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .header-container {
+        padding: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        display: flex !important;
+        flex-direction: row !important;
+    }
+
+    .header-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .logo {
+        flex: 0 0 auto;
+        margin-right: 10px;
+    }
+
+    nav {
+        flex: 1 0 auto;
+        margin: 0 10px;
+        min-width: 0;
+    }
+
+    .nav-links {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
+
+    .nav-links .nav {
+        flex-wrap: nowrap !important;
+        justify-content: flex-start;
+    }
+
+    .top-icons {
+        flex: 0 0 auto;
+        margin-left: 10px;
+    }
+
+    .logo img {
+        max-height: 40px;
+    }
+
+    .nav-links {
+        padding: 0 5px;
+    }
+
+    .top-icons {
+        padding: 0 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .header-container {
+        padding: 5px;
+        flex-wrap: nowrap !important;
+    }
+
+    .nav-links .nav {
+        gap: 0.5rem;
+    }
+
+    .nav-underline .nav-link {
+        padding: 8px 4px !important;
+        font-size: 0.8rem;
+    }
+
+    .top-icons i {
+        font-size: 18px;
+    }
+}
+
