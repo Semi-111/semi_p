@@ -70,7 +70,7 @@
 				<!-- 마이페이지 버튼 -->
 				<i class="bi bi-person-circle" title="마이페이지"
 					onclick="location.href='${pageContext.request.contextPath}/member/myPage'"></i>
-				<c:if test="${sessionScope.member.role >= 51}">
+				<c:if test="${sessionScope.member.role >= 60}">
 					<!-- 관리자 버튼 -->
 					<i class="bi bi-person-gear" title="관리자 페이지"
 						onclick="location.href='${pageContext.request.contextPath}/admin/home/main'"></i>
