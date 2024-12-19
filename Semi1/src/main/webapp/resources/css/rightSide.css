@@ -54,9 +54,12 @@
 }
 
 .section ul li {
-    font-size: 14px;
+    font-size: 13px;
     border-top: 1px solid #e3e3e3;
-	padding: 10px;
+	padding: 5px;
+	display: flex; /* flex를 사용하여 같은 줄 배치 */
+    justify-content: space-between; /* 양 끝으로 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
 }
 
 .section ul li span {
@@ -64,6 +67,24 @@
     font-size: 12px;
     color: #888;
     margin-top: 2px;
+}
+
+.section li a {
+	text-decoration: none; /* 밑줄 제거 */
+	color: black; /* 텍스트 색상 */
+}
+        
+.section li a:hover {
+	background-color: #FBF8FC;
+}
+
+.title a{
+	text-decoration: none; /* 밑줄 제거 */
+	color: black; /* 텍스트 색상 */
+}
+
+.title a:hover {
+	background-color: #FBF8FC;
 }
 
 .review {
@@ -80,10 +101,37 @@
     color: #333;
 }
 
-.review p:nth-child(1) {
-    font-size: 15px;
+.review p.title {
+    font-size: 13px;
     font-weight: bold;
     margin-bottom: 5px;
+}
+
+.review p.content {
+	font-size: 12px;
+	display: -webkit-box; /* Flexbox의 텍스트 클램핑 지원 */
+	-webkit-box-orient: vertical;
+	overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 생략부호 표시 */
+    line-clamp: 2; /* 표시할 줄 수 */
+    -webkit-line-clamp: 2;
+}
+
+.star-rate {
+    display: flex;
+    margin: 2px 0px;
+}
+
+/* 별 회색 */
+.star-rate i {
+    font-size: 8px;
+    color: #ddd;
+    margin-right: 2px;
+}
+
+/* 별 노란색 */
+.star-rate i.active {
+    color: #ffd700;
 }
 
 

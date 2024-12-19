@@ -305,4 +305,26 @@ public class LectureReviewDAO {
 		}
 	}
 	
+	// 게시물 삭제
+	public void deleteReview(long reviewNum, String userId) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = " DELETE FROM lecturereview WHERE review_num=? ";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, reviewNum);
+			
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}		
+	}
+	
+	
 }

@@ -95,12 +95,15 @@ public class GradePointController {
             int totalHakscore = dao.totalHakscore(userId);
             
             
+            
             double semesterPoints = dao.semesterPoints(userId);
             int semesterCredits = dao.semesterCredits(userId);
             
             model.put("status", "true");
             model.put("totalGpa", Math.round(totalGpa * 100.0) / 100.0);
             model.put("totalHakscore", totalHakscore);
+            
+            
             model.put("semesterPoints", Math.round(semesterPoints * 100.0) / 100.0);
             model.put("semesterCredits", semesterCredits);
 	        

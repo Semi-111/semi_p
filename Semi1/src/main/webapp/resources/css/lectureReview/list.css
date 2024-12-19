@@ -187,7 +187,7 @@ body {
 
 /* 페이징 처리 */
 .page-navigation {
-	
+	padding: 15px !important;	
 	display: flex;
 	justify-content: center;
 	gap: 5px;
@@ -217,6 +217,6 @@ body {
 	background: white;
 	border-radius: 8px;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-	padding: 15px;
+	
 	
 }
