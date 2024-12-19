@@ -91,10 +91,10 @@ public class MemberDAO {
 			pstmt.setInt(6, dto.getStudentNum());
 
 			pstmt.executeUpdate();
-			
+
 			System.out.println("Executing Query: " + sql);
 			System.out.println("Values: " + dto.getUserId() + ", " + dto.getPwd() + ", " + dto.getNickName());
-			
+
 			conn.commit();
 
 		} catch (SQLException e) {
@@ -172,50 +172,67 @@ public class MemberDAO {
 		return dto;
 	}
 
-	public void updateMember(MemberDTO dto) throws SQLException {
+	public void updateMember(MemberDTO dto, long mbNum) throws SQLException {
 		PreparedStatement pstmt = null;
 		String sql;
 
 		/*
+		 * try { /* sql = "UPDATE member SET pwd=?, modifyDay=SYSDATE WHERE userId = ?";
+		 * pstmt = conn.prepareStatement(sql);
+		 * 
+		 * pstmt.setString(1, dto.getPwd()); pstmt.setString(2, dto.getUserId());
+		 * pstmt.executeUpdate();
+		 * 
+		 * pstmt.close(); pstmt = null;
+		 * 
+		 * sql =
+		 * "UPDATE dt_member SET email=?, birthday=TO_DATE(?,'YYYY-MM-DD'), tel=? WHERE =?"
+		 * ; pstmt = conn.prepareStatement(sql);
+		 * 
+		 * pstmt.setString(1, dto.getEmail()); pstmt.setString(2, dto.getBirth());
+		 * pstmt.setString(3, dto.getTel()); pstmt.setLong(4, dto.getMb_Num());
+		 * pstmt.executeUpdate();
+		 * 
+		 * pstmt.executeUpdate();
+		 */
+
+		/*
+		 * sql = "SELECT mb_Num FROM member WHERE userId = ?"; pstmt =
+		 * conn.prepareStatement(sql); pstmt.setString(1, dto.getUserId()); ResultSet rs
+		 * = pstmt.executeQuery();
+		 * 
+		 * if (rs.next()) { long mb_Num = rs.getLong("mb_Num");
+		 * 
+		 * // 2. dt_member 테이블 업데이트 sql =
+		 * "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?"
+		 * ; pstmt = conn.prepareStatement(sql); pstmt.setString(1, dto.getEmail());
+		 * pstmt.setString(2, dto.getBirth()); pstmt.setString(3, dto.getTel());
+		 * pstmt.setLong(4, mb_Num); pstmt.executeUpdate(); }
+		 * 
+		 * } catch (SQLException e) { e.printStackTrace(); throw e; } finally {
+		 * DBUtil.close(pstmt); }
+		 */
+
 		try {
-			/*
-			 * sql = "UPDATE member SET pwd=?, modifyDay=SYSDATE WHERE userId = ?"; pstmt =
-			 * conn.prepareStatement(sql);
-			 * 
-			 * pstmt.setString(1, dto.getPwd()); pstmt.setString(2, dto.getUserId());
-			 * pstmt.executeUpdate();
-			 * 
-			 * pstmt.close(); pstmt = null;
-			 * 
-			 * sql =
-			 * "UPDATE dt_member SET email=?, birthday=TO_DATE(?,'YYYY-MM-DD'), tel=? WHERE =?"
-			 * ; pstmt = conn.prepareStatement(sql);
-			 * 
-			 * pstmt.setString(1, dto.getEmail()); pstmt.setString(2, dto.getBirth());
-			 * pstmt.setString(3, dto.getTel()); pstmt.setLong(4, dto.getMb_Num());
-			 * pstmt.executeUpdate();
-			 * 
-			 * pstmt.executeUpdate();
-			 */
-			
-			/*
-			sql = "SELECT mb_Num FROM member WHERE userId = ?";
+			// member 테이블의 비밀번호 업데이트
+			sql = "UPDATE member SET pwd = ?, modifyDay = SYSDATE WHERE MB_NUM = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getUserId());
-			ResultSet rs = pstmt.executeQuery();
+			pstmt.setString(1, dto.getPwd());
+			pstmt.setLong(2, mbNum);
 
-			if (rs.next()) {
-				long mb_Num = rs.getLong("mb_Num");
+			pstmt.executeUpdate();
 
-				// 2. dt_member 테이블 업데이트
-				sql = "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?";
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, dto.getEmail());
-				pstmt.setString(2, dto.getBirth());
-				pstmt.setString(3, dto.getTel());
-				pstmt.setLong(4, mb_Num);
-				pstmt.executeUpdate();
-			}
+			pstmt.close();
+			pstmt = null;
+
+			sql = "UPDATE dt_member SET email=?, birthday=TO_DATE(?, 'YYYY-MM-DD'), tel=? WHERE MB_NUM =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getBirth());
+			pstmt.setString(3, dto.getTel());
+			pstmt.setLong(4, mbNum);
+
+			pstmt.executeUpdate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -223,32 +240,6 @@ public class MemberDAO {
 		} finally {
 			DBUtil.close(pstmt);
 		}
-		*/
-		
-		try {
-	        // member 테이블의 비밀번호 업데이트
-	        sql = "UPDATE member SET pwd = ?, modifyDay = SYSDATE WHERE userId = ?";
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, dto.getPwd());
-	        pstmt.setString(2, dto.getUserId());
-	        pstmt.executeUpdate();
-	        
-	        pstmt.close();
-	        pstmt = null;
-	        
-	        sql = "UPDATE dt_member SET email=?, birthday=TO_DATE(?, 'YYYY-MM-DD'), tel=? WHERE userId=?";
-	        pstmt = conn.prepareStatement(sql);
-	        pstmt.setString(1, dto.getEmail());
-	        pstmt.setString(1, dto.getBirth());
-	        pstmt.setString(1, dto.getTel());
-	        pstmt.executeUpdate();
-	        
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        throw e;
-	    } finally {
-	        DBUtil.close(pstmt);
-	    }
 	}
 
 	public void updateMemberLevel(String userId, int role) throws SQLException {

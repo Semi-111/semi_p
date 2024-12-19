@@ -59,14 +59,20 @@
 					<div>
 						<!-- 비밀번호 변경 -->
 						<div>
-							<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
+							<button type="button"
+								onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
 								변경</button>
 						</div>
 					</div>
 					<div>
 						<!-- 이메일 변경 -->
 						<button type="button"
-							onclick="location.href='/member/changeEmail'">이메일 변경</button>
+							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일 변경</button>
+					</div>
+					<div>
+						<!-- 번호 변경 -->
+						<button type="button"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">번호 변경</button>
 					</div>
 				</div>
 			</div>

@@ -43,7 +43,6 @@ public class MemberController {
 		MemberDAO dao = new MemberDAO();
 
 		// 클라이언트가 보낸 아이디/패스워드
-		// req.setCharacterEncoding("UTF-8"); // 요청 데이터의 인코딩 설정
 		String userId = req.getParameter("userId");
 		String pwd = req.getParameter("pwd");
 
@@ -119,100 +118,123 @@ public class MemberController {
 	}
 
 	// 비밀번호 변경 폼
-	@RequestMapping(value = "/member/changePwd", method = GET)
-	public ModelAndView changePasswordForm(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		
-		// 세션에서 사용자 정보 가져오기
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		@RequestMapping(value = "/member/changePwd", method = GET)
+		public ModelAndView changePasswordForm(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException {
+			HttpSession session = req.getSession();
 
-		// 비밀번호 변경 폼
-		ModelAndView mav = new ModelAndView("member/changePwd");
-		mav.addObject("memberInfo", info);
-		/* mav.addObject("message", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다."); */
+			// 세션에서 사용자 정보 가져오기
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		return mav;
-	}
-
-	// 비밀번호 변경 처리
-	@RequestMapping(value = "/member/changePwd", method = POST)
-	public ModelAndView changePasswordSubmit(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException, SQLException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-
-		if (info == null) {
-			return new ModelAndView("redirect:/member/login");
-		}
-
-		String pwd = req.getParameter("pwd");
-		String newPwd = req.getParameter("newPwd");
-		String confirmPwd = req.getParameter("confirmPwd");
-
-		MemberDAO dao = new MemberDAO();
-		MemberDTO dto = dao.findById(info.getUserId());
-
-		if (dto == null || !dto.getPwd().equals(pwd)) {
+			// 비밀번호 변경 폼
 			ModelAndView mav = new ModelAndView("member/changePwd");
-			mav.addObject("message", "현재 비밀번호가 일치하지 않습니다.");
-			return mav;
-		}
+			mav.addObject("memberInfo", info);
 
-		if (!newPwd.equals(confirmPwd)) {
-			ModelAndView mav = new ModelAndView("member/changePwd");
-			mav.addObject("message", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
 			return mav;
 		}
 
 		// 비밀번호 변경 처리
-		dto.setPwd(newPwd);
-		dao.updateMember(dto);
+		@RequestMapping(value = "/member/changePwd", method = POST)
+		public ModelAndView changePasswordSubmit(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException, SQLException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		ModelAndView mav = new ModelAndView("redirect:/member/myPage");
-		return mav;
-	}
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
 
-	// 이메일 변경 폼
-	@RequestMapping(value = "/member/changeEmail", method = GET)
-	public ModelAndView changeEmailForm(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		// 이메일 변경 폼
-		ModelAndView mav = new ModelAndView("member/changeEmail");
-		return mav;
-	}
+			String pwd = req.getParameter("pwd");
+			String newPwd = req.getParameter("newPwd");
+			String confirmPwd = req.getParameter("confirmPwd");
 
-	// 이메일 변경 처리
-	@RequestMapping(value = "/member/changeEmail", method = POST)
-	public ModelAndView changeEmailSubmit(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException, SQLException {
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = dao.findById(info.getUserId());
 
-		if (info == null) {
-			return new ModelAndView("redirect:/member/login");
+			if (dto == null) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+				return mav;
+			}
+
+			// 현재 비밀번호 확인
+			if (!dto.getPwd().equals(pwd)) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "현재 비밀번호가 일치하지 않습니다.");
+				return mav;
+			}
+
+			if (!newPwd.equals(confirmPwd)) {
+				ModelAndView mav = new ModelAndView("member/changePwd");
+				mav.addObject("message", "새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+				return mav;
+			}
+
+			// 비밀번호 변경 처리
+			dto.setPwd(newPwd);
+			dao.updateMember(dto, info.getMb_Num());
+
+			return new ModelAndView("redirect:/member/myPage");
 		}
 
-		String newEmail = req.getParameter("newEmail");
+		// 이메일 변경 폼
+		@RequestMapping(value = "/member/changeEmail", method = GET)
+		public ModelAndView changeEmailForm(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException {
+			HttpSession session = req.getSession();
 
-		MemberDAO dao = new MemberDAO();
-		MemberDTO dto = dao.findById(info.getUserId());
+			// 세션에서 사용자 정보 가져오기
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		if (dto == null) {
+			// 이메일 변경 폼
 			ModelAndView mav = new ModelAndView("member/changeEmail");
-			mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+			mav.addObject("memberInfo", info);
+
 			return mav;
 		}
 
 		// 이메일 변경 처리
-		dto.setEmail(newEmail);
-		dao.updateMember(dto);
+		@RequestMapping(value = "/member/changeEmail", method = POST)
+		public ModelAndView changeEmailSubmit(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException, SQLException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
 
-		ModelAndView mav = new ModelAndView("redirect:/member/myPage");
-		return mav;
-	}
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
 
-	///
+			String email = req.getParameter("email");
+			String newEmail = req.getParameter("newEmail");
+			String confirmEmail = req.getParameter("confirmEmail");
+
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = dao.findById(info.getUserId());
+
+			if (dto == null) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+				return mav;
+			}
+
+			// 현재 이메일 확인
+			if (!dto.getEmail().equals(email)) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "현재 이메일과 일치하지 않습니다.");
+				return mav;
+			}
+
+			if (!newEmail.equals(confirmEmail)) {
+				ModelAndView mav = new ModelAndView("member/changeEmail");
+				mav.addObject("message", "새 이메일과 확인 이메일이 일치하지 않습니다.");
+				return mav;
+			}
+
+			dto.setEmail(newEmail);
+			dao.updateMember(dto, info.getMb_Num());
+
+			return new ModelAndView("redirect:/member/myPage");
+		}
 
 	@RequestMapping(value = "/member/noAuthorized", method = GET)
 	public ModelAndView noAuthorized(HttpServletRequest req, HttpServletResponse resp)
@@ -255,15 +277,13 @@ public class MemberController {
 			dto.setStudentNum(Integer.parseInt(req.getParameter("studentNum")));
 			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
 
-
 			dao.insertMember(dto);
 
 			session.setAttribute("mode", "insert");
 			session.setAttribute("Name", dto.getName());
 
 			return new ModelAndView("redirect:/member/complete");
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			if (e.getErrorCode() == 1) {
 				message = "아이디 중복으로 회원 가입이 실패 했습니다.";
 			} else if (e.getErrorCode() == 1400) {
@@ -275,8 +295,7 @@ public class MemberController {
 				message = "회원 가입이 실패 했습니다.";
 				// 기타 - 2291:참조키 위반, 12899:폭보다 문자열 입력 값이 큰경우
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			message = "회원 가입이 실패 했습니다.";
 			e.printStackTrace();
 		}
@@ -360,6 +379,7 @@ public class MemberController {
 		// 회원정보 수정 완료
 		MemberDAO dao = new MemberDAO();
 		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 
 		try {
 			MemberDTO dto = new MemberDTO();
@@ -373,7 +393,7 @@ public class MemberController {
 			dto.setTel(req.getParameter("tel"));
 			dto.setLessonNum(Integer.parseInt(req.getParameter("lessonNum")));
 
-			dao.updateMember(dto);
+			dao.updateMember(dto, info.getMb_Num());
 
 			session.setAttribute("mode", "update");
 			session.setAttribute("Name", dto.getName());
