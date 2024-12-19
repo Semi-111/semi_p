@@ -5,7 +5,12 @@ public class BoardRankDTO {
     // 글제목
 	// 작성일
 	// private int likeCount;      // 좋아요 수
-
+	
+	// 강의평
+	
+	
+	
+	
 	private long mb_Num;		// 회원번호
 	private String userId;		// 아이디
 	private String nickName;	// 닉네임

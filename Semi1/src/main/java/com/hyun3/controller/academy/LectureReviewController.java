@@ -61,7 +61,7 @@ public class LectureReviewController {
 			int dataCount = dao.dataCount();
 			
 			// 전체 페이지 수
-			int size = 10;
+			int size = 2;
 			int total_page = util.pageCount(dataCount, size);
 			if(current_page > total_page) {
 				current_page = total_page;
