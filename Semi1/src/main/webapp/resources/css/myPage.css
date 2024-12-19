@@ -1,0 +1,83 @@
+#form {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.first-profile, .second-profile, .third-profile {
+    margin-bottom: 50px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+h3 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.myInfo p, .myAccount p {
+    margin: 10px 0;
+    line-height: 1.6;
+    font-size: 1em;
+}
+
+.changeBtn {
+    background-color: #d197f0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.changeBtn:hover {
+    background-color: #9f5bdd;
+}
+
+.logout {
+    text-align: right;
+}
+
+.logoutBtn {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+.logoutBtn:hover {
+    background-color: #e53935;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

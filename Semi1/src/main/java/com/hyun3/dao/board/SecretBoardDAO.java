@@ -122,7 +122,6 @@ public class SecretBoardDAO {
           dto.setCaDate(rs.getString("CA_DATE"));
           dto.setFileName(rs.getString("FILENAME"));
           dto.setBoardLikeCount(rs.getInt("likeCount"));
-
           MemberDTO member = new MemberDTO();
           member.setUserId(rs.getString("USERID"));
           member.setNickName(rs.getString("NICKNAME"));

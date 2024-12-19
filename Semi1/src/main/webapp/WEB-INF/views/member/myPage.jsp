@@ -7,6 +7,8 @@
 <meta charset="UTF-8">
 <title>TRAINEE - MYPAGE</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/myPage.css">
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
@@ -15,11 +17,10 @@
 </head>
 <body>
 	<div class="myPage">
-		<form name="myPageForm" method="post">
+		<form name="myPageForm" id="form" method="post">
 			<div class="first-profile">
 				<h3>내 정보</h3>
 				<div class="myInfo">
-					<p>아이디: ${memberInfo.userId}</p>
 					<p>이름: ${memberInfo.name}</p>
 					<p>닉네임: ${memberInfo.nickName}</p>
 					<p>학과: ${hak}</p>
@@ -33,8 +34,9 @@
 			<div class="second-profile">
 				<h3>계정</h3>
 				<div class="myAccount">
-					<p>아이디 |</p>
-					<p>
+					<p>아이디 | ${memberInfo.userId}</p>
+
+					<!-- <p>
 						학과 설정 | <select>
 							<option value="dept1">경영학과</option>
 							<option value="dept2">경찰행정과</option>
@@ -47,32 +49,32 @@
 					<p>
 						학과 처리 내역 |
 						<button type="button" onclick="openModal()">보기</button>
-					</p>
-
+					</p> -->
+					<%-- 
 					<!-- 모달 창 -->
 					<div id="myModal" style="display: none;">
 						<div class="modal-content">
 							<span class="close" onclick="closeModal()">&times;</span>
-							<%-- <p>${memberInfo.CA_day}</p> --%>
+							<p>${memberInfo.CA_day}</p>
 						</div>
 					</div>
+					<div> --%>
+
 					<div>
-						<!-- 비밀번호 변경 -->
-						<div>
-							<button type="button"
-								onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
-								변경</button>
-						</div>
+						<button type="button" class="changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호
+							변경</button>
 					</div>
 					<div>
-						<!-- 이메일 변경 -->
-						<button type="button"
-							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일 변경</button>
+						<button type="button" class="changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeEmail'">이메일
+							변경</button>
 					</div>
 					<div>
 						<!-- 번호 변경 -->
-						<button type="button"
-							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">번호 변경</button>
+						<button type="button" class="changeBtn"
+							onclick="location.href='${pageContext.request.contextPath}/member/changeTel'">전화번호
+							변경</button>
 					</div>
 				</div>
 			</div>

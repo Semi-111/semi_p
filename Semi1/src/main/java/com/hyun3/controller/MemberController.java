@@ -236,6 +236,65 @@ public class MemberController {
 			return new ModelAndView("redirect:/member/myPage");
 		}
 
+		// 전화번호 변경 폼
+		@RequestMapping(value = "/member/changeTel", method = GET)
+		public ModelAndView changeTelForm(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException {
+			HttpSession session = req.getSession();
+			
+			// 세션에서 사용자 정보 가져오기
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			// 이메일 변경 폼
+			ModelAndView mav = new ModelAndView("member/changeTel");
+			mav.addObject("memberInfo", info);
+			
+			return mav;
+		}
+		
+		// 전화번호 변경 처리
+		@RequestMapping(value = "/member/changeTel", method = POST)
+		public ModelAndView changeTelSubmit(HttpServletRequest req, HttpServletResponse resp)
+				throws ServletException, IOException, SQLException {
+			HttpSession session = req.getSession();
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
+			
+			String tel = req.getParameter("tel");
+			String newTel = req.getParameter("newTel");
+			String confirmTel = req.getParameter("confirmTel");
+			
+			MemberDAO dao = new MemberDAO();
+			MemberDTO dto = dao.findById(info.getUserId());
+			
+			if (dto == null) {
+				ModelAndView mav = new ModelAndView("member/changeTel");
+				mav.addObject("message", "회원 정보를 찾을 수 없습니다.");
+				return mav;
+			}
+			
+			// 현재 전화번호 확인
+			if (!dto.getTel().equals(tel)) {
+				ModelAndView mav = new ModelAndView("member/changeTel");
+				mav.addObject("message", "현재 이메일과 일치하지 않습니다.");
+				return mav;
+			}
+			
+			if (!newTel.equals(confirmTel)) {
+				ModelAndView mav = new ModelAndView("member/changeTel");
+				mav.addObject("message", "새 이메일과 확인 이메일이 일치하지 않습니다.");
+				return mav;
+			}
+			
+			dto.setTel(newTel);
+			dao.updateMember(dto, info.getMb_Num());
+			
+			return new ModelAndView("redirect:/member/myPage");
+		}
+		
 	@RequestMapping(value = "/member/noAuthorized", method = GET)
 	public ModelAndView noAuthorized(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

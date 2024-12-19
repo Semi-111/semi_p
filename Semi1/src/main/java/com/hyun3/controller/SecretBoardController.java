@@ -1,23 +1,8 @@
 package com.hyun3.controller;
 
-import com.hyun3.dao.board.SecretBoardDAO;
-import com.hyun3.domain.SessionInfo;
-import com.hyun3.domain.board.ReplyDTO;
-import com.hyun3.domain.board.SecretBoardDTO;
-import com.hyun3.domain.board.StudentBoardDTO;
-import com.hyun3.mvc.annotation.Controller;
-import com.hyun3.mvc.annotation.RequestMapping;
-import com.hyun3.mvc.annotation.ResponseBody;
-import com.hyun3.mvc.view.ModelAndView;
-import com.hyun3.util.FileManager;
-import com.hyun3.util.MyMultipartFile;
-import com.hyun3.util.MyUtil;
-import com.hyun3.util.MyUtilBootstrap;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
+import static com.hyun3.mvc.annotation.RequestMethod.GET;
+import static com.hyun3.mvc.annotation.RequestMethod.POST;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +16,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hyun3.mvc.annotation.RequestMethod.*;
-import static java.nio.charset.StandardCharsets.*;
+import com.hyun3.dao.board.SecretBoardDAO;
+import com.hyun3.domain.SessionInfo;
+import com.hyun3.domain.board.ReplyDTO;
+import com.hyun3.domain.board.SecretBoardDTO;
+import com.hyun3.mvc.annotation.Controller;
+import com.hyun3.mvc.annotation.RequestMapping;
+import com.hyun3.mvc.annotation.ResponseBody;
+import com.hyun3.mvc.view.ModelAndView;
+import com.hyun3.util.FileManager;
+import com.hyun3.util.MyMultipartFile;
+import com.hyun3.util.MyUtil;
+import com.hyun3.util.MyUtilBootstrap;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
 @Controller
 public class SecretBoardController {

@@ -12,19 +12,19 @@
 function sendOk() {
 	const f = document.changePwdForm;
 
-	/* let str = f.pwd.value;
+	let str = f.pwd.value;
 	if(!str){
 		alert("현재 비밀번호를 입력하세요.");
 		f.pwd.focus();
 		return;
 	}
 	
-	let str = f.confirmPwd.value;
+	str = f.confirmPwd.value;
 	if(!str) {
-		alert("새 비밀번호와 입력하신 비밀번호는 일치하지 않습니다. ");
+		alert("새로 입력하신 비밀번호가 일치하지 않습니다.");
 		f.confirmPwd.focus();
 		return;
-	} */
+	}
 
 	f.action = "${pageContext.request.contextPath}/member/changePwd";
 	f.submit();

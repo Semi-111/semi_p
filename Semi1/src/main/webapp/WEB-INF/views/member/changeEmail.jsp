@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>이메일 변경</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <script type="text/javascript">
 	function sendOk() {
@@ -19,9 +19,9 @@
 			return;
 		}
 
-		let str = f.confirmEmail.value;
+		str = f.confirmEmail.value;
 		if (!str) {
-			alert("새로운 이메일와 입력하신 이메일은 일치하지 않습니다.");
+			alert("새로 입력하신 이메일이 일치하지 않습니다. ");
 			f.confirmEmail.focus();
 			return;
 		}
