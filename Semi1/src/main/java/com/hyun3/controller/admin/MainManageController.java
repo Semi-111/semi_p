@@ -3,6 +3,7 @@ package com.hyun3.controller.admin;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,92 +198,175 @@ public class MainManageController {
 
 		return model;
 	}
-	
+
 	// 멤버쉽 화면으로 이동
 	@RequestMapping(value = "/admin/home/membership", method = RequestMethod.GET)
-	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    ModelAndView mav = new ModelAndView("admin/home/membership");
-	    
-	    MembershipDAO dao = new MembershipDAO();
-	    MyUtil util = new MyUtilBootstrap();
+	public ModelAndView membership(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 
-	    try {
-	        String page = req.getParameter("page");
-	        int current_page = 1;
-	        if (page != null) {
-	            current_page = Integer.parseInt(page);
-	        }
+		ModelAndView mav = new ModelAndView("admin/home/membership");
 
-	        // 검색
-	        String schType = req.getParameter("schType");
-	        String kwd = req.getParameter("kwd");
-	        if (schType == null) {
-	            schType = "all";
-	            kwd = "";
-	        }
+		MembershipDAO dao = new MembershipDAO();
+		MyUtil util = new MyUtilBootstrap();
 
-	        // GET 방식이면 디코딩
-	        if (req.getMethod().equalsIgnoreCase("GET")) {
-	            kwd = URLDecoder.decode(kwd, "utf-8");
-	        }
+		try {
+			String page = req.getParameter("page");
+			int current_page = 1;
+			if (page != null) {
+				current_page = Integer.parseInt(page);
+			}
 
-	        // 전체 데이터 개수
-	        int dataCount;
-	        if (kwd.length() == 0) {
-	            dataCount = dao.dataCount();
-	        } else {
-	            dataCount = dao.dataCount(schType, kwd);
-	        }
+			// 검색
+			String schType = req.getParameter("schType");
+			String kwd = req.getParameter("kwd");
+			if (schType == null) {
+				schType = "all";
+				kwd = "";
+			}
 
-	        // 전체 페이지 수
-	        int size = 10;
-	        int total_page = util.pageCount(dataCount, size);
-	        if (current_page > total_page) {
-	            current_page = total_page;
-	        }
+			// GET 방식이면 디코딩
+			if (req.getMethod().equalsIgnoreCase("GET")) {
+				kwd = URLDecoder.decode(kwd, "utf-8");
+			}
 
-	        // 게시물 가져오기
-	        int offset = (current_page - 1) * size;
-	        if (offset < 0)
-	            offset = 0;
-	        
-	        List<MemberDTO> list = null;
-	        if (kwd.length() == 0) {
-	            list = dao.listMember(offset, size);
-	        } else {
-	            list = dao.listMember(offset, size, schType, kwd);
-	        }
+			// 전체 데이터 개수
+			int dataCount = 0;
+			if (kwd.length() == 0) {
+				dataCount = dao.dataCount();
+			} else {
+				dataCount = dao.dataCount(schType, kwd);
+			}
 
-	        String query = "";
-	        if (kwd.length() != 0) {
-	            query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
-	        }
+			// 전체 페이지 수
+			int size = 10;
+			int total_page = util.pageCount(dataCount, size);
+			if (current_page > total_page) {
+				current_page = total_page;
+			}
 
-	        // 페이징 처리
-	        String cp = req.getContextPath();
-	        String listUrl = cp + "/admin/home/membership";
+			// 게시물 가져오기
+			int offset = (current_page - 1) * size;
+			if (offset < 0)
+				offset = 0;
 
-	        if (query.length() != 0) {
-	            listUrl += "?" + query;
-	        }
+			List<MemberDTO> list = new ArrayList<>();
+			if (kwd.length() == 0) {
+				list = dao.listMember(offset, size);
+			} else {
+				list = dao.listMember(offset, size, schType, kwd);
+			}
 
-	        String paging = util.paging(current_page, total_page, listUrl);
+			String query = "";
+			if (kwd.length() != 0) {
+				query = "schType=" + schType + "&kwd=" + URLEncoder.encode(kwd, "utf-8");
+			}
 
-	        // JSP에 전달할 속성
-	        mav.addObject("list", list);
-	        mav.addObject("page", current_page);
-	        mav.addObject("total_page", total_page);
-	        mav.addObject("dataCount", dataCount);
-	        mav.addObject("size", size);
-	        mav.addObject("paging", paging);
-	        mav.addObject("schType", schType);
-	        mav.addObject("kwd", kwd);
+			// 페이징 처리
+			String cp = req.getContextPath();
+			String listUrl = cp + "/admin/home/membership";
+			if (query.length() != 0) {
+				listUrl += "?" + query;
+			}
 
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			String paging = util.paging(current_page, total_page, listUrl);
 
-	    return mav;
+			// JSP에 전달할 속성
+			mav.addObject("list", list);
+			mav.addObject("page", current_page);
+			mav.addObject("total_page", total_page);
+			mav.addObject("dataCount", dataCount);
+			mav.addObject("size", size);
+			mav.addObject("paging", paging);
+			mav.addObject("schType", schType);
+			mav.addObject("kwd", kwd);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mav;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/member/updateStatus", method = RequestMethod.POST)
+	public Map<String, Object> updateMemberStatus(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String, Object> model = new HashMap<>();
+
+		try {
+			String memberIdsStr = req.getParameter("memberIds");
+			String status = req.getParameter("status");
+
+			if (memberIdsStr == null || status == null) {
+				model.put("state", "false");
+				return model;
+			}
+
+			// 문자열 배열을 Long 리스트로 변환
+			List<Long> memberIds = new ArrayList<>();
+			for (String id : memberIdsStr.split(",")) {
+				memberIds.add(Long.parseLong(id));
+			}
+
+			// status 값에 따라 block 상태 결정 (active: 0, block: 1)
+			int blockStatus = status.equals("active") ? 0 : 1;
+
+			MembershipDAO dao = new MembershipDAO();
+			dao.updateMemberStatus(memberIds, blockStatus);
+
+			model.put("state", "success");
+
+		} catch (Exception e) {
+			model.put("state", "false");
+			e.printStackTrace();
+		}
+
+		return model;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/member/detail", method = RequestMethod.GET)
+	public Map<String, Object> memberDetail(HttpServletRequest req) {
+		Map<String, Object> model = new HashMap<>();
+
+		try {
+			long memberNum = Long.parseLong(req.getParameter("memberNum"));
+
+			MembershipDAO dao = new MembershipDAO();
+			MemberDTO dto = dao.findById(memberNum);
+
+			if (dto != null) {
+				model.put("state", "success");
+				model.put("role", dto.getRole());
+				model.put("lessonNum", dto.getLessonNum());
+				model.put("lessonName", dto.getLessonName());
+			} else {
+				model.put("state", "false");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.put("state", "false");
+		}
+
+		return model;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/admin/member/updateRole", method = RequestMethod.POST)
+	public Map<String, Object> updateRole(HttpServletRequest req) {
+		Map<String, Object> model = new HashMap<>();
+
+		try {
+			long memberNum = Long.parseLong(req.getParameter("memberNum"));
+			String role = req.getParameter("role");
+
+			MembershipDAO dao = new MembershipDAO();
+			dao.updateRole(memberNum, role);
+			model.put("state", "success");
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.put("state", "false");
+		}
+
+		return model;
 	}
 
 }
