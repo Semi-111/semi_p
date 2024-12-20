@@ -84,48 +84,8 @@
       </c:forEach>
     </div>
 
-    <!-- 사이드바 -->
-    <div class="sidebar">
-      <div class="hot-posts">
-        <h3 class="sidebar-title">HOT 게시물</h3>
-        <div class="hot-post-item">
-          <span>자유게시판 인기글</span>
-          <span class="post-date">11/29</span>
-        </div>
-        <div class="hot-post-item">
-          <span>학과 MT 후기</span>
-          <span class="post-date">11/28</span>
-        </div>
-        <a href="#" class="d-block text-end mt-2">더보기</a>
-      </div>
-
-      <div class="weekly-posts">
-        <h3 class="sidebar-title">주간 인기글</h3>
-        <div class="hot-post-item">
-          <span>2024 학과 행사</span>
-          <span class="post-date">11/27</span>
-        </div>
-        <div class="hot-post-item">
-          <span>스터디 모집</span>
-          <span class="post-date">11/25</span>
-        </div>
-        <a href="#" class="d-block text-end mt-2">더보기</a>
-      </div>
-
-      <div class="recent-reviews">
-        <h3 class="sidebar-title">최근 강의평</h3>
-        <div class="hot-post-item">
-          <span>알고리즘 수업 리뷰</span>
-          <span class="post-date">11/26</span>
-        </div>
-        <div class="hot-post-item">
-          <span>데이터베이스 수업 후기</span>
-          <span class="post-date">11/24</span>
-        </div>
-        <a href="#" class="d-block text-end mt-2">더보기</a>
-      </div>
-    </div>
-  </div>
+    <!-- 사이드바 이곳에 -->
+    <jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
 
   <div class="pagination">
     <ul>
@@ -135,10 +95,8 @@
   </div>
 </div>
 
-<footer>
   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
   <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-</footer>
 
 </body>
 </html>

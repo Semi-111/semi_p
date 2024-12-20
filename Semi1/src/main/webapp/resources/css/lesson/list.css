@@ -245,7 +245,8 @@ nav {
 
 .post-title a {
 	text-decoration: none;
-	color: #333;
+	color: #000;
+	font-weight: bold;
 }
 
 .post-title a:hover {

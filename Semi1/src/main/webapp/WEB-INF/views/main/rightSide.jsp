@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 
 <div class="col-3 d-none d-lg-block" id="rightSide">
-	
+
     <div class="sidebar">
         <!-- 검색창 -->
 		<div class="search-bar">
@@ -66,10 +66,10 @@
             <c:if test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
                 <div class="text-center">
                     <p>로그인후 작성해주세요</p>
-                    <a href="${pageContext.request.contextPath}/login">로그인</a>
+                    <a href="${pageContext.request.contextPath}/member/login">로그인</a>
                 </div>
             </c:if>
         </div>
     </div>
-	
+
 </div>

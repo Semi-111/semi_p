@@ -15,19 +15,37 @@
 
 /* 왼쪽 사이드 화면 */
 
-/* 프로필 컨테이너 스타일 */
-.profile-container, .login-prompt {
-	background-color: #f9f9f9;
+/* 프로필 컨테이너 스타일(로그인 전) */
+.login-prompt {
+	background-color: #F7F7F7;
 	text-align: center;
-	margin-bottom: 20px;
-	height: 200px;
+	height: 180px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.before {
+	font-weight: bold;
+	color: #E61747;
+	padding-top: 80px;
+}
+
+/* 로그인 후 */
+.profile-container {
+	background-color: #F7F7F7;
+	text-align: center;
+	height: 250px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile>h5 {
+	padding-top: 35px;
+	font-weight: bold;
 }
 
 /* 프로필 정보 스타일 */
 .profile-info h6 {
-	margin: 5px 0;
-	font-size: 14px;
+	margin: 20px 0;
+	font-size: 15px;
 	color: #333;
 }
 
@@ -35,14 +53,16 @@
 .profile-buttons, .login-buttons {
 	display: flex; /* 버튼을 가로로 정렬 */
 	justify-content: center; /* 중앙 정렬 */
-	gap: 10px;
-	margin-top: 15px;
+	margin-top: 30px;
+	padding-right: 3px;
+	padding-left: 3px;
+	gap: 5px;
+	padding-right: 3px;
 }
 
-/* 버튼 스타일 */
 .profile-buttons button, .login-buttons button {
 	padding: 8px 15px;
-	border: 1px solid #ddd;
+	border: 1px solid #BA81B5;
 	border-radius: 5px;
 	background-color: #fff;
 	color: #333;
@@ -52,7 +72,7 @@
 }
 
 .profile-buttons button:hover, .login-buttons button:hover {
-	background-color: #f0f0f0;
+	background-color: #FFF6FE;
 }
 
 .MyPicture img {
@@ -62,9 +82,15 @@
 	object-fit: cover;
 }
 
+/* 날씨 */
+.weather {
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
 /* 왼쪽 광고(이미지) */
 .ad-container {
-	margin-bottom: 20px;
+	margin: 30px auto;
 }
 
 .ad {
@@ -75,9 +101,8 @@
 
 .ad img {
 	width: 100%;
-	height: auto;
+	height: 120px;
 	transition: transform 0.3s ease;
-	border: 1px solid #888888;
 }
 
 .ad:hover img {

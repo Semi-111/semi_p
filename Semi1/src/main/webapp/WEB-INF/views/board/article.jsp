@@ -114,10 +114,8 @@
 </div><!-- post-container 종료 -->
 
 
-<footer>
     <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
     <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-</footer>
 
 <script>
     $(function () {

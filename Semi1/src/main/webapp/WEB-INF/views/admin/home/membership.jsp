@@ -8,28 +8,19 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <!-- Bootstrap CSS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Bootstrap JS -->
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/admin/main.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin/main.css">
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trainee Admin - 회원 관리</title>
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css"
-	rel="stylesheet">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/admin/main.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin/main.css">
 <style>
 * {
 	margin: 0;
@@ -259,27 +250,20 @@ let currentLessonNum = 0;
 <body>
 	<jsp:include page="/WEB-INF/views/layout/adminSide.jsp" />
 	<div class="container">
-		<h1 style="margin: 20px 0; font-size: 24px; color: #374151;">회원
-			관리</h1>
+		<h1 style="margin: 20px 0; font-size: 24px; color: #374151;">회원관리</h1>
 
-		<form name="searchForm"
-			action="${pageContext.request.contextPath}/admin/home/membership"
-			method="get" class="search-area">
+		<form name="searchForm" action="${pageContext.request.contextPath}/admin/home/membership" method="get" class="search-area">
 			<div class="search-row">
 				<select name="schType">
 					<option value="all" ${schType=="all"?"selected":""}>전체</option>
 					<option value="userId" ${schType=="userId"?"selected":""}>아이디</option>
 					<option value="nickName" ${schType=="nickName"?"selected":""}>닉네임</option>
-				</select> <input type="text" name="kwd" value="${kwd}"
-					placeholder="검색어를 입력하세요">
+				</select> <input type="text" name="kwd" value="${kwd}" placeholder="검색어를 입력하세요">
 				<button type="button" class="btn btn-primary" onclick="searchList()">검색</button>
-				<button type="button" class="btn btn-success"
-					onclick="exportToExcel()">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-						viewBox="0 0 24 24" fill="none" stroke="currentColor"
+				<button type="button" class="btn btn-success" onclick="exportToExcel()">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
 						stroke-width="2">
-                        <path
-							d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
                     </svg>
 					엑셀 내보내기
 				</button>
@@ -297,8 +281,9 @@ let currentLessonNum = 0;
 			<table>
 				<thead>
 					<tr>
-						<th><input type="checkbox" class="custom-checkbox"
-							onclick="checkAll(this)"></th>
+						<th>
+							<input type="checkbox" class="custom-checkbox" onclick="checkAll(this)">
+						</th>
 						<th>회원ID</th>
 						<th>아이디</th>
 						<th>닉네임</th>
@@ -312,24 +297,26 @@ let currentLessonNum = 0;
 				<tbody>
 					<c:forEach var="dto" items="${list}">
 						<tr>
-							<td><input type="checkbox" class="custom-checkbox"
-								name="members" value="${dto.mb_Num}"></td>
+							<td>
+								<input type="checkbox" class="custom-checkbox" name="members" value="${dto.mb_Num}">
+							</td>
 							<td>${dto.mb_Num}</td>
 							<td>${dto.userId}</td>
 							<td>${dto.nickName}</td>
 							<td>${dto.ca_Day}</td>
 							<td>${dto.lessonName}</td>
-							<td><c:choose>
+							<td>
+								<c:choose>
 									<c:when test="${dto.role == '60'}">관리자</c:when>
 									<c:when test="${dto.role >= '51' && dto.role <= '56'}">과대표</c:when>
 									<c:otherwise>일반회원</c:otherwise>
 								</c:choose></td>
-							<td><span
-								class="status-badge ${dto.block == 0 ? 'status-active' : 'status-inactive'}">
-									${dto.block == 0 ? '활성' : '정지'} </span></td>
 							<td>
-								<button class="btn btn-primary"
-									onclick="openMemberModal(${dto.mb_Num})">권한조정</button>
+								<span class="status-badge ${dto.block == 0 ? 'status-active' : 'status-inactive'}">
+									${dto.block == 0 ? '활성' : '정지'} </span>
+							</td>
+							<td>
+								<button class="btn btn-primary" onclick="openMemberModal(${dto.mb_Num})">권한조정</button>
 							</td>
 						</tr>
 					</c:forEach>
@@ -361,7 +348,7 @@ let currentLessonNum = 0;
 								<option value="51">경영학과 과대표</option>
 								<option value="52">경찰행정학과 과대표</option>
 								<option value="53">디자인학과 과대표</option>
-								<option value="54">음악공연학과 과대표</option>
+								<option value="54">화학 과대표</option>
 								<option value="55">컴퓨터공학전자과 과대표</option>
 								<option value="56">정보통신학과 과대표</option>
 							</select>
