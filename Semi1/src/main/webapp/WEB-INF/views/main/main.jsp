@@ -108,8 +108,9 @@
 				<!-- 중앙 화면 -->
 				<div class="col-7 col-lg-7" id="mainContent">
 					<div class="lucky">
-						<a href="${pageContext.request.contextPath}/main/lucky"> 
-							<img src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg" class="lucky-image">
+						<a href="${pageContext.request.contextPath}/main/lucky"> <img
+							src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg"
+							class="lucky-image">
 						</a>
 					</div>
 
@@ -174,13 +175,14 @@
 													<c:forEach var="dto" items="${secretBoard}">
 														<div class="text-truncate px-2 subject-list">
 															<!-- text-truncate : 말줄임표 -->
-															<a href="${pageContext.request.contextPath}/bbs/secretBoard/article?type=SECRET&cmNum=${dto.cmNum}&page=1">
-																	${dto.title}
-															</a>
+															<a
+																href="${pageContext.request.contextPath}/bbs/secretBoard/article?type=SECRET&cmNum=${dto.cmNum}&page=1">
+																${dto.title} </a>
 														</div>
 													</c:forEach>
 												</c:if>
-												<c:if test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
+												<c:if
+													test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
 													<div class="text-center">
 														<p>로그인후 작성해주세요</p>
 														<a href="${pageContext.request.contextPath}/login">로그인</a>

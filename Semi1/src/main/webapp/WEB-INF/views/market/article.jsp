@@ -46,17 +46,15 @@
 				<p>${dto.content}</p>
 				<c:if test="${not empty dto.fileName}">
 					<div class="img-box">
-						<img
-							src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}"
-							class="img-fluid">
+						<img src="${pageContext.request.contextPath}/uploads/photo/${dto.fileName}" class="img-fluid">
 					</div>
 				</c:if>
 			</div>
 			<div class="post-actions">
 				<div class="action-left">
 					<button type="button" class="btn btn-gray" onclick="toggleLike();" title="관심">
-						<i class="bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}"
-							id="heartIcon"></i> 관심 <span id="countLikes">${countLikes}</span>
+						<i class="bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'}" id="heartIcon"></i> 관심
+							 <span id="countLikes">${countLikes}</span>
 					</button>
 					<button class="btn btn-gray">공유하기</button>
 				</div>
