@@ -2,7 +2,6 @@
 function mapMove() {
 
     let url = path + `/map/moveP`;
-    console.log(url);
     let pageElement = document.getElementById('page');
     let page = pageElement ? pageElement.value : null;
 
@@ -14,7 +13,9 @@ function mapMove() {
     let query = 'page=' + page + "&lat1=" + lat1 + "&lat2=" + lat2 + "&lon1=" + lon1 + "&lon2=" + lon2;
 
     let schTerm = $("#schTerm").val();
-    if (schTerm != null && schTerm !== "") {
+    console.log(schTerm);
+
+    if (schTerm != null && schTerm !== "none") {
         schTerm = encodeURIComponent(schTerm);
         query += "&schTerm=" + schTerm;
     }

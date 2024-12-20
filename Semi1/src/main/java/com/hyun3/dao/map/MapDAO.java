@@ -28,12 +28,11 @@ public class MapDAO {
                     " SELECT ST_ID, THUMBNAIL," +
                     " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
                     " FROM ST_IMG) " +
-                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, TEL ,THUMBNAIL,LAT,LON " +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, LAT, TEL, LON, t.THUMBNAIL" +
                     " FROM MAP m " +
-                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
-                    " WHERE t.rn = 1 " +
-                    " AND LAT BETWEEN ? AND ? " +
-                    " AND LON BETWEEN ? AND ?" +
+                    " LEFT JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID AND t.rn = 1" +
+                    " WHERE LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ? "+
                     " ORDER BY ST_ID" +
                     " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
 
@@ -82,15 +81,17 @@ public class MapDAO {
                     " SELECT ST_ID, THUMBNAIL," +
                     " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
                     " FROM ST_IMG) " +
-                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, TEL ,THUMBNAIL,LAT,LON " +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, LAT, TEL, LON, t.THUMBNAIL" +
                     " FROM MAP m " +
-                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
-                    " WHERE t.rn = 1 " +
-                    " AND LAT BETWEEN ? AND ? " +
-                    " AND LON BETWEEN ? AND ?" +
+                    " LEFT JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID AND t.rn = 1" +
+                    " WHERE LAT BETWEEN ? AND ? " +
+                    " AND LON BETWEEN ? AND ? " +
                     " AND (m.ST_NAME LIKE ? OR m.CT_NAME LIKE ?)" +
                     " ORDER BY ST_ID" +
                     " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+
+
+
 
             pstmt = conn.prepareStatement(sql);
 
@@ -139,11 +140,10 @@ public class MapDAO {
                     " SELECT ST_ID, THUMBNAIL," +
                     " ROW_NUMBER() OVER (PARTITION BY ST_ID ORDER BY IMG_NUM) AS rn" +
                     " FROM ST_IMG) " +
-                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, LAT, TEL, LON ,THUMBNAIL" +
+                    " SELECT m.ST_ID ST_ID, ST_NAME, ADDRESS, LAT, TEL, LON, t.THUMBNAIL" +
                     " FROM MAP m " +
-                    " JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID " +
-                    " WHERE t.rn = 1 " +
-                    " AND LAT BETWEEN ? AND ? " +
+                    " LEFT JOIN ThumbnailCTE t ON m.ST_ID = t.ST_ID AND t.rn = 1" +
+                    " WHERE LAT BETWEEN ? AND ? " +
                     " AND LON BETWEEN ? AND ? ";
             if (!schTerm.equals("none")) {
                 sql += " AND (m.ST_NAME LIKE ? OR m.CT_NAME LIKE ?) ";
@@ -282,43 +282,44 @@ public class MapDAO {
 
     }
 
-public List<BlogDTO> getBlog(long stId, int size, int start) {
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    List<BlogDTO> result = new ArrayList<>();
-    try {
-        sql = "SELECT BLOG_NUM,BLOG_NAME,BLOG_TITLE,BLOG_CONTENT,BLOG_URL,  " +
-                " TO_CHAR(REG_DATE, 'YYYY-MM-DD') REG_DATE "+
-                " FROM BLOG WHERE ST_ID = ?" +
-              " ORDER BY BLOG_NUM" +
-              " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        pstmt = conn.prepareStatement(sql);
-        pstmt.setLong(1, stId);
-        pstmt.setInt(2, start);
-        pstmt.setInt(3, size);
-        rs = pstmt.executeQuery();
-        while (rs.next()) {
-            BlogDTO blogDTO = new BlogDTO();
-            blogDTO.setBlogNum(rs.getLong("BLOG_NUM"));
-            blogDTO.setBlogName(rs.getString("BLOG_NAME"));
-            blogDTO.setBlogTitle(rs.getString("BLOG_TITLE"));
-            blogDTO.setBlogContent(rs.getString("BLOG_CONTENT"));
-            blogDTO.setBlogUrl(rs.getString("BLOG_URL"));
-            blogDTO.setBlogDate(rs.getString("REG_DATE"));
+    public List<BlogDTO> getBlog(long stId, int size, int start) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<BlogDTO> result = new ArrayList<>();
+        try {
+            sql = "SELECT BLOG_NUM,BLOG_NAME,BLOG_TITLE,BLOG_CONTENT,BLOG_URL,  " +
+                    " TO_CHAR(REG_DATE, 'YYYY-MM-DD') REG_DATE " +
+                    " FROM BLOG WHERE ST_ID = ?" +
+                    " ORDER BY BLOG_NUM" +
+                    " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, stId);
+            pstmt.setInt(2, start);
+            pstmt.setInt(3, size);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                BlogDTO blogDTO = new BlogDTO();
+                blogDTO.setBlogNum(rs.getLong("BLOG_NUM"));
+                blogDTO.setBlogName(rs.getString("BLOG_NAME"));
+                blogDTO.setBlogTitle(rs.getString("BLOG_TITLE"));
+                blogDTO.setBlogContent(rs.getString("BLOG_CONTENT"));
+                blogDTO.setBlogUrl(rs.getString("BLOG_URL"));
+                blogDTO.setBlogDate(rs.getString("REG_DATE"));
 
 
-            result.add(blogDTO);
+                result.add(blogDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs);
+            DBUtil.close(pstmt);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        DBUtil.close(rs);
-        DBUtil.close(pstmt);
+
+        return result;
     }
 
-    return result;
-}
-    public List<StImgDTO> getImg(long id,int start, int size) {
+    public List<StImgDTO> getImg(long id, int start, int size) {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
@@ -353,7 +354,7 @@ public List<BlogDTO> getBlog(long stId, int size, int start) {
         return result;
     }
 
-    public int blogData(long  id) {
+    public int blogData(long id) {
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -371,12 +372,12 @@ public List<BlogDTO> getBlog(long stId, int size, int start) {
         } catch (Exception e) {
             e.printStackTrace();
 
+        }
+
+        return result;
     }
 
-    return result;
-    }
-
-    public int imgData(long id){
+    public int imgData(long id) {
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;

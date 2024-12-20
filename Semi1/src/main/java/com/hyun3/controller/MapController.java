@@ -45,6 +45,7 @@ public class MapController {
             double req_lon1 = req.getParameter("lon") != null ? Double.parseDouble(req.getParameter("lon")) : 126.9172611;
             double req_lat2 = req.getParameter("lat2") != null ? Double.parseDouble(req.getParameter("lat2")) : 37.5574451;
             double req_lon2 = req.getParameter("lon2") != null ? Double.parseDouble(req.getParameter("lon2")) : 126.9217269;
+            int zoomLevel = req.getParameter("zoomLevel") != null ? Integer.parseInt(req.getParameter("zoomLevel")) : 19;
 
             q = req.getParameter("schTerm");
 
@@ -69,7 +70,7 @@ public class MapController {
             mav.addObject("lon1", req_lon1);
             mav.addObject("lat2", req_lat2);
             mav.addObject("lon2", req_lon2);
-
+            mav.addObject("zoomLevel", zoomLevel);
         } catch (Exception e) {
             e.printStackTrace();
             mav.addObject("markersData", "error");
@@ -152,7 +153,10 @@ public class MapController {
             if (page != null) {
                 mainPage = Integer.parseInt(page);
             }
-
+            String q = req.getParameter("schTerm");
+            if (q == null) {
+                q = "none";
+            }
 
 
             MapDTO details = dao.getDetails(Long.parseLong(stId));
@@ -168,7 +172,7 @@ public class MapController {
             mav.addObject("tel", details.getTel());
             mav.addObject("category", details.getCtGroup());
             mav.addObject("page", mainPage);
-
+            mav.addObject("schTerm", q);
             mav.addObject("blog_cnt", blog_cnt);
             mav.addObject("img_cnt", img_cnt);
             mav.addObject("img", details.getStImgDTO());

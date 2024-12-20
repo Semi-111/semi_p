@@ -72,9 +72,7 @@ function loadDetails(stId) {
     let page = document.getElementById('page').value;
 
     query += "&page=" + page;
-
-    let schTerm = $("#schTerm").val();
-    if (schTerm != null && schTerm !== "") {
+    if (schTerm != null && schTerm !== "none") {
         schTerm = encodeURIComponent(schTerm);
         query += "&schTerm=" + schTerm;
     }

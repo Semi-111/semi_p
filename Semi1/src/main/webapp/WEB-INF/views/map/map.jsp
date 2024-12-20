@@ -79,7 +79,7 @@
 
     let map = new naver.maps.Map('map', {
         center: new naver.maps.LatLng(centerLat, centerLon),
-        zoom: 19
+        zoom: ${zoomLevel}
     });
 
     let markersData = '${markersDataJS}';

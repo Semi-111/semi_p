@@ -31,7 +31,9 @@
         <hr>
         <div class="search-results" id="storeDetails-${marker.stId}" onclick="loadDetails(${marker.stId})">
             <a href="#">
-                <img src="${marker.divisionCode}" alt="" id="storeImg-${marker.stId}">
+                <c:if test="${marker.divisionCode != null}">
+                    <img src="${marker.divisionCode}" alt="" id="storeImg-${marker.stId}">
+                </c:if>
             </a>
             <a href="#">
                 <h3 id="storeName-${marker.stId}">${marker.stName}</h3>

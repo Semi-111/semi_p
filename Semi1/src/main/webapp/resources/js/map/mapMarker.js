@@ -64,8 +64,9 @@ function refreshMap() {
     const mapBounds = map.getBounds();
     const ne = mapBounds.getNE();
     const sw = mapBounds.getSW();
+    const  zoom = map.getZoom();
 
-    const url = path + '/map?lat=' + sw.lat() + '&lon=' + sw.lng() + '&lat2=' + ne.lat() + '&lon2=' + ne.lng();
+    const url = path + '/map?lat=' + sw.lat() + '&lon=' + sw.lng() + '&lat2=' + ne.lat() + '&lon2=' + ne.lng() + '&zoomLevel=' + zoom;
     window.location.href = url;
 
 }
