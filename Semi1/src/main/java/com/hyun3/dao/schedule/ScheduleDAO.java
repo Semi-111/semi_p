@@ -25,7 +25,7 @@ public class ScheduleDAO {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, dto.getGradee());
 			ps.setString(2, dto.getStGradee());
-			ps.setString(3, dto.getSbNum());
+			ps.setString(3, dto.getDt_sb_num());
 			ps.setLong(4, dto.getMb_Num());
 
 			int result = ps.executeUpdate();
@@ -44,6 +44,7 @@ public class ScheduleDAO {
 		return success;
 	}
 
+	// 모달 창 안에 수업 과목 리스트 
 	public List<ScheduleDTO> viewSubject() {
 		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
 		PreparedStatement pstmt = null;
@@ -51,9 +52,9 @@ public class ScheduleDAO {
 		String sql;
 
 		try {
-			sql = "    SELECT s.st_grade, s.sb_num, s.sb_name, d.hakscore, TO_CHAR(t.studytime, 'HH24:MI') AS studytime, t.studyday "
+			sql = "    SELECT s.st_grade, s.sb_num, s.sb_name, d.dt_sub_num, d.hakscore, TO_CHAR(t.studytime, 'HH24:MI') AS studytime, t.studyday "
 					+ "    FROM subject s " + "    JOIN dt_subject d ON s.sb_num = d.sb_num "
-					+ "    RIGHT JOIN timetable t ON d.dt_sub_num = t.dt_sub_num " + "	   ORDER BY s.st_grade";
+					+ "    JOIN timetable t ON d.dt_sub_num = t.dt_sub_num " + "	   ORDER BY s.st_grade";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -63,6 +64,7 @@ public class ScheduleDAO {
 				ScheduleDTO dto = new ScheduleDTO();
 				dto.setStGrade(rs.getInt("st_grade"));
 				dto.setSbNum(rs.getString("sb_num"));
+				dto.setDt_sb_num(rs.getString("dt_sub_num"));
 				dto.setSbName(rs.getString("sb_name"));
 				dto.setHakscore(rs.getInt("hakscore"));
 				dto.setStudytime(rs.getString("studytime"));
@@ -81,7 +83,7 @@ public class ScheduleDAO {
 		return list;
 	}
 	
-	public List<ScheduleDTO> getTimetable(String gradeYear, String semester, Long memberId) {
+	public List<ScheduleDTO> getTimetable(String gradeYear, String semester, Long mb_num) {
 		List<ScheduleDTO> list = new ArrayList<ScheduleDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -89,10 +91,12 @@ public class ScheduleDAO {
 		
 	    try {
 	        // SQL 쿼리 준비
-	        sql = "SELECT grade_year, semester, a.dt_sub_num, mb_num, t.studytime, t.studyday "
+	        sql = " SELECT a.grade_year, a.semester, a.dt_sub_num, a.mb_num, TO_CHAR(t.studytime, 'HH24:MI') AS studytime, t.studyday, t.studyday, sb_name "
 	        		+ " FROM at_subject a "
 	        		+ " JOIN timetable t ON a.dt_sub_num = t.dt_sub_num "
-	        		+ " WHERE grade_year = ? AND semester = ? AND mb_num = ? ;";
+	        		+ " JOIN dt_subject d ON t.dt_sub_num = d.dt_sub_num "
+	        		+ " JOIN subject s ON d.sb_num = s.sb_num "
+	        		+ " WHERE a.grade_year = ? AND a.semester = ? AND a.mb_num = ? ";
 	        
 	        // PreparedStatement 객체 생성
 	        pstmt = conn.prepareStatement(sql);
@@ -100,7 +104,7 @@ public class ScheduleDAO {
 	        // 파라미터 바인딩
 	        pstmt.setString(1, gradeYear); // grade_year 값 설정
 	        pstmt.setString(2, semester);  // semester 값 설정
-	        pstmt.setLong(3, memberId);    // mb_num 값 설정 (회원 번호)
+	        pstmt.setLong(3, mb_num);    // mb_num 값 설정 (회원 번호)
 
 	        // 쿼리 실행
 	        rs = pstmt.executeQuery();
@@ -110,8 +114,11 @@ public class ScheduleDAO {
 	            ScheduleDTO dto = new ScheduleDTO();
 	            dto.setGradee(rs.getString("grade_year"));
 	            dto.setStGradee(rs.getString("semester"));
-	            dto.setSbNum(rs.getString("dt_sub_num"));  // 과목 번호도 추가로 설정
+	            dto.setDt_sb_num(rs.getString("dt_sub_num"));  // 과목 번호도 추가로 설정
 	            dto.setMb_Num(rs.getLong("mb_num"));      // 회원 번호도 설정
+                dto.setStudytime(rs.getString("studytime"));
+                dto.setStudyDay(rs.getString("studyday"));	            
+                dto.setSbName(rs.getString("sb_name"));	            
 	            
 	            // 리스트에 DTO 추가
 	            list.add(dto);

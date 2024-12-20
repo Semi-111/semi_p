@@ -11,10 +11,20 @@ public class ScheduleDTO {
     private String studyDay; // 수업 요일
     private String color; // 과목 색깔
     private String timetableNum; // 시간표 번호... 이제 필요 없을 듯?
-    
+    private String dt_sb_num; 
+   
     private String score; // 성적(null)
     
     private Long mb_Num;
+
+    
+	public String getDt_sb_num() {
+		return dt_sb_num;
+	}
+
+	public void setDt_sb_num(String dt_sb_num) {
+		this.dt_sb_num = dt_sb_num;
+	}
 
 	public int getStGrade() {
 		return stGrade;

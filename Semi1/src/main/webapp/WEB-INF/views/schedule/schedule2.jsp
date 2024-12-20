@@ -32,14 +32,14 @@
         <div class="time-table-selector">
             <div class="select-box-container">
                 <select id="semesterSelect" name="semester">
-                    <option value="4학년 2학기" onclick="sendServer(4,2)">4학년 2학기</option>
-                    <option value="4학년 1학기" onclick="sendServer(4,1)">4학년 1학기</option>
-                    <option value="3학년 2학기" onclick="sendServer(3,2)">3학년 2학기</option>
-                    <option value="3학년 1학기" onclick="sendServer(3,1)">3학년 1학기</option>
-                    <option value="2학년 2학기" onclick="sendServer(2,2)">2학년 2학기</option>
-                    <option value="2학년 1학기" onclick="sendServer(2,1)">2학년 1학기</option>
-                    <option value="1학년 2학기" onclick="sendServer(1,2)">1학년 2학기</option>
-                    <option value="1학년 1학기" onclick="sendServer(1,1)">1학년 1학기</option>
+                    <option value="4학년 2학기">4학년 2학기</option>
+                    <option value="4학년 1학기">4학년 1학기</option>
+                    <option value="3학년 2학기">3학년 2학기</option>
+                    <option value="3학년 1학기">3학년 1학기</option>
+                    <option value="2학년 2학기">2학년 2학기</option>
+                    <option value="2학년 1학기">2학년 1학기</option>
+                    <option value="1학년 2학기">1학년 2학기</option>
+                    <option value="1학년 1학기">1학년 1학기</option>
                 </select>
 
 		<nav class="timetable-btn-container" id="timetableBtnContainer">
@@ -127,8 +127,10 @@
 
 	    // 시간표에서 선택된 수업을 배열에 추가
 	    $('.modal-line td.selected').each(function() {
+	    	
 	        const subject = {
 	            sbNum: $(this).closest('tr').data('sbnum'),  // 과목 번호
+	            dt_sb_num: $(this).closest('tr').find('input[type="hidden"]').val(),
 	        };
 	        selectedSubjects.push(subject);  // 배열에 수업 추가
 	    });
@@ -149,8 +151,9 @@
 	        contentType: 'application/json',
 	        data: JSON.stringify({ 
 	            subjects: selectedSubjects.map(function(subject) {
+	            
 	                // 여기서 sbNum을 String으로 변환
-	                subject.sbNum = String(subject.sbNum);
+	                subject.dt_sb_num = String(subject.dt_sb_num);
 	                return subject;
 	            }),
 	            semester: semester  // 선택된 학기 정보
@@ -170,27 +173,8 @@
 	        console.log('선택된 과목:', selectedSubjects);  // 실패 시 선택된 과목 출력
 	    }
 	});
+}
 
-	}
-	
-	function loadTimetable(timetableData) {
-	    // 시간표 데이터 배열을 순회하면서 각 시간대와 요일에 맞게 과목을 추가
-	    timetableData.forEach(item => {
-	        const { dtSubNum, gradeYear, semester, mbNum } = item; // 과목 번호, 학년, 학기, 회원 번호
-
-	        // 각 과목이 배치될 시간대와 요일은 클릭 이벤트로 받아오는 방식이므로
-	        // 과목을 추가할 곳을 찾는 로직이 필요합니다
-	        // 예시로, studyDay(요일)과 studyTime(교시)에 맞게 셀을 찾는 코드
-	        const studyDay = getStudyDay();   // 사용자가 클릭한 요일을 얻어오는 함수
-	        const studyTime = getStudyTime(); // 사용자가 클릭한 시간을 얻어오는 함수
-
-	        // 셀을 찾아서 과목명과 색상으로 채움
-	        const cell = $(`#timetable tr[data-time="${studyTime}"] td[data-day="${studyDay}"]`);
-	        cell.text("과목 번호: " + dtSubNum);  // 과목 번호 표시 (예: 1001)
-	        cell.css("background-color", "#FFD8D8");  // 과목 색상 채우기 (예: 붉은색)
-	    });
-	}
-	
     
 	</script>
 
@@ -221,6 +205,7 @@
 				        <td>${vo.sbName}</td>
 				        <td>${vo.hakscore}</td>
 				        <td>${vo.studytime}</td> <!-- studyTime은 이미 String -->
+				    	<input type="hidden" id="${vo.dt_sb_num}" value="${vo.dt_sb_num}">
 				    </tr>
 				</c:forEach>
                 	

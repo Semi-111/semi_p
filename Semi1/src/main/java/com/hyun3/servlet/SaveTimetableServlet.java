@@ -57,13 +57,13 @@ import jakarta.servlet.http.HttpSession;
 	        // 4. 수업들 DB에 삽입
 	        for (int i = 0; i < subjectsArray.length(); i++) {
 	            JSONObject subjectObj = subjectsArray.getJSONObject(i);
-	            String sbNum = subjectObj.getString("sbNum");  // 과목 번호
+	            String sbNum = subjectObj.getString("dt_sb_num");  // 과목 번호
 
 	            // DTO 객체 생성 및 값 설정
 	            ScheduleDTO dto = new ScheduleDTO();
 	            dto.setGradee(semester.split(" ")[0].replaceAll("[^0-9]", ""));  // 학년
 	            dto.setStGradee(semester.split(" ")[1].replaceAll("[^0-9]", ""));  // 학기
-	            dto.setSbNum(sbNum);    // 수업 번호
+	            dto.setDt_sb_num(sbNum);    // 수업 번호
 	            dto.setMb_Num(info.getMb_Num()); // 로그인된 회원 ID
 
 	            // DB에 저장
