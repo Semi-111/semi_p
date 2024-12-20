@@ -10,7 +10,7 @@ header {
     top: 0;
     width: 100%;
     background: white;
-    border-bottom: 1px solid #DBBEDF;
+    border-bottom: 2px solid #DBBEDF;
     z-index: 1000;
 }
 
@@ -37,95 +37,42 @@ header {
 }
 
 /* 네비게이션 메뉴 */
-nav {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
-    margin: 0 20px;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.nav-links {
-    width: 100%;
-    max-width: 800px;
-    overflow-x: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    display: flex;
-    align-items: center;
-}
-
-.nav-links::-webkit-scrollbar {
-    display: none;
-}
-
-.nav-links .nav {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: nowrap !important;
-    gap: 1rem;
-    min-width: max-content;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-}
-
-.nav-links .nav-item {
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-/* Bootstrap 네비게이션 스타일 오버라이드 */
 .nav-underline .nav-link {
-    color: #666 !important;
-    padding: 10px 8px !important;
-    font-size: 0.95rem;
-    transition: color 0.2s ease;
-    white-space: nowrap;
+    padding: 20px 20px;
+    color: #000;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.nav-underline .nav-link:hover,
-.nav-underline .nav-link.active {
-    color: #a855f7 !important;
+.nav-underline .nav-link:hover {
+    color: #c971ea;
     font-weight: bold;
 }
 
-/* 드롭다운 메뉴 스타일 */
-.dropdown-menu {
-    border-radius: 4px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ddd;
-}
-
-.dropdown-item {
-    color: #666;
-    padding: 8px 15px;
-}
-
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #a855f7;
+.nav-underline .nav-link.active {
+    color: #c971ea;
+    font-weight: bold;
 }
 
 /* 상단 아이콘 */
 .top-icons {
     flex: 0 0 auto;
     display: flex;
-    gap: 15px;
+    gap: 20px;
     padding: 0 15px;
     min-width: max-content;
 }
 
 .top-icons i {
-    font-size: 20px;
-    color: #666;
+    font-size: 22px;
+    color: #320a41;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .top-icons i:hover {
-    color: #a855f7;
+    color: #c971ea;
 }
 
 /* 반응형 스타일 */
@@ -159,77 +106,69 @@ nav {
     }
 }
 
+/* 화면 줄어들 때만 로고 클릭 시 메뉴 표시 */
 @media screen and (max-width: 768px) {
-    .header-container {
-        padding: 8px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        display: flex !important;
-        flex-direction: row !important;
-    }
-
-    .header-container::-webkit-scrollbar {
+    nav {
         display: none;
     }
 
-    .logo {
-        flex: 0 0 auto;
-        margin-right: 10px;
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #DBBEDF;
+        z-index: 999;
+        padding: 10px 0;
     }
 
-    nav {
-        flex: 1 0 auto;
-        margin: 0 10px;
-        min-width: 0;
+    .dropdown-item {
+        padding: 10px 15px;
+        font-size: 14px;
+        color: #000;
+        text-decoration: none;
+        display: block;
+        transition: background 0.3s ease;
     }
 
-    .nav-links {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 0;
+    .dropdown-item:hover {
+        background: #f7f7f7;
     }
 
-    .nav-links .nav {
-        flex-wrap: nowrap !important;
-        justify-content: flex-start;
+    .submenu {
+        padding-left: 20px;
     }
 
-    .top-icons {
-        flex: 0 0 auto;
-        margin-left: 10px;
+    .submenu .dropdown-item {
+        font-size: 13px;
+    }
+
+    .submenu .dropdown-item:hover {
+        background: #eaeaea;
     }
 
     .logo img {
-        max-height: 40px;
-    }
-
-    .nav-links {
-        padding: 0 5px;
+        max-height: 50px;
+        cursor: pointer;
     }
 
     .top-icons {
-        padding: 0 10px;
+        margin-left: auto;
     }
 }
 
+/* 모바일 화면 */
 @media screen and (max-width: 480px) {
-    .header-container {
-        padding: 5px;
-        flex-wrap: nowrap !important;
-    }
-
-    .nav-links .nav {
-        gap: 0.5rem;
-    }
-
-    .nav-underline .nav-link {
-        padding: 8px 4px !important;
-        font-size: 0.8rem;
+    .logo img {
+        max-height: 40px;
     }
 
     .top-icons i {
         font-size: 18px;
     }
-}
 
+    .dropdown-item {
+        font-size: 12px;
+    }
+}
