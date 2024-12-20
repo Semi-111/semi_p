@@ -55,7 +55,7 @@
                             </c:forEach>
                         </div>
                         <p class="title">
-                            <a href="${pageContext.request.contextPath}/lectureReview/article?review_num=${dto.review_Num}&page=${page}">${dto.sb_Name} : ${dto.pf_Name}</a>
+                            <a href="${pageContext.request.contextPath}/lectureReview/article?review_num=${dto.review_Num}&page=1">${dto.sb_Name} : ${dto.pf_Name}</a>
                         </p>
                         <p class="content">
                                 ${dto.content}
