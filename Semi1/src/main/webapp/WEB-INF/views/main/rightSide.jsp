@@ -46,7 +46,7 @@
                 <span>최근 강의평</span>
                 <a href="${pageContext.request.contextPath}/lectureReview/list">더 보기</a>
             </div>
-            <c:if test="${userRole >= 40}">
+            <c:if test="${sessionScope.member.role >= 40}">
                 <c:forEach var="dto" items="${listReview}">
                     <div class="review">
                         <div class="star-rate">
@@ -63,7 +63,7 @@
                     </div>
                 </c:forEach>
             </c:if>
-            <c:if test="${userRole == null || userRole < 40}">
+            <c:if test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
                 <div class="text-center">
                     <p>로그인후 작성해주세요</p>
                     <a href="${pageContext.request.contextPath}/login">로그인</a>
