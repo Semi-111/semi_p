@@ -1,3 +1,13 @@
+/* 현승 추가!! */
+h3>a {
+    color: #000;
+    text-decoration: none;
+}
+
+h3 > a:hover {
+    color: #b05ed9;
+}
+    
 .modal-backdrop {
     display: none;
     position: fixed;

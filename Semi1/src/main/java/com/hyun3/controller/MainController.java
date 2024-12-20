@@ -70,10 +70,28 @@ public class MainController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/main/survey", method = RequestMethod.GET)
-	public ModelAndView surveyForm(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		ModelAndView mav = new ModelAndView("main/survey");
-		return mav;
+	@RequestMapping(value = "/main/lucky", method = RequestMethod.GET)
+	public ModelAndView lucky(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	    ModelAndView mav = new ModelAndView("main/lucky");
+
+	    // 이미지 파일명 목록
+	    String[] images = {
+	        "/resources/images/lucky/test1.jpg",
+	        "/resources/images/lucky/test2.jpg",
+	        "/resources/images/lucky/test3.jpg",
+	        "/resources/images/lucky/test4.jpg",
+	        "/resources/images/lucky/test5.jpg",
+	        "/resources/images/lucky/test6.jpg",
+	        "/resources/images/lucky/test7.jpg"
+	    };
+
+	    // 랜덤 인덱스 선택
+	    int randomIndex = (int) (Math.random() * images.length);
+	    String selectedImage = images[randomIndex];
+
+	    // 모델에 랜덤 이미지 추가
+	    mav.addObject("selectedImage", selectedImage);
+
+	    return mav;
 	}
 }

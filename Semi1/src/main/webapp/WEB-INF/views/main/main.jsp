@@ -107,10 +107,9 @@
 
 				<!-- 중앙 화면 -->
 				<div class="col-7 col-lg-7" id="mainContent">
-					<div class="survey">
-						<a href="${pageContext.request.contextPath}/main/survey"> <img
-							src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg"
-							class="survey-image">
+					<div class="lucky">
+						<a href="${pageContext.request.contextPath}/main/lucky"> 
+							<img src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg" class="lucky-image">
 						</a>
 					</div>
 
