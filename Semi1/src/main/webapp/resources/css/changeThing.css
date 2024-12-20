@@ -8,11 +8,9 @@ body {
 }
 
 h3 {
-    color: #983AC7;
+    color: #007bff;
     text-align: center;
-    margin-top: 100px;
-    font-size: 30px;
-    
+    margin-top: 30px;
 }
 
 form {
@@ -43,7 +41,7 @@ input[type="text"], input[type="password"] {
 }
 
 button {
-    background-color: #C878F0;
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -55,11 +53,11 @@ button {
 }
 
 button[type="button"]:hover {
-    background-color: #B555E5;
+    background-color: #0056b3;
 }
 
 button[type="button"]:active {
-    background-color: #983AC7;
+    background-color: #004085;
 }
 
 button[type="button"]:focus {
@@ -89,7 +87,7 @@ button[type="button"]:last-child:hover {
 
 /* 폼 안의 텍스트 필드 */
 input:focus {
-    border-color: #F61A21;
+    border-color: #007bff;
     outline: none;
 }
 

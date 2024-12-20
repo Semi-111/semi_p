@@ -8,26 +8,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LUCKY</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script type="text/javascript">
+	// 페이지 새로고침 시 랜덤 이미지가 계속 나오도록 설정
+	function reloadPage() {
+		window.location.reload(); // 페이지 새로고침
+	}
 
-<script>
-    function reloadPage() {
-        location.reload(); // 페이지 새로고침
-    }
-
-    function goToMain() {
-        window.location.href = "${pageContext.request.contextPath}/main"; // 메인 페이지로 이동
-    }
+	// 메인 페이지로 돌아가기
+	function goToMain() {
+		window.location.href = '/main'; // 메인 페이지로 이동
+	}
 </script>
-
 </head>
 <body>
-    <h1>오늘의 운세는?</h1>
-    
-    <!-- 랜덤 이미지 출력 -->
-    <img src="${luckyImage}" alt="Lucky Image" class="lucky-image">
+	<h1>오늘의 운세는?</h1>
+	<!-- 랜덤으로 선택된 이미지를 보여줌 -->
+	<img src="${selectedImage}" alt="운세 이미지" style="width: 100%; max-width: 600px;">
 
-    <!-- 버튼들 -->
-    <button onclick="reloadPage()">운세 새로고침</button>
-    <button onclick="goToMain()">나가기</button>
+	<br>
+	<br>
+
+	<!-- 버튼들 -->
+	<button onclick="reloadPage()">운세 새로고침</button>
+	<button onclick="goToMain()">나가기</button>
 </body>
 </html>

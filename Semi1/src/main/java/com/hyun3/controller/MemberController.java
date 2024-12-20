@@ -556,50 +556,6 @@ public class MemberController {
 	}
 
 
-	/*
-	@RequestMapping(value = "/member/image", method = RequestMethod.POST)
-	public ModelAndView imageUpload(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		HttpSession session = req.getSession();
 
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-
-		if (info == null) {
-			return new ModelAndView("redirect:/member/login");
-		}
-
-		ModelAndView mav = new ModelAndView("member/myPage");
-
-		FileManager fileManager = new FileManager();
-		String root = session.getServletContext().getRealPath("/");
-		String pathname = root + "uploads" + File.separator + "photo";
-		System.out.println("root = " + root);
-		System.out.println("pathname = " + pathname);
-
-		Part part = req.getPart("infoimage");
-
-		if (part != null && part.getSize() > 0) {
-			MyMultipartFile uploadedFile = fileManager.doFileUpload(part, pathname);
-
-			if (uploadedFile != null) {
-				String originalFilename = uploadedFile.getSaveFilename();
-//				String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8).replace("+", "%20");
-
-				info.setImage(originalFilename);
-//				System.out.println("확인: " + info.getImage());
-			} else {
-				System.out.println("exit..");
-			}
-		} else {
-			System.out.println("why..");
-		}
-
-		session.setAttribute("member", info);
-
-		mav.addObject("memberInfo", info);
-		return mav;
-	}
-
-*/
 
 }

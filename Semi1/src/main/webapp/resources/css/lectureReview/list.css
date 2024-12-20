@@ -2,16 +2,11 @@
 
 h3>a {
     color: #000;
-    text-decoration: none !important;
-}
-
-a {
-	text-decoration: none !important;
-	color: black !important;
+    text-decoration: none;
 }
 
 h3 > a:hover {
-    color: #b05ed9 !important;
+    color: #b05ed9;
 }
 
 body {
@@ -178,7 +173,7 @@ body {
 }
 
 .lecture-title a:hover {
-	color: #a855f7 !important;
+	color: #a855f7;
 }
 
 .professor {
@@ -235,7 +230,7 @@ body {
 }
 
 .page-link {
-	text-decoration: none !important;
+	text-decoration: none;
 	color: #666;
 	padding: 8px 12px;
 	border: 1px solid #ddd;

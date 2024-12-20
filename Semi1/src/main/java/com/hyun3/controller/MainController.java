@@ -3,13 +3,14 @@ package com.hyun3.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 
+import com.hyun3.dao.academy.LectureReviewDAO;
 import com.hyun3.dao.board.InfoBoardDAO;
 import com.hyun3.dao.board.SecretBoardDAO;
 import com.hyun3.dao.board.StudentBoardDAO;
 import com.hyun3.dao.lesson.LessonDAO;
 import com.hyun3.dao.notice.NoticeDAO;
+import com.hyun3.domain.academy.LectureReviewDTO;
 import com.hyun3.domain.board.InfoBoardDTO;
 import com.hyun3.domain.board.SecretBoardDTO;
 import com.hyun3.domain.board.StudentBoardDTO;
@@ -45,17 +46,16 @@ public class MainController {
 		List<StudentBoardDTO> studentBoard = studentdao.listBoard1("student", 0, 5); // 새내기
 		List<StudentBoardDTO> oldbieBoard = studentdao.listBoard1("oldbie", 0, 5); // 졸업생
 
-		// List<StudentBoardDTO> oldbieBoard = studentdao.listBoard("oldbie", 0, 5,
-		// null, null, null); // 졸업생
-
-		// 졸업
 
 		LessonDAO lessondao = new LessonDAO(); // 학과별
 		try {
 			List<LessonDTO> lessonBoard = lessondao.listBoard(0, 5);
 
 			List<NoticeDTO> noticeBoard = noticedao.listBoard(0, 5, "0");
+			LectureReviewDAO ReviewDAO = new LectureReviewDAO();
+			List<LectureReviewDTO> listReview = ReviewDAO.listReview(0, 3);
 
+			mav.addObject("listReview", listReview);
 			mav.addObject("lessonBoard", lessonBoard);
 			mav.addObject("noticeBoard", noticeBoard);
 			mav.addObject("freeBoard", freeBoard);
@@ -73,24 +73,26 @@ public class MainController {
 
 	@RequestMapping(value = "/main/lucky", method = RequestMethod.GET)
 	public ModelAndView lucky(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    // lucky 폴더 안에 있는 이미지 파일들 이름 목록을 배열에 저장
+	    ModelAndView mav = new ModelAndView("main/lucky");
+
+	    // 이미지 파일명 목록
 	    String[] images = {
-	        "test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg", "test6.jpg", "test7.jpg"
+	        "/resources/images/lucky/test1.jpg",
+	        "/resources/images/lucky/test2.jpg",
+	        "/resources/images/lucky/test3.jpg",
+	        "/resources/images/lucky/test4.jpg",
+	        "/resources/images/lucky/test5.jpg",
+	        "/resources/images/lucky/test6.jpg",
+	        "/resources/images/lucky/test7.jpg"
 	    };
 
-	    // Random 객체를 사용하여 배열에서 랜덤한 인덱스를 선택
-	    Random rand = new Random();
-	    int randomIndex = rand.nextInt(images.length); // 0부터 6까지 랜덤 번호 생성
+	    // 랜덤 인덱스 선택
+	    int randomIndex = (int) (Math.random() * images.length);
+	    String selectedImage = images[randomIndex];
 
-	    // 랜덤으로 선택된 이미지를 mav에 전달
-	    String selectedImage = "/resources/images/lucky/" + images[randomIndex];
-	    
-	    // ModelAndView 객체를 생성하고 선택된 이미지를 모델에 추가
-	    ModelAndView mav = new ModelAndView("main/lucky");
-	    mav.addObject("luckyImage", selectedImage);
+	    // 모델에 랜덤 이미지 추가
+	    mav.addObject("selectedImage", selectedImage);
 
 	    return mav;
 	}
-
-
 }

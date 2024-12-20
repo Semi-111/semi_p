@@ -285,8 +285,7 @@
 				</div>
 
 				<!-- 오른쪽 사이드 -->
-				<c:set var="url" value="http://localhost:9090${pageContext.request.contextPath}/rightSide"/>
-				<c:import url="${url}"/>
+				<jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
 
 			</div>
 		</div>
