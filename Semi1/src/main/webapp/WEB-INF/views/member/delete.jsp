@@ -11,8 +11,10 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 
 <style type="text/css">
-.body-container {
-	max-width: 800px;
+.container {
+	max-width: 300px;
+	width: 100%;
+	padding: 20px;
 }
 </style>
 <script type="text/javascript">
@@ -43,50 +45,45 @@
 		<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 	</header>
 
-	<main>
-		<div class="container">
-			<div class="body-container">
+	<div class="container">
 
-				<div class="row justify-content-md-center">
-					<div class="col-md-7">
-						<div class="border mt-5 p-4">
-							<form name="deleteForm" action="" method="post" class="row g-3">
-								<h3 class="text-center fw-bold">회원 탈퇴</h3>
-								<div class="d-grid">
-									<p class="form-control-plaintext text-center">회원을 탈퇴하시려면
-										비밀번호를 두 번 입력해주세요.</p>
-								</div>
-								<div class="d-grid">
-									<input type="password" name="pwd"
-										class="form-control form-control-lg" autocomplete="off"
-										placeholder="비밀번호">
-								</div>
-								<div class="d-grid">
-									<input type="password" name="confirmPwd"
-										class="form-control form-control-lg" autocomplete="off"
-										placeholder="비밀번호 확인">
-								</div>
-								<div class="d-grid">
-									<button type="button" class="btn btn-lg btn-primary"
-										onclick="sendOk();">
-										확인 <i class="bi bi-check2"></i>
-									</button>
-									<input type="hidden" name="mode" value="delete">
-								</div>
-							</form>
-						</div>
-
-
+		<div class="d-flex justify-content-center align-items-center"
+			style="min-height: 100vh;">
+			<div class="row justify-content-center">
+				<div class="col-md-7">
+					<div class="border p-4">
+						<form name="deleteForm" action="" method="post" class="row g-3">
+							<h3 class="text-center fw-bold">회원 탈퇴</h3>
+							<div class="d-grid">
+								<p class="form-control-plaintext text-center">회원을 탈퇴하시려면
+									비밀번호를 두 번 입력해주세요.</p>
+							</div>
+							<div class="d-grid">
+								<input type="password" name="pwd"
+									class="form-control form-control-lg" autocomplete="off"
+									placeholder="비밀번호">
+							</div>
+							<div class="d-grid">
+								<input type="password" name="confirmPwd"
+									class="form-control form-control-lg" autocomplete="off"
+									placeholder="비밀번호 확인">
+							</div>
+							<div class="d-grid">
+								<button type="button" class="btn btn-lg btn-danger"
+									onclick="sendOk();">
+									확인 <i class="bi bi-check2"></i>
+								</button>
+								<input type="hidden" name="mode" value="delete">
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
-	</main>
 
-	<footer>
-		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-	</footer>
+	</div>
 
+	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 
 </body>

@@ -72,10 +72,13 @@
 					<span class="label">아이디</span>
 					<span class="value">${memberInfo.userId}</span>
 				</div>
-				<div class="info-item">
+				<br>
+				<br>
+				<h5>&lt;정보 변경&gt;</h5>
+				<%-- <div class="info-item">
 					<span class="label">이메일</span>
 					<span class="value">${memberInfo.email}</span>
-				</div>
+				</div> --%>
 				<div class="actions">
 					<button type="button" class="btn changeBtn"
 							onclick="location.href='${pageContext.request.contextPath}/member/changePwd'">비밀번호 변경</button>
@@ -88,12 +91,12 @@
 		</section>
 
 		<!-- 일정 섹션 -->
-		<section class="profile-section">
+		<!-- <section class="profile-section">
 			<h2>일정</h2>
 			<div class="schedule">
 				<p>현재 일정이 없습니다.</p>
 			</div>
-		</section>
+		</section> -->
 
 		<div>
 			<button type="button" class="changeBtn"
