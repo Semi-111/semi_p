@@ -13,14 +13,22 @@ public class MemberDTO {
 	private String email; // 이메일
 	private String tel; // 전화번호
 	private String birth; // 생일
+	private String profileImg; // 프로필 이미지
 
 	private int studentNum; // 학번(수정)
 
 	private int lessonNum; // 이 부분 추가
 
 	private String lessonName;
-	
-	
+
+	public String getProfileImg() {
+		return profileImg;
+	}
+
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
+
 	public String getLessonName() {
 		return lessonName;
 	}

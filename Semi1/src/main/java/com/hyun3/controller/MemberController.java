@@ -71,6 +71,7 @@ public class MemberController {
 			info.setRole(dto.getRole());
 			info.setNickName(dto.getNickName());
 			info.setLessonNum(dto.getLessonNum()); // 이 부분 추가 - 선웅
+			info.setImage(dto.getProfileImg());
 
 			// 세션에 member 라는 이름으로 로그인 정보를 저장
 			session.setAttribute("member", info);
@@ -499,6 +500,63 @@ public class MemberController {
 		return model;
 	}
 
+
+	@RequestMapping(value = "/member/image", method = RequestMethod.POST)
+	public ModelAndView imageUpload(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException, SQLException {
+		HttpSession session = req.getSession();
+		ModelAndView mav = new ModelAndView("member/myPage");
+
+		try {
+
+			SessionInfo info = (SessionInfo) session.getAttribute("member");
+			MemberDAO dao = new MemberDAO();
+			if (info == null) {
+				return new ModelAndView("redirect:/member/login");
+			}
+
+			long mbNum = info.getMb_Num();
+
+
+
+			FileManager fileManager = new FileManager();
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "photo";
+
+
+			if (info.getImage() != null && !info.getImage().isEmpty()) {
+				fileManager.doFiledelete(info.getImage(), pathname);
+			}
+
+			Part part = req.getPart("infoimage");
+
+			if (part != null && part.getSize() > 0) {
+				MyMultipartFile uploadedFile = fileManager.doFileUpload(part, pathname);
+
+				if (uploadedFile != null) {
+					String saveFilename = uploadedFile.getSaveFilename();
+					dao.updateProfileImg(mbNum, saveFilename);
+					info.setImage(saveFilename);
+				} else {
+					System.out.println("exit..");
+				}
+			} else {
+				System.out.println("why..");
+			}
+
+			session.setAttribute("member", info);
+
+			mav.addObject("memberInfo", info);
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mav;
+	}
+
+
+	/*
 	@RequestMapping(value = "/member/image", method = RequestMethod.POST)
 	public ModelAndView imageUpload(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -524,11 +582,11 @@ public class MemberController {
 			MyMultipartFile uploadedFile = fileManager.doFileUpload(part, pathname);
 
 			if (uploadedFile != null) {
-				String originalFilename = uploadedFile.getOriginalFilename();
-				String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8).replace("+", "%20");
+				String originalFilename = uploadedFile.getSaveFilename();
+//				String encodedFilename = URLEncoder.encode(originalFilename, StandardCharsets.UTF_8).replace("+", "%20");
 
-				info.setImage(encodedFilename);
-				System.out.println("확인: " + info.getImage());
+				info.setImage(originalFilename);
+//				System.out.println("확인: " + info.getImage());
 			} else {
 				System.out.println("exit..");
 			}
@@ -542,6 +600,6 @@ public class MemberController {
 		return mav;
 	}
 
-
+*/
 
 }

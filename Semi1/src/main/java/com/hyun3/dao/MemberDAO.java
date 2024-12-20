@@ -19,7 +19,7 @@ public class MemberDAO {
 
 		try {
 			String sql = "SELECT m.mb_Num,  m.userId, m.pwd,  m.nickName,  m.role, m.ca_Day, m.lessonNum, " +
-					" dt.name, dt.email, dt.birthday, dt.tel, dt.studentnum " +
+					" dt.name, dt.email, dt.birthday, dt.tel, dt.studentnum,dt.profile_img" +
 					" FROM member m " +
 					" LEFT JOIN DT_MEMBER dt ON m.mb_Num = dt.mb_Num " +
 					" WHERE m.userId = ? " +
@@ -48,6 +48,7 @@ public class MemberDAO {
 				dto.setBirth(rs.getString("birthday"));
 				dto.setTel(rs.getString("tel"));
 				dto.setStudentNum(rs.getInt("studentnum"));
+				dto.setProfileImg(rs.getString("profile_img"));
 			}
 
 		} catch (Exception e) {
@@ -90,7 +91,7 @@ public class MemberDAO {
 			pstmt.close();
 			pstmt = null;
 
-			sql = "INSERT INTO dt_member(mb_Num, name, email, birthday, tel, studentnum) VALUES (?, ?, ?, TO_DATE(?,'YYYY-MM-DD'), ?, ?)";
+			sql = "INSERT INTO dt_member(mb_Num, name, email, birthday, tel, studentnum,PROFILE_IMG) VALUES (?, ?, ?, TO_DATE(?,'YYYY-MM-DD'), ?, ?,'')";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setLong(1, seqValue);
@@ -319,4 +320,25 @@ public class MemberDAO {
 		}
 	}
 
+
+	public void updateProfileImg(long mbNum, String saveFilename) throws SQLException {
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "UPDATE dt_member SET PROFILE_IMG = ? WHERE mb_Num = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, saveFilename);
+			pstmt.setLong(2, mbNum);
+
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DBUtil.close(pstmt);
+		}
+
+	}
 }
