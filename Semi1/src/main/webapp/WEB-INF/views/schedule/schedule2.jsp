@@ -199,17 +199,17 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <div id="input-boxx">
-           	 	<h3>&nbsp;&nbsp;&nbsp;수업</h3>&nbsp;&nbsp;&nbsp;
-            	<input type="text" id="search" placeholder="검색..." onkeyup="filterSubjects()">
+            	<input type="text" id="search" placeholder="교과목명?" onkeyup="filterSubjects()">
             </div>
+            <br>
             <table class="subject">
                 <thead>
                     <tr>
-                        <th>학년</th>
-                        <th>학수번호</th>
-                        <th>교과목명</th>
-                        <th>학점</th>
-                        <th>교시</th>
+                        <th class="modaltext" style="background: #E8D9FF">학년</th>
+                        <th class="modaltext" style="background: #E8D9FF">학수번호</th>
+                        <th class="modaltext" style="background: #E8D9FF">교과목명</th>
+                        <th class="modaltext" style="background: #E8D9FF">학점</th>
+                        <th class="modaltext" style="background: #E8D9FF">교시</th>
                     </tr>
                 </thead>
                 <tbody>

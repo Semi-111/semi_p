@@ -301,9 +301,26 @@
             font-size: 16px;
         }
 
+		#input-boxx {
+	    margin-left: 20px; /* Adds space above the whole box */
+	    border-radius: 3px;
+		}
+
+		#input-boxx input {
+	    padding: 2px; /* Adds padding inside the input box */
+	    margin-top: 10px; /* Adds space between the title and the input field */
+	    width: 10%; /* Optional: makes the input field take the full width */
+		}	
+
         .save-timetable-btn:hover {
        		border: none;
             background-color: #A566FF;
+        }
+        
+        .modaltext {
+        	border-top: 2px solid #A566FF !important ;
+        	border-bottom: 2px solid #A566FF !important ;
+        	font-size: 15px !important;
         }
         
         
