@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+h3>a {
+    color: #000;
+    text-decoration: none;
+}
+
+h3 > a:hover {
+    color: #b05ed9;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -16,11 +25,21 @@ body {
 
 /* 왼쪽 사이드바 */
 .sidebar {
-    width: 35%;
+    width: 40%;
     background: #fff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar form {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬, 선택사항 */
+    gap: 10px; /* input과 button 사이의 간격 설정 */
+}
+
+.sidebar form input {
+    flex: 1; /* 남는 공간을 모두 차지하도록 */
 }
 
 /* 과목명, 교수명 검색 */
@@ -30,7 +49,24 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+}
+
+.search-bar .btn {
+	background-color: #a855f7;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.search-bar select:focus, .search-box input:focus {
+	outline: none;
+	border-color: #a855f7;
+}
+
+.search-bar button:hover {
+	background-color: #9333ea;
 }
 
 .lecture-info {
@@ -118,7 +154,7 @@ body {
 
 /* 오른쪽 메인 콘텐츠 */
 .main-content {
-    width: 65%;
+    width: 60%;
     margin-left: 20px;
 }
 

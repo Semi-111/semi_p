@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Controller
 public class BoardRankController {
 	
-	@RequestMapping(value = "/main/rightSide" , method = RequestMethod.GET)
+	@RequestMapping(value = "/rightSide" , method = RequestMethod.GET)
 	public ModelAndView 메소드명(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ModelAndView mav = new ModelAndView("main/rightSide");
 		
@@ -25,7 +25,8 @@ public class BoardRankController {
 		List<LectureReviewDTO> listReview = ReviewDAO.listReview(0, 3);
 		
 		mav.addObject("listReview", listReview);
-	
+		
+		
 		
 		return mav;
 	}

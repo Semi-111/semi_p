@@ -1,6 +1,8 @@
 package com.hyun3.controller.academy;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.hyun3.dao.academy.LectureReviewDAO;
@@ -60,6 +62,16 @@ public class LectureReviewController {
 			
 			int dataCount = dao.dataCount();
 			
+			String kwd = req.getParameter("kwd");
+			if (kwd == null) {
+			    kwd = "";
+			}
+			
+			// GET 방식이면 디코딩
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				kwd = URLDecoder.decode(kwd, "utf-8");
+			}
+			
 			// 전체 페이지 수
 			int size = 5;
 			int total_page = util.pageCount(dataCount, size);
@@ -70,20 +82,29 @@ public class LectureReviewController {
 			// 데이터 가져오기
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
-					
+			
 			List<LectureReviewDTO> reviewList = dao.listReview(offset, size);
+			if(kwd.length() == 0) {
+				reviewList = dao.listReview(offset, size);
+			}
 			
 			for(LectureReviewDTO dto : reviewList) {
 				dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 			}
 			// reviewList = dao.listReview(userId);
 			
+			String query = "";
+			if(kwd.length() != 0) {
+				query = "kwd=" + URLEncoder.encode(kwd, "utf-8");
+			}
 			
 			// 페이징 처리
 			String cp = req.getContextPath();
 			String listUrl = cp + "/lectureReview/list?=page=" + current_page;
 			
-		
+			if(query.length() != 0) {
+				listUrl += "&" + query;
+			}
 			
 			String paging = util.paging(current_page, total_page, listUrl);
 			
@@ -96,8 +117,8 @@ public class LectureReviewController {
 			mav.addObject("size", size);
 			
 			mav.addObject("paging", paging);
+			mav.addObject("kwd", kwd);
 			// mav.addObject("schType", schType);
-			// mav.addObject("kwd", kwd);
 				
 		} catch (Exception e) {
 			e.printStackTrace();

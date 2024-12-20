@@ -19,14 +19,16 @@ $(function() {
     var lectureCount = $('.lecture-detail .lecture-list').length;
     
     // 하나당 높이가 60이므로 총 높이 계산
-    var totalHeight = lectureCount * 60 + 100;
+    var totalHeight = lectureCount * 60 + 200;
 
     // .sidebar의 높이를 동적으로 설정
     $('.sidebar').css("height", totalHeight + "px");	
 });
 
-
-
+function searchList() {
+	const f = document.searchForm;
+	f.submit();
+}
 
 </script>
 
@@ -36,43 +38,51 @@ $(function() {
 <jsp:include page="/WEB-INF/views/layout/header.jsp" />
 
 <main class="list-main">
+
     <div class="container">
-        <!-- 왼쪽 메뉴 -->
-        <div class="sidebar">
-            <div class="lecture-info">
-            	<!-- 검색 바 -->
-
-                <div class="lecture-my">내 강의</div>
-                           
-                <div class="lecture-detail">
-                	<c:forEach var="dto" items="${myLlist}">
-                		<div class="lecture-list">
-		                    <span class="lecture-title">
-		                    	<c:choose>
-		                    		<c:when test="${dto.isWritten == 1}">
-		                    			<a href="${pageContext.request.contextPath}/lectureReview/update?reviewnum=${dto.review_Num}">
-		                    				${dto.sb_Name} (수정/확인)
-		                    			</a>		                  		
-		                    		</c:when>
-		                    			
-		                    		<c:otherwise>
-		                    			<a href="${pageContext.request.contextPath}/lectureReview/write?atNum=${dto.at_Num}">
-		                    				${dto.sb_Name} (평가하기)
-		                    			</a>
-		                    		</c:otherwise>		                    	
-		                    	</c:choose>
-		                    		                    	               
-		                    </span>
-		                    <br>
-		                    <span class="professor">${dto.pf_Name}</span>
-	                    </div>
-                    </c:forEach>
-                </div>
-                
-                
-            </div>
-        </div>
-
+    	
+		
+			<!-- 왼쪽 메뉴 -->
+	        <div class="sidebar">
+	        	<div class="search-bar">
+		        	<form name="searchForm" action="${pageContext.request.contextPath}/lectureReview/list" method="get">
+			    		<input type="text" name="kwd" value="${kwd}" class="form-control" placeholder="과목명, 교수명으로 검색하세요">
+			    		<button type="button" class="btn" onclick="searchList();" >검색</button>
+			    	</form>
+	        	</div>
+	            <div class="lecture-info">
+	            					
+	                <div class="lecture-my">내 강의</div>
+	                           
+	                <div class="lecture-detail">
+	                	<c:forEach var="dto" items="${myLlist}">
+	                		<div class="lecture-list">
+			                    <span class="lecture-title">
+			                    	<c:choose>
+			                    		<c:when test="${dto.isWritten == 1}">
+			                    			<a href="${pageContext.request.contextPath}/lectureReview/update?reviewnum=${dto.review_Num}">
+			                    				${dto.sb_Name} (수정/확인)
+			                    			</a>		                  		
+			                    		</c:when>
+			                    			
+			                    		<c:otherwise>
+			                    			<a href="${pageContext.request.contextPath}/lectureReview/write?atNum=${dto.at_Num}">
+			                    				${dto.sb_Name} (평가하기)
+			                    			</a>
+			                    		</c:otherwise>		                    	
+			                    	</c:choose>
+			                    		                    	               
+			                    </span>
+			                    <br>
+			                    <span class="professor">${dto.pf_Name}</span>
+		                    </div>
+	                    </c:forEach>
+	                </div>	                	                
+	            </div>
+	        </div>
+		
+		
+		
         <!-- 오른쪽 강의 평가 리스트 -->
         <div class="main-content">
         	
@@ -131,10 +141,9 @@ $(function() {
 					</div>
 				</div>
             
-        </div>
-        
-        
+        </div>   
     </div>
+
 </main>
 
 <script type="text/javascript">
