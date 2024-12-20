@@ -50,6 +50,7 @@ function searchList() {
 			    		<button type="button" class="btn" onclick="searchList();" >검색</button>
 			    	</form>
 	        	</div>
+        		        	
 	            <div class="lecture-info">
 	            					
 	                <div class="lecture-my">내 강의</div>

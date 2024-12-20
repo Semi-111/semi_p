@@ -1,12 +1,17 @@
 @charset "UTF-8";
 
-h3>a {
-    color: #000;
-    text-decoration: none;
+.lecture-list .lecture-title a {
+    color: #000 !important;
+    text-decoration: none !important;
 }
 
-h3 > a:hover {
-    color: #b05ed9;
+.lecture-list:hover .lecture-title a {
+    color: #b05ed9 !important;
+}
+
+a {
+	text-decoration: none !important;
+	color: black !important;
 }
 
 body {
@@ -173,7 +178,7 @@ body {
 }
 
 .lecture-title a:hover {
-	color: #a855f7;
+	color: #a855f7 !important;
 }
 
 .professor {
