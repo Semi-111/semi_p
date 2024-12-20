@@ -320,14 +320,14 @@ function createOrUpdateGradeChart(gradeLabels, gradePercentages) {
     // 2. 라벨과 데이터를 customOrder 기준으로 정렬
     const sortedData = gradeLabels
         .map((label, index) => ({
-            label, // 성적 라벨 (예: A+, B+)
+            label: label, // 성적 라벨 (예: A+, B+)
             percentage: gradePercentages[index] // 해당 라벨의 비율 데이터
         }))
         .sort((a, b) => customOrder.indexOf(a.label) - customOrder.indexOf(b.label)); // 정렬 기준
 
     // 3. 정렬된 데이터에서 라벨과 비율을 분리
-    const sortedLabels = sortedData.map((item) => item.label);
-    const sortedPercentages = sortedData.map((item) => item.percentage);
+    let sortedLabels = sortedData.map((item) => item.label);
+    let sortedPercentages = sortedData.map((item) => item.percentage);
 
     // 데이터가 비어있을 경우 기본값 설정
     if (!sortedLabels || sortedLabels.length === 0) {
