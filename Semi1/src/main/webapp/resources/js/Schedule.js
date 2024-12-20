@@ -426,6 +426,18 @@ function removeTimeSlots(col, startTime, duration) {
 	});
 	
 	function loadTimetable(timetableData) {
+		// timetableData가 undefined 또는 빈 배열인 경우 처리
+		 if (!timetableData || timetableData.length === 0) {
+		     // 확인창 띄우기
+		     const userConfirmed = confirm("등록된 수업이 없습니다.");
+		     if (userConfirmed) {
+		         console.log("사용자가 확인 버튼을 클릭했습니다.");
+		     } else {
+		         console.log("사용자가 취소 버튼을 클릭했습니다.");
+		     }
+		     return; // 함수 종료
+		 }
+		
 		console.log("받아온 시간표 데이터:", timetableData);
 	    // 시간표 데이터 배열을 순회하면서 각 시간대와 요일에 맞게 과목을 추가
 	    timetableData.forEach(item => {
