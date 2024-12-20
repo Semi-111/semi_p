@@ -46,7 +46,7 @@
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/market/list">장터</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/food/list">맛집</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/map">맛집</a></li>
 					<li class="nav-item1"><a class="nav-link">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
 				</ul>
 			</div>
