@@ -3,6 +3,7 @@ package com.hyun3.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import com.hyun3.dao.board.InfoBoardDAO;
 import com.hyun3.dao.board.SecretBoardDAO;
@@ -72,26 +73,24 @@ public class MainController {
 
 	@RequestMapping(value = "/main/lucky", method = RequestMethod.GET)
 	public ModelAndView lucky(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	    ModelAndView mav = new ModelAndView("main/lucky");
-
-	    // 이미지 파일명 목록
+	    // lucky 폴더 안에 있는 이미지 파일들 이름 목록을 배열에 저장
 	    String[] images = {
-	        "/resources/images/lucky/test1.jpg",
-	        "/resources/images/lucky/test2.jpg",
-	        "/resources/images/lucky/test3.jpg",
-	        "/resources/images/lucky/test4.jpg",
-	        "/resources/images/lucky/test5.jpg",
-	        "/resources/images/lucky/test6.jpg",
-	        "/resources/images/lucky/test7.jpg"
+	        "test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg", "test6.jpg", "test7.jpg"
 	    };
 
-	    // 랜덤 인덱스 선택
-	    int randomIndex = (int) (Math.random() * images.length);
-	    String selectedImage = images[randomIndex];
+	    // Random 객체를 사용하여 배열에서 랜덤한 인덱스를 선택
+	    Random rand = new Random();
+	    int randomIndex = rand.nextInt(images.length); // 0부터 6까지 랜덤 번호 생성
 
-	    // 모델에 랜덤 이미지 추가
-	    mav.addObject("selectedImage", selectedImage);
+	    // 랜덤으로 선택된 이미지를 mav에 전달
+	    String selectedImage = "/resources/images/lucky/" + images[randomIndex];
+	    
+	    // ModelAndView 객체를 생성하고 선택된 이미지를 모델에 추가
+	    ModelAndView mav = new ModelAndView("main/lucky");
+	    mav.addObject("luckyImage", selectedImage);
 
 	    return mav;
 	}
+
+
 }
