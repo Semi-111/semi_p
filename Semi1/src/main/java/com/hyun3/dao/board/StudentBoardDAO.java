@@ -75,7 +75,7 @@ public class StudentBoardDAO {
 	        if (dto.getCategoryNum() != null) {
 	            ps.setInt(5, dto.getCategoryNum());
 	        } else {
-	            ps.setNull(5, java.sql.Types.INTEGER);
+	            ps.setNull(5, Types.INTEGER);
 	        }
 
 	        ps.setLong(6, dto.getCmNum());

@@ -89,8 +89,7 @@
     }
 
     let schTerm = '${schTerm}';
-
-
+    let pathContext  = '${pageContext.request.contextPath}';
 
 </script>
 

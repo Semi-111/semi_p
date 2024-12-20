@@ -5,7 +5,7 @@ function createMarker(data) {
         position: new naver.maps.LatLng(data.lat, data.lon),
         map: map,
         icon: {
-            url: '/resources/images/map/marker.png',
+            url: pathContext+'/resources/images/map/marker.png',
             size: new naver.maps.Size(48, 48),
             origin: new naver.maps.Point(0, 0),
             anchor: new naver.maps.Point(25, 25)
