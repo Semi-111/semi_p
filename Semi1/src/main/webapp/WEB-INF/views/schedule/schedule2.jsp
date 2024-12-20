@@ -17,15 +17,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/header.js"></script>
 
-
-
-
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ScheduleCss.css" type="text/css">
 
 </head>
 <body>
 
-	<jsp:include page="/WEB-INF/views/layout/header.jsp" />
+<jsp:include page="/WEB-INF/views/layout/header2.jsp" />
 	
     <main>
     <form action="/SaveTimetableServlet" method="POST"></form>
@@ -174,7 +171,26 @@
 	    }
 	});
 }
+	
+    // 수업 목록을 필터링하는 함수
+    function filterSubjects() {
+        let input = document.getElementById('search'); // 검색 입력값
+        let filter = input.value.toLowerCase(); // 입력값을 소문자로 변환
+        let rows  = document.querySelectorAll('.modal-line'); // 테이블 본문
 
+        // 모든 행을 순회하면서 검색어가 포함된 항목을 표시하고, 그렇지 않은 항목은 숨깁니다.
+        rows.forEach(function(row) {
+            let td = row.querySelector('td:nth-child(3)'); // '교과목명' 열 (세 번째 <td>)
+            if (td) {
+                let text = td.textContent || td.innerText; // 교과목명 텍스트 가져오기
+                if (text.toLowerCase().indexOf(filter) > -1) {
+                    row.style.display = ""; // 검색어가 포함되면 표시
+                } else {
+                    row.style.display = "none"; // 포함되지 않으면 숨깁니다
+                }
+            }
+        });
+    }
     
 	</script>
 
@@ -184,7 +200,7 @@
             <span class="close">&times;</span>
             <div id="input-boxx">
            	 	<h3>&nbsp;&nbsp;&nbsp;수업</h3>&nbsp;&nbsp;&nbsp;
-            	<input type="text" id="search" placeholder="검색...">
+            	<input type="text" id="search" placeholder="검색..." onkeyup="filterSubjects()">
             </div>
             <table class="subject">
                 <thead>
