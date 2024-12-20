@@ -36,7 +36,7 @@
 				<div class="col-2 d-none d-lg-block" id="leftSide">
 					<div class="profile-container">
 						<c:choose>
-							<c:when test="${sessionScope.member != null}">
+							<c:when test="${sessionScope.member != null || sessionScope.member.role > 40}">
 								<div class="profile">
 									<h5>나의 정보</h5>
 									<div class="profile-info">
@@ -68,7 +68,7 @@
 							<c:otherwise>
 								<div class="login-prompt">
 									<h6>
-										커뮤티니 이용을 위해<br>로그인이 필요합니다!
+										커뮤니티 이용을 위해<br>로그인이 필요합니다!
 									</h6>
 									<div class="login-buttons">
 										<button type="button"
@@ -108,7 +108,7 @@
 				<!-- 중앙 화면 -->
 				<div class="col-7 col-lg-7" id="mainContent">
 					<div class="lucky">
-						<a href="${pageContext.request.contextPath}/main/lucky"> 
+						<a href="${pageContext.request.contextPath}/main/lucky">
 							<img src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg" class="lucky-image">
 						</a>
 					</div>

@@ -135,10 +135,8 @@
   </div>
 </div>
 
-<footer>
   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
   <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-</footer>
 
 </body>
 </html>
