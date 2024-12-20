@@ -361,7 +361,7 @@ let currentLessonNum = 0;
 								<option value="51">경영학과 과대표</option>
 								<option value="52">경찰행정학과 과대표</option>
 								<option value="53">디자인학과 과대표</option>
-								<option value="54">음악공연학과 과대표</option>
+								<option value="54">화학 과대표</option>
 								<option value="55">컴퓨터공학전자과 과대표</option>
 								<option value="56">정보통신학과 과대표</option>
 							</select>
