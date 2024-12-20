@@ -14,367 +14,369 @@
     <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
      --%>
 <link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+   href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
 <link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+   href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/main.css">
+   href="${pageContext.request.contextPath}/resources/css/main.css">
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/resources/js/main.js"></script>
+   src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp" />
 </head>
 
 <body>
-	<header>
-		<jsp:include page="/WEB-INF/views/layout/header.jsp" />
-	</header>
-	<form name="mainForm" method="get">
-		<div class="container-fluid">
-			<div class="row">
-				<!-- 왼쪽 사이드 -->
-				<div class="col-2 d-none d-lg-block" id="leftSide">
-					<div class="profile-container">
-						<c:choose>
-							<c:when test="${sessionScope.member != null || sessionScope.member.role > 40}">
-								<div class="profile">
-									<h5>나의 정보</h5>
-									<div class="profile-info">
-										<div class="MyPicture">
+   <header>
+      <jsp:include page="/WEB-INF/views/layout/header.jsp" />
+   </header>
+   <form name="mainForm" method="get">
+      <div class="container-fluid">
+         <div class="row">
+            <!-- 왼쪽 사이드 -->
+            <div class="col-2 d-none d-lg-block" id="leftSide">
+               <div class="profile-container">
+                  <c:choose>
+                     <c:when test="${sessionScope.member != null}">
+                        <div class="profile">
+                           <h5>나의 정보</h5>
+                           <div class="profile-info">
+                              <div class="MyPicture">
 
-											<c:if test="${not empty sessionScope.member.image}">
-												<img
-													src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}">
-											</c:if>
+                                 <c:if test="${not empty sessionScope.member.image}">
+                                    <img
+                                       src="${pageContext.request.contextPath}/uploads/photo/${sessionScope.member.image}">
+                                 </c:if>
 
-											<c:if test="${empty sessionScope.member.image}">
-												<img
-													src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
-											</c:if>
+                                 <c:if test="${empty sessionScope.member.image}">
+                                    <img
+                                       src="${pageContext.request.contextPath}/resources/images/indexUI/profile.jpg">
+                                 </c:if>
 
-										</div>
-										<h6>닉네임: ${sessionScope.member.nickName}</h6>
-									</div>
-									<div class="profile-buttons">
-										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/member/myPage'">
-											내정보</button>
-										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/member/logout'">
-											로그아웃</button>
-									</div>
-								</div>
-							</c:when>
-							<c:otherwise>
-								<div class="login-prompt">
-									<h6>
-										커뮤니티 이용을 위해<br>로그인이 필요합니다!
-									</h6>
-									<div class="login-buttons">
-										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/member/login'">
-											로그인</button>
-										<button type="button"
-											onclick="location.href='${pageContext.request.contextPath}/member/member'">
-											회원가입</button>
-									</div>
-								</div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<div class="row">
-						<div class="col">
-							<div class="weather"></div>
-						</div>
-					</div>
-					<div class="row ad-container">
-						<div class="col">
-							<div class="ad">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/indexUI/ad1.jpg">
-							</div>
-						</div>
-					</div>
-					<div class="row ad-container">
-						<div class="col">
-							<div class="ad">
-								<img
-									src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
-							</div>
-						</div>
-					</div>
-				</div>
+                              </div>
+                              <h6>닉네임: ${sessionScope.member.nickName}</h6>
+                           </div>
+                           <div class="profile-buttons">
+                              <button type="button"
+                                 onclick="location.href='${pageContext.request.contextPath}/member/myPage'">
+                                 내정보</button>
+                              <button type="button"
+                                 onclick="location.href='${pageContext.request.contextPath}/member/logout'">
+                                 로그아웃</button>
+                           </div>
+                        </div>
+                     </c:when>
+                     <c:otherwise>
+                        <div class="login-prompt">
+                           <h6>
+                              커뮤티니 이용을 위해<br>로그인이 필요합니다!
+                           </h6>
+                           <div class="login-buttons">
+                              <button type="button"
+                                 onclick="location.href='${pageContext.request.contextPath}/member/login'">
+                                 로그인</button>
+                              <button type="button"
+                                 onclick="location.href='${pageContext.request.contextPath}/member/member'">
+                                 회원가입</button>
+                           </div>
+                        </div>
+                     </c:otherwise>
+                  </c:choose>
+               </div>
+               <div class="row">
+                  <div class="col">
+                     <div class="weather"></div>
+                  </div>
+               </div>
+               <div class="row ad-container">
+                  <div class="col">
+                     <div class="ad">
+                        <img
+                           src="${pageContext.request.contextPath}/resources/images/indexUI/ad1.jpg">
+                     </div>
+                  </div>
+               </div>
+               <div class="row ad-container">
+                  <div class="col">
+                     <div class="ad">
+                        <img
+                           src="${pageContext.request.contextPath}/resources/images/indexUI/ad2.jpg">
+                     </div>
+                  </div>
+               </div>
+            </div>
 
-				<!-- 중앙 화면 -->
-				<div class="col-7 col-lg-7" id="mainContent">
-					<div class="lucky">
-						<a href="${pageContext.request.contextPath}/main/lucky">
-							<img src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg" class="lucky-image">
-						</a>
-					</div>
+            <!-- 중앙 화면 -->
+            <div class="col-7 col-lg-7" id="mainContent">
+               <div class="lucky">
+                  <a href="${pageContext.request.contextPath}/main/lucky"> <img
+                     src="${pageContext.request.contextPath}/resources/images/indexUI/lucky.jpg"
+                     class="lucky-image">
+                  </a>
+               </div>
 
-					<div class="row">
-						<div class="col" id="bbs-container">
-							<div class="container text-center">
-								<div class="row row-cols-2">
+               <div class="row">
+                  <div class="col" id="bbs-container">
+                     <div class="container text-center">
+                        <div class="row row-cols-2">
 
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 자유게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${freeBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 학과별게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/lessonBoard/list">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${lessonBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 비밀게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/bbs/secretBoard/list">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:if test="${sessionScope.member.role >= 40}">
-													<c:forEach var="dto" items="${secretBoard}">
-														<div class="text-truncate px-2 subject-list">
-															<!-- text-truncate : 말줄임표 -->
-															<a href="${pageContext.request.contextPath}/bbs/secretBoard/article?type=SECRET&cmNum=${dto.cmNum}&page=1">
-																	${dto.title}
-															</a>
-														</div>
-													</c:forEach>
-												</c:if>
-												<c:if test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
-													<div class="text-center">
-														<p>로그인후 작성해주세요</p>
-														<a href="${pageContext.request.contextPath}/login">로그인</a>
-													</div>
-												</c:if>
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 공지게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/noticeBoard/list">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${noticeBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/noticeBoard/article?noticeNum=${dto.cm_num}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 자유게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=free">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${freeBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=free&cmNum=${dto.cmNum}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 학과별게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/lessonBoard/list">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${lessonBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/lessonBoard/article?cm_num=${dto.cm_num}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 비밀게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/bbs/secretBoard/list">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:if test="${sessionScope.member.role >= 40}">
+                                       <c:forEach var="dto" items="${secretBoard}">
+                                          <div class="text-truncate px-2 subject-list">
+                                             <!-- text-truncate : 말줄임표 -->
+                                             <a
+                                                href="${pageContext.request.contextPath}/bbs/secretBoard/article?type=SECRET&cmNum=${dto.cmNum}&page=1">
+                                                ${dto.title} </a>
+                                          </div>
+                                       </c:forEach>
+                                    </c:if>
+                                    <c:if
+                                       test="${sessionScope.member.role == null || sessionScope.member.role < 40}">
+                                       <div class="text-center">
+                                          <p>로그인후 작성해주세요</p>
+                                          <a href="${pageContext.request.contextPath}/login">로그인</a>
+                                       </div>
+                                    </c:if>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 공지게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/noticeBoard/list">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${noticeBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/noticeBoard/article?noticeNum=${dto.cm_num}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
 
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 새내기게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=student">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${studentBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=student&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 정보게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=info">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${infoBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=info&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 새내기게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=student">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${studentBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=student&cmNum=${dto.cmNum}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 정보게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/bbs/infoBoard/list?type=info">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${infoBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/bbs/infoBoard/article?type=info&cmNum=${dto.cmNum}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
 
-											</div>
-										</div>
-									</div>
-									<div class="col">
-										<div class="board-container">
-											<div class="board-title subject-list" style="color: #A447AB;">
-												<i class="bi bi-clipboard"></i> 졸업생게시판
-												<div class="more-link">
-													<a
-														href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=oldbie">더보기</a>
-												</div>
-											</div>
-											<div class="board-contant">
-												<c:forEach var="dto" items="${oldbieBoard}">
-													<div class="text-truncate px-2 subject-list">
-														<!-- text-truncate : 말줄임표 -->
-														<a
-															href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=oldbie&cmNum=${dto.cmNum}&page=1">
-															${dto.title} </a>
-													</div>
-												</c:forEach>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col">
+                              <div class="board-container">
+                                 <div class="board-title subject-list" style="color: #A447AB;">
+                                    <i class="bi bi-clipboard"></i> 졸업생게시판
+                                    <div class="more-link">
+                                       <a
+                                          href="${pageContext.request.contextPath}/bbs/studentBoard/list?type=oldbie">더보기</a>
+                                    </div>
+                                 </div>
+                                 <div class="board-contant">
+                                    <c:forEach var="dto" items="${oldbieBoard}">
+                                       <div class="text-truncate px-2 subject-list">
+                                          <!-- text-truncate : 말줄임표 -->
+                                          <a
+                                             href="${pageContext.request.contextPath}/bbs/studentBoard/article?type=oldbie&cmNum=${dto.cmNum}&page=1">
+                                             ${dto.title} </a>
+                                       </div>
+                                    </c:forEach>
 
-											</div>
-										</div>
-									</div>
+                                 </div>
+                              </div>
+                           </div>
 
-								</div>
-							</div>
-						</div>
-					</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
 
-				</div>
+            </div>
 
-				<!-- 오른쪽 사이드 -->
-				<jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
+            <!-- 오른쪽 사이드 -->
+            <jsp:include page="/WEB-INF/views/main/rightSide.jsp" />
 
-			</div>
-		</div>
-	</form>
+         </div>
+      </div>
+   </form>
 
-	<script type="text/javascript">
-		$(function() {
-			const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Seoul&appid=88ab27b7f970936f979a5be2c9dc8df1&units=metric';
-			const weatherTransfer = {
-				'Snow' : '눈',
-				'Rain' : '비',
-				'Clear' : '맑음',
-				'Clouds' : '구름'
-			};
-			const now = new Date();
-			const today = now.toISOString().split('T')[0];
+   <script type="text/javascript">
+      $(function() {
+         const apiUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Seoul&appid=88ab27b7f970936f979a5be2c9dc8df1&units=metric';
+         const weatherTransfer = {
+            'Snow' : '눈',
+            'Rain' : '비',
+            'Clear' : '맑음',
+            'Clouds' : '구름'
+         };
+         const now = new Date();
+         const today = now.toISOString().split('T')[0];
 
-			$
-					.getJSON(
-							apiUrl,
-							function(data) {
-								let found = false;
+         $
+               .getJSON(
+                     apiUrl,
+                     function(data) {
+                        let found = false;
 
-								$
-										.each(
-												data.list,
-												function(i, item) {
-													const date = item.dt_txt
-															.split(' ')[0];
+                        $
+                              .each(
+                                    data.list,
+                                    function(i, item) {
+                                       const date = item.dt_txt
+                                             .split(' ')[0];
 
-													if (date === today
-															&& !found) {
-														const temp = item.main.temp;
-														const humidity = item.main.humidity;
-														const speed = item.wind.speed;
-														const weather = weatherTransfer[item.weather[0].main]
-																|| '기타';
-														const icon = item.weather[0].icon;
+                                       if (date === today
+                                             && !found) {
+                                          const temp = item.main.temp;
+                                          const humidity = item.main.humidity;
+                                          const speed = item.wind.speed;
+                                          const weather = weatherTransfer[item.weather[0].main]
+                                                || '기타';
+                                          const icon = item.weather[0].icon;
 
-														$(
-																'<h4/>',
-																{
-																	text : date
-																			+ ' ('
-																			+ [
-																					'일',
-																					'월',
-																					'화',
-																					'수',
-																					'목',
-																					'금',
-																					'토' ][new Date(
-																					date)
-																					.getDay()]
-																			+ ')',
-																	css : {
-																		'font-size' : '16px',
-																		'padding-left' : '13px'
-																	}
-																}).appendTo(
-																'.weather');
+                                          $(
+                                                '<h4/>',
+                                                {
+                                                   text : date
+                                                         + ' ('
+                                                         + [
+                                                               '일',
+                                                               '월',
+                                                               '화',
+                                                               '수',
+                                                               '목',
+                                                               '금',
+                                                               '토' ][new Date(
+                                                               date)
+                                                               .getDay()]
+                                                         + ')',
+                                                   css : {
+                                                      'font-size' : '16px',
+                                                      'padding-left' : '13px'
+                                                   }
+                                                }).appendTo(
+                                                '.weather');
 
-														$(
-																'<ul/>',
-																{
-																	'class' : 'weather-list',
-																	html : '<li> 온도 : '
-																			+ temp
-																			+ '<br>습도 : '
-																			+ humidity
-																			+ '<br>바람: '
-																			+ speed
-																			+ '<br>날씨: '
-																			+ weather
-																			+ ' <img src="http://openweathermap.org/img/w/' + icon + '.png"></li>',
-																	css : {
-																		'font-size' : '14px'
-																	}
-																}).appendTo(
-																'.weather');
+                                          $(
+                                                '<ul/>',
+                                                {
+                                                   'class' : 'weather-list',
+                                                   html : '<li> 온도 : '
+                                                         + temp
+                                                         + '<br>습도 : '
+                                                         + humidity
+                                                         + '<br>바람: '
+                                                         + speed
+                                                         + '<br>날씨: '
+                                                         + weather
+                                                         + ' <img src="http://openweathermap.org/img/w/' + icon + '.png"></li>',
+                                                   css : {
+                                                      'font-size' : '14px'
+                                                   }
+                                                }).appendTo(
+                                                '.weather');
 
-														found = true;
-													}
-												});
-							});
-		});
-	</script>
+                                          found = true;
+                                       }
+                                    });
+                     });
+      });
+   </script>
 
-	<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
-	<jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
+   <jsp:include page="/WEB-INF/views/layout/footer.jsp" />
+   <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp" />
 </body>
 </html>
