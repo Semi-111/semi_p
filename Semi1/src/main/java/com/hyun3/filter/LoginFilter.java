@@ -98,7 +98,7 @@ public class LoginFilter implements Filter {
 				"/member/member", "/member/userIdCheck", "/member/complete",
 				"/notice/list","/map/**","/map" , "/rightSide",
 				"/uploads/photo/**","/schedule/**",
-				"/resources/**" , "/main/survey"
+				"/resources/**" , "/main/lucky"
 		};
 
 		if(uri.length() <= 1) {
