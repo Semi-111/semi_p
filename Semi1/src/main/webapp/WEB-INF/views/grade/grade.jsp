@@ -164,6 +164,8 @@ $(function () {
 // 성적 등록 버튼 클릭 이벤트
 $('.submit-btn').click(function() {	
     let formData = [];
+    
+    
 	
     $('tr[data-atnum]').each(function() {		
 		let atNum = $(this).attr('data-atnum'); // 교과목 ID
@@ -178,6 +180,8 @@ $('.submit-btn').click(function() {
     const queryString = formData.map(function(item) {
     	return 'atNum=' + encodeURIComponent(item.atNum) + '&grade=' + encodeURIComponent(item.grade);
 	}).join('&');
+    
+
 	
 	
 	let url = '${pageContext.request.contextPath}/grade/updateGrade';
@@ -242,19 +246,7 @@ function createOrUpdateChart(semesters, overallGrades) {
                 
                 scales: {
                 	x: {
-                		
-                		ticks: {
-                            callback: function (value, index) {
-                                const label = this.getLabelForValue(value);
-                                if (Array.isArray(label)) {
-                                    return label.join("\n");
-                                }
-                                return label;
-                            },
-                            maxRotation: 0, // 라벨 회전 비활성화
-                            minRotation: 0,
-                        },
-                      
+                	                     
                         grid: {
                             drawBorder: true, // X축 경계선 표시
                             drawTicks: false, // X축 틱 제거
@@ -294,7 +286,16 @@ function fetchGradeData() {
         type: "POST",
         dataType: "json",
         success: function (data) {
-        	const semesters = data.semesters; // 학기 데이터
+        	const semesters = [
+                "1학년 1학기",
+                "1학년 2학기",
+                "2학년 1학기",
+                "2학년 2학기",
+                "3학년 1학기",
+                "3학년 2학기",
+                "4학년 1학기",
+                "4학년 2학기",
+            ];
             const overallGrades = data.overallGrades; // GPA 데이터
 
             // Chart.js 그래프 생성/업데이트

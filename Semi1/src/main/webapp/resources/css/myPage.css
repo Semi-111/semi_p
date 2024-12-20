@@ -1,0 +1,158 @@
+/* 전체 컨테이너 스타일 */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 섹션 스타일 */
+.profile-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+    border-bottom: 2px solid #ececec;
+    padding-bottom: 10px;
+}
+
+/* 정보 아이템 스타일 */
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.info-item .label {
+    width: 100px;
+    font-weight: bold;
+    color: #555;
+}
+
+.info-item .value {
+    color: #333;
+}
+
+/* 로그아웃 버튼 스타일 */
+.logout .btn {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout .btn:hover {
+    background-color: #ff4d4d;
+}
+
+/* 계정 변경 버튼 스타일 */
+.actions .changeBtn {
+    display: block;
+    background-color: #d1c4e9;
+    color: #4a148c;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+}
+
+.actions .changeBtn:hover {
+    background-color: #b39ddb;
+}
+
+/* 프로필 이미지 업로드 스타일 */
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.image-upload img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.image-upload input[type="file"] {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.image-upload .uploadBtn {
+    background-color: #81c784;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.image-upload .uploadBtn:hover {
+    background-color: #66bb6a;
+}
+
+/* 일정 섹션 스타일 */
+.schedule p {
+    color: #757575;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* 회원 탈퇴 버튼 */
+.changeBtn {
+    background-color: #f06292;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.changeBtn:hover {
+    background-color: #ec407a;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .info-item .label {
+        width: 80px;
+    }
+
+    .profile-section {
+        padding: 15px;
+    }
+
+    .image-upload img {
+        width: 100px;
+        height: 100px;
+    }
+}

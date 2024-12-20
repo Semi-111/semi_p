@@ -14,6 +14,7 @@
 }
 
 /* 왼쪽 사이드 화면 */
+
 /* 프로필 컨테이너 스타일 */
 .profile-container, .login-prompt {
 	background-color: #f9f9f9;
@@ -58,29 +59,29 @@
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
-	object-fit: cover; /* 이미지 비율을 맞추면서 크기 조정 */
+	object-fit: cover;
 }
 
-
-/* 슬라이더 설정 */
-.slider-container {
+/* 왼쪽 광고(이미지) */
+.ad-container {
 	margin-bottom: 20px;
 }
 
-.slider {
+.ad {
 	display: flex;
 	overflow: hidden;
 	position: relative;
 }
 
-.slider img {
+.ad img {
 	width: 100%;
 	height: auto;
 	transition: transform 0.3s ease;
+	border: 1px solid #888888;
 }
 
-.slider:hover img {
-	transform: scale(1.05); /* 호버 시 이미지 확대 */
+.ad:hover img {
+	transform: scale(1.03);
 }
 
 /* 중앙 컨테이너 */
@@ -207,76 +208,75 @@
 }
 
 .sidebar {
-    width: 320px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 15px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	width: 320px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	padding: 15px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .search-bar input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	font-size: 14px;
 }
 
 .section {
-    margin-top: 20px;
+	margin-top: 20px;
 }
 
 .section-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #0078ff;
+	display: flex;
+	justify-content: space-between;
+	font-weight: bold;
+	margin-bottom: 10px;
+	color: #0078ff;
 }
 
 .section-header a {
-    text-decoration: none;
-    font-size: 12px;
-    color: #777;
+	text-decoration: none;
+	font-size: 12px;
+	color: #777;
 }
 
 .section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
 
 .section ul li {
-    font-size: 14px;
-    margin-bottom: 10px;
+	font-size: 14px;
+	margin-bottom: 10px;
 }
 
 .section ul li span {
-    display: block;
-    font-size: 12px;
-    color: #888;
-    margin-top: 2px;
+	display: block;
+	font-size: 12px;
+	color: #888;
+	margin-top: 2px;
 }
 
 .review {
-    font-size: 14px;
-    margin-bottom: 20px;
+	font-size: 14px;
+	margin-bottom: 20px;
 }
 
 .review p {
-    margin: 5px 0;
+	margin: 5px 0;
 }
 
 .review strong {
-    color: #333;
+	color: #333;
 }
 
 .review p:nth-child(1) {
-    font-size: 15px;
-    font-weight: bold;
-    margin-bottom: 5px;
+	font-size: 15px;
+	font-weight: bold;
+	margin-bottom: 5px;
 }
-
 
 /* 화면 축소 시 중앙화면만 보이게 설정 */
 @media ( max-width : 992px) {

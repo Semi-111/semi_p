@@ -40,15 +40,14 @@
 
 		<!-- 검색 -->
 		<div class="search-box">
-			<form name="searchForm"
-				action="${pageContext.request.contextPath}/market/list" method="get">
+			<form name="searchForm" action="${pageContext.request.contextPath}/market/list" method="get">
 				<div style="display: flex; gap: 10px; justify-content: center;">
 					<select name="schType" class="form-select">
 						<option value="all" ${schType=="all"?"selected":""}>제목+내용</option>
 						<option value="title" ${schType=="title"?"selected":""}>제목</option>
 						<option value="content" ${schType=="content"?"selected":""}>내용</option>
-					</select> <input type="text" name="kwd" value="${kwd}" class="form-control"
-						placeholder="검색어를 입력하세요">
+					</select> 
+					<input type="text" name="kwd" value="${kwd}" class="form-control" placeholder="검색어를 입력하세요">
 					<button type="button" class="btn" onclick="searchList();">검색</button>
 				</div>
 			</form>
@@ -61,7 +60,7 @@
 				<c:forEach var="dto" items="${list}">
 					<div class="post-item">
 						<h3 class="post-title">
-							<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${current_page}">${dto.title}</a>
+							<a href="${pageContext.request.contextPath}/market/article?marketNum=${dto.marketNum}&page=${page}">${dto.title}</a>
 						</h3>
 						<div class="post-info">
 							<span>작성자: ${dto.nickName}</span> 

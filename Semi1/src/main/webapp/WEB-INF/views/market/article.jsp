@@ -73,9 +73,9 @@
 				    </c:if>
 				    <button class="btn btn-red">신고</button>
 				    <button type="button" class="btn btn-gray" 
-				        onclick="location.href='${pageContext.request.contextPath}/market/list?${query}'">
-				        <i class="bi bi-list"></i> 목록
-				    </button>
+		        onclick="location.href='${pageContext.request.contextPath}/market/list?${query}'">
+		        <i class="bi bi-list"></i> 목록
+		    </button>
 				</div>
 				
 			</div>

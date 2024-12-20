@@ -195,13 +195,14 @@ public class GradePointDAO {
 		String sql;
 		
 		try {
-			sql = " UPDATE at_subject SET grade=? WHERE at_num = ? ";
+			sql = " UPDATE at_subject SET grade=? "
+					+ " WHERE at_num = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getGrade());
 			pstmt.setLong(2, dto.getAt_Num());
-			
+						
 			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {

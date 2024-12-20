@@ -16,11 +16,15 @@ public class MemberDAO {
 		MemberDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql;
 
 		try {
-			sql = "SELECT mb_Num, userId, nickname, " + " role, ca_Day, lessonNum " + " FROM member "
-					+ " WHERE userId = ? AND pwd = ? AND block = 0";
+			String sql = "SELECT m.mb_Num,  m.userId, m.pwd,  m.nickName,  m.role, m.ca_Day, m.lessonNum, " +
+					" dt.name, dt.email, dt.birthday, dt.tel, dt.studentnum " +
+					" FROM member m " +
+					" LEFT JOIN DT_MEMBER dt ON m.mb_Num = dt.mb_Num " +
+					" WHERE m.userId = ? " +
+					"  AND m.pwd = ? " +
+					"  AND m.block = 0";
 
 			pstmt = conn.prepareStatement(sql);
 
@@ -31,13 +35,19 @@ public class MemberDAO {
 
 			if (rs.next()) {
 				dto = new MemberDTO();
-
 				dto.setMb_Num(rs.getLong("mb_Num"));
 				dto.setUserId(rs.getString("userId"));
-				dto.setName(rs.getString("nickname"));
+				dto.setPwd(rs.getString("pwd"));
+				dto.setNickName(rs.getString("nickName"));
 				dto.setRole(rs.getString("role"));
 				dto.setCa_Day(rs.getString("ca_Day"));
-				dto.setLessonNum(rs.getInt("lessonNum")); // lessonNum 설정 추가
+				dto.setLessonNum(rs.getInt("lessonNum"));
+
+				dto.setName(rs.getString("name"));
+				dto.setEmail(rs.getString("email"));
+				dto.setBirth(rs.getString("birthday"));
+				dto.setTel(rs.getString("tel"));
+				dto.setStudentNum(rs.getInt("studentnum"));
 			}
 
 		} catch (Exception e) {
@@ -179,20 +189,20 @@ public class MemberDAO {
 		/*
 		 * try { /* sql = "UPDATE member SET pwd=?, modifyDay=SYSDATE WHERE userId = ?";
 		 * pstmt = conn.prepareStatement(sql);
-		 * 
+		 *
 		 * pstmt.setString(1, dto.getPwd()); pstmt.setString(2, dto.getUserId());
 		 * pstmt.executeUpdate();
-		 * 
+		 *
 		 * pstmt.close(); pstmt = null;
-		 * 
+		 *
 		 * sql =
 		 * "UPDATE dt_member SET email=?, birthday=TO_DATE(?,'YYYY-MM-DD'), tel=? WHERE =?"
 		 * ; pstmt = conn.prepareStatement(sql);
-		 * 
+		 *
 		 * pstmt.setString(1, dto.getEmail()); pstmt.setString(2, dto.getBirth());
 		 * pstmt.setString(3, dto.getTel()); pstmt.setLong(4, dto.getMb_Num());
 		 * pstmt.executeUpdate();
-		 * 
+		 *
 		 * pstmt.executeUpdate();
 		 */
 
@@ -200,15 +210,15 @@ public class MemberDAO {
 		 * sql = "SELECT mb_Num FROM member WHERE userId = ?"; pstmt =
 		 * conn.prepareStatement(sql); pstmt.setString(1, dto.getUserId()); ResultSet rs
 		 * = pstmt.executeQuery();
-		 * 
+		 *
 		 * if (rs.next()) { long mb_Num = rs.getLong("mb_Num");
-		 * 
+		 *
 		 * // 2. dt_member 테이블 업데이트 sql =
 		 * "UPDATE dt_member SET email = ?, birthday = TO_DATE(?, 'YYYY-MM-DD'), tel = ? WHERE mb_Num = ?"
 		 * ; pstmt = conn.prepareStatement(sql); pstmt.setString(1, dto.getEmail());
 		 * pstmt.setString(2, dto.getBirth()); pstmt.setString(3, dto.getTel());
 		 * pstmt.setLong(4, mb_Num); pstmt.executeUpdate(); }
-		 * 
+		 *
 		 * } catch (SQLException e) { e.printStackTrace(); throw e; } finally {
 		 * DBUtil.close(pstmt); }
 		 */

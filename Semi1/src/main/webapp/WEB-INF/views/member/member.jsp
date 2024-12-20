@@ -13,12 +13,12 @@
 <style type="text/css">
 .body-container {
 	max-width: 800px;
-	margin: 10px auto;
+	margin: 20px auto;
 	padding: 20px;
 	background: #FCFCFC;
 	box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15), 0 3px 3px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
+	transition: transform 0.3s ease, box-shadow 0.2s ease;
 }
 
 .body-container:hover {
