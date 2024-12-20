@@ -60,7 +60,7 @@ public class LectureReviewController {
 				current_page = Integer.parseInt(page);
 			}
 			
-			int dataCount = dao.dataCount();
+			
 			
 			String kwd = req.getParameter("kwd");
 			if (kwd == null) {
@@ -70,6 +70,13 @@ public class LectureReviewController {
 			// GET 방식이면 디코딩
 			if(req.getMethod().equalsIgnoreCase("GET")) {
 				kwd = URLDecoder.decode(kwd, "utf-8");
+			}
+			
+			int dataCount;
+			if(kwd.length() == 0) {
+				dataCount = dao.dataCount();
+			} else {
+				dataCount = dao.dataCount(kwd);
 			}
 			
 			// 전체 페이지 수
@@ -83,9 +90,11 @@ public class LectureReviewController {
 			int offset = (current_page - 1) * size;
 			if(offset < 0) offset = 0;
 			
-			List<LectureReviewDTO> reviewList = dao.listReview(offset, size);
+			List<LectureReviewDTO> reviewList = null;
 			if(kwd.length() == 0) {
 				reviewList = dao.listReview(offset, size);
+			} else {
+				reviewList = dao.listReview(offset, size, kwd);
 			}
 			
 			for(LectureReviewDTO dto : reviewList) {

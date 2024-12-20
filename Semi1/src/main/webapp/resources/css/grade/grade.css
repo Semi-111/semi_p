@@ -15,7 +15,7 @@ body {
 .grade-main { background-color: #ffffff; }
 
 .container {
-	max-width: 900px !important;
+	max-width: 1000px !important;
 	margin: 0 auto;
 	padding: 20px;
 }

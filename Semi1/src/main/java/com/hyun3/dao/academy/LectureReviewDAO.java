@@ -201,6 +201,102 @@ public class LectureReviewDAO {
 		return result;
 	}
 	
+	
+	public int dataCount(String kwd) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT COUNT(*) cnt ");
+			sb.append(" FROM lecturereview lr ");
+			sb.append(" JOIN at_subject at ON lr.at_num = at.at_num ");
+			sb.append(" JOIN member m ON at.mb_num = m.mb_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE m.block = 0 ");
+			sb.append(" AND (INSTR(s.sb_name, ?) >=1 OR INSTR(p.pf_name, ?) >= 1) ");
+			sb.append(" ORDER BY lr.reg_date DESC ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, kwd);
+			pstmt.setString(2, kwd);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("cnt");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return result;
+	}
+	
+	public List<LectureReviewDTO> listReview(int offset, int size, String kwd) {
+		List<LectureReviewDTO> list = new ArrayList<LectureReviewDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT lr.review_num, at.at_num, m.nickName, ");
+			sb.append(" s.sb_name, p.pf_name, lr.content, lr.rating ");
+			sb.append(" FROM lecturereview lr ");
+			sb.append(" JOIN at_subject at ON lr.at_num = at.at_num ");
+			sb.append(" JOIN member m ON at.mb_num = m.mb_num ");
+			sb.append(" JOIN dt_subject dt on at.dt_sub_num = dt.dt_sub_num ");
+			sb.append(" JOIN subject s on dt.sb_num = s.sb_num ");
+			sb.append(" JOIN pf_sb ps on s.sb_num = ps.sb_num ");
+			sb.append(" JOIN professor p on ps.pf_num = p.pf_num ");
+			sb.append(" WHERE m.block = 0 ");
+			sb.append(" AND (INSTR(s.sb_name, ?) >=1 OR INSTR(p.pf_name, ?) >= 1) ");
+			sb.append(" ORDER BY lr.reg_date DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			
+			pstmt.setString(1, kwd);
+			pstmt.setString(2, kwd);
+			pstmt.setInt(3, offset);
+			pstmt.setInt(4, size);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				LectureReviewDTO dto = new LectureReviewDTO();
+				
+				dto.setReview_Num(rs.getLong("review_num"));
+				dto.setAt_Num(rs.getLong("at_num"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setSb_Name(rs.getString("sb_name"));
+				dto.setPf_Name(rs.getString("pf_name"));
+				dto.setContent(rs.getString("content"));
+				dto.setRating(rs.getInt("rating"));
+			
+				list.add(dto);
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBUtil.close(rs);
+			DBUtil.close(pstmt);
+		}
+		
+		return list;
+	}
+	
+	
 	// 해당 게시물 보기
 	public LectureReviewDTO findByRvNum(long reviewNum) {
 		LectureReviewDTO dto = null;
