@@ -46,21 +46,29 @@
                 <span>최근 강의평</span>
                 <a href="${pageContext.request.contextPath}/lectureReview/list">더 보기</a>
             </div>
-            <c:forEach var="dto" items="${listReview}">
-                <div class="review">
-	            	<div class="star-rate">
-	            		<c:forEach begin="1" end="5" var="i">          	                		
-	                    	<i class="fa fa-star star ${i <= dto.rating ? 'active' : ''}" data-value="${i}"></i>
-	                    </c:forEach>                	
+            <c:if test="${userRole >= 40}">
+                <c:forEach var="dto" items="${listReview}">
+                    <div class="review">
+                        <div class="star-rate">
+                            <c:forEach begin="1" end="5" var="i">
+                                <i class="fa fa-star star ${i <= dto.rating ? 'active' : ''}" data-value="${i}"></i>
+                            </c:forEach>
+                        </div>
+                        <p class="title">
+                            <a href="${pageContext.request.contextPath}/lectureReview/article?review_num=${dto.review_Num}&page=${page}">${dto.sb_Name} : ${dto.pf_Name}</a>
+                        </p>
+                        <p class="content">
+                                ${dto.content}
+                        </p>
                     </div>
-                    <p class="title">
-                    	<a href="${pageContext.request.contextPath}/lectureReview/article?review_num=${dto.review_Num}&page=${page}">${dto.sb_Name} : ${dto.pf_Name}</a>        
-                    </p>
-                    <p class="content">
-                            ${dto.content}
-                    </p>
+                </c:forEach>
+            </c:if>
+            <c:if test="${userRole == null || userRole < 40}">
+                <div class="text-center">
+                    <p>로그인후 작성해주세요</p>
+                    <a href="${pageContext.request.contextPath}/login">로그인</a>
                 </div>
-            </c:forEach>
+            </c:if>
         </div>
     </div>
 	
