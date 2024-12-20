@@ -35,28 +35,35 @@ public class StudentBoardDAO {
 
   // 게시글 추가
   public void insertBoard(StudentBoardDTO dto, long mbNum) throws SQLException {
-    String sql = "INSERT INTO STUDENTBOARD (CM_NUM, DIVISION, TITLE, CONTENT, CA_DATE, FILENAME, VIEWS, MB_NUM, CT_NUM) " +
-        "VALUES (SEQ_STUDENT_BOARD.nextval, ?, ?, ?, SYSDATE, ?, 0, ?, ?)";
+	    String sql = "INSERT INTO STUDENTBOARD (CM_NUM, DIVISION, TITLE, CONTENT, CA_DATE, FILENAME, VIEWS, MB_NUM, CT_NUM) " +
+	        "VALUES (SEQ_STUDENT_BOARD.nextval, ?, ?, ?, SYSDATE, ?, 0, ?, ?)";
 
-    try (PreparedStatement ps = conn.prepareStatement(sql)) {
-      conn.setAutoCommit(false);
+	    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+	      conn.setAutoCommit(false);
 
-      ps.setString(1, dto.getDivision());
-      ps.setString(2, dto.getTitle());
-      ps.setString(3, dto.getContent());
-      ps.setString(4, dto.getFileName());
-      ps.setLong(5, mbNum);
-      ps.setInt(6, dto.getCategoryNum());
+	      ps.setString(1, dto.getDivision());
+	      ps.setString(2, dto.getTitle());
+	      ps.setString(3, dto.getContent());
+	      ps.setString(4, dto.getFileName());
+	      ps.setLong(5, mbNum);
 
-      ps.executeUpdate();
-      conn.commit();
-    } catch (Exception e) {
-      conn.rollback();
-      throw e;
-    } finally {
-      conn.setAutoCommit(true);
-    }
-  }
+	      Integer categoryNum = dto.getCategoryNum();
+
+	      if (categoryNum != null) {
+	        ps.setInt(6, categoryNum);
+	      } else {
+	        ps.setNull(6, java.sql.Types.INTEGER);
+	      }
+
+	      ps.executeUpdate();
+	      conn.commit();
+	    } catch (Exception e) {
+	      conn.rollback();
+	      throw e;
+	    } finally {
+	      conn.setAutoCommit(true);
+	    }
+	  }
 
   // 게시글 수정
   public void updateBoard(StudentBoardDTO dto, long mbNum) throws SQLException {
