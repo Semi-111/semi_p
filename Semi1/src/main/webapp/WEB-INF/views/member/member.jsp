@@ -356,13 +356,13 @@ h3>img {
 										onchange="form.sendButton.disabled = !checked"> <label
 										class="form-check-label"> <a href="#"
 										class="text-decoration-none">이용약관</a>에 동의합니다.
-										<a href="#" class="text-decoration-none">서비스 이용약관 </a>동의(필수)
+										<!-- <a href="#" class="text-decoration-none">서비스 이용약관 </a>동의(필수)
 										<a href="#"
 										class="text-decoration-none">개인정보 수집 및 이용 </a>동의 (필수)
 										<a href="#"
 										class="text-decoration-none">광고성 정보 수신 </a>동의(선택)
 										<a href="#"
-										class="text-decoration-none">만 14세 </a>이상입니다.
+										class="text-decoration-none">만 14세 </a>이상입니다. -->
 									</label>
 								</div>
 							</div>

@@ -21,17 +21,26 @@
 	text-align: center;
 	height: 180px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	box-shadow: none /* 추가 */
 }
 
-.before {
+.login-prompt>h6 {
 	font-weight: bold;
 	color: #E61747;
-	padding-top: 80px;
+	padding-top: 40px;
+	font-size: 16px;
 }
 
-/* 로그인 후 */
-.profile-container {
+.login-buttons>button {
+	justify-content: center;
+	margin-top: 20px;
+	padding: 5px 8px;
+	border: 1px solid #BA81B5;
+	background-color: #fff;
+	border-radius: 5px;
+}
+
+/* 프로필 컨테이너 스타일(로그인 후) */
+.profile {
 	background-color: #F7F7F7;
 	text-align: center;
 	height: 250px;
@@ -39,48 +48,37 @@
 }
 
 .profile>h5 {
-	padding-top: 35px;
 	font-weight: bold;
+	color: #000;
+	padding-top: 30px;
+	font-size: 22px;
 }
 
-/* 프로필 정보 스타일 */
-.profile-info h6 {
-	margin: 20px 0;
+.MyPicture img {
+	width: 70px;
+	height: 70px;
+	margin-top: 10px; border-radius : 50%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.profile-info>h6 {
+	margin-top: 10px;
 	font-size: 15px;
 	color: #333;
 }
 
-/* 버튼 섹션 스타일 */
-.profile-buttons, .login-buttons {
-	display: flex; /* 버튼을 가로로 정렬 */
-	justify-content: center; /* 중앙 정렬 */
-	margin-top: 30px;
-	padding-right: 3px;
-	padding-left: 3px;
-	gap: 5px;
-	padding-right: 3px;
-}
-
-.profile-buttons button, .login-buttons button {
-	padding: 8px 15px;
+.profile-buttons>button {
+	justify-content: center;
+	margin-top: 10px;
+	padding: 5px 8px;
 	border: 1px solid #BA81B5;
-	border-radius: 5px;
 	background-color: #fff;
-	color: #333;
-	font-size: 14px;
-	cursor: pointer;
-	transition: all 0.3s ease;
+	border-radius: 5px;
 }
 
-.profile-buttons button:hover, .login-buttons button:hover {
-	background-color: #FFF6FE;
-}
-
-.MyPicture img {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	object-fit: cover;
+.login-buttons>button:hover, .profile-buttons button:hover {
+	background-color: #e9dafa;
 }
 
 /* 날씨 */
@@ -163,8 +161,8 @@
 }
 
 .board-title .title-text {
-	display: flex; /* 아이콘과 텍스트를 나란히 배치 */
-	align-items: center; /* 세로 가운데 정렬 */
+	display: flex;
+	align-items: center;
 	font-size: 18px;
 	color: #84398a;
 	text-align: left;
@@ -177,7 +175,7 @@
 }
 
 #bbs-container .board-title .more-link a {
-	font-size: 13px; /* 글씨 작게 */
+	font-size: 13px;
 	color: #5C8EC7;
 	text-decoration: none; /* 밑줄 제거 */
 	transition: color 0.2s ease; /* 부드러운 색상 전환 효과 */
@@ -217,7 +215,7 @@
 	display: block; /* a 태그를 블록 요소로 변경 */
 	width: 100%; /* 줄 전체 너비를 차지하도록 설정 */
 	height: 100%; /* 부모 높이에 맞춤 */
-	text-decoration: none; /* 밑줄 제거 */
+	text-decoration: none;
 	color: inherit; /* 텍스트 색상 상속 */
 }
 
