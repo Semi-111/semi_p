@@ -31,20 +31,7 @@ h3>img {
 }
 
 .custom-btn {
-	width: 130px;
-	background-color: #F6EFFA;
-	color: #743394;
-	font-size: 14px;
-	border: 1px solid #8235B6;
-	cursor: pointer;
-	transition: all 0.3s ease;
-	background-color: #F6EFFA;
-	margin-top: 2px;
-}
-
-.custom-btn:hover {
-	background-color: #D5C3E5;
-	color: #000;
+	width: 150px;
 }
 </style>
 
@@ -232,6 +219,7 @@ h3>img {
 											value="false">
 										<c:if test="${mode=='member'}">
 											<button type="button" class="btn custom-btn"
+												style="border: 1px solid #8235B6; background-color: #F6EFFA; color: #743394; cursor: pointer; transition: all 0.3s ease;"
 												onclick="userIdCheck();">아이디중복검사</button>
 										</c:if>
 
@@ -333,8 +321,8 @@ h3>img {
 						<div class="row mb-3">
 							<label class="col-sm-2 col-form-label" for="studentNum">학과</label>
 							<div class="col-sm-7">
-								<select name="lessonNum" id="lessonNum" class="form-control" value="${dto.studentNum}"
-								${mode=="update" ? "readonly" : ""}>
+								<select name="lessonNum" id="lessonNum" class="form-control"
+									value="${dto.studentNum}" ${mode=="update" ? "readonly" : ""}>
 									<option value="0">학과를 선택해주세요</option>
 									<option value="51">경영학과</option>
 									<option value="52">경찰행정</option>
@@ -355,8 +343,7 @@ h3>img {
 										class="form-check-input" checked style="margin-left: 0;"
 										onchange="form.sendButton.disabled = !checked"> <label
 										class="form-check-label"> <a href="#"
-										class="text-decoration-none">이용약관</a>에 동의합니다.
-										<!-- <a href="#" class="text-decoration-none">서비스 이용약관 </a>동의(필수)
+										class="text-decoration-none">이용약관</a>에 동의합니다. <!-- <a href="#" class="text-decoration-none">서비스 이용약관 </a>동의(필수)
 										<a href="#"
 										class="text-decoration-none">개인정보 수집 및 이용 </a>동의 (필수)
 										<a href="#"

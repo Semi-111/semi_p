@@ -1,11 +1,16 @@
 /* 전체 컨테이너 스타일 */
 .container {
     max-width: 800px;
-    margin: 20px auto;
+    margin: 30px auto;
     padding: 20px;
     font-family: 'Noto Sans', sans-serif;
-    background-color: #f9f9f9;
     border-radius: 8px;
+}
+.myPage {
+    width: 70%;
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 20px;
+    background-color: #ececec;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -19,9 +24,9 @@
 }
 
 .profile-section h2 {
-    font-size: 18px;
+    font-size: 22px;
     margin-bottom: 15px;
-    color: #333;
+    color: #000;
     border-bottom: 2px solid #ececec;
     padding-bottom: 10px;
 }
@@ -45,30 +50,31 @@
 
 /* 로그아웃 버튼 스타일 */
 .logout .btn {
-    background-color: #ff6b6b;
+    background-color: #5457d1;
     color: white;
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .logout .btn:hover {
-    background-color: #ff4d4d;
+    background-color: #383cc9;
+    color: #fff;
 }
 
 /* 계정 변경 버튼 스타일 */
 .actions .changeBtn {
     display: block;
-    background-color: #d1c4e9;
+    background-color: #dfceee;
     color: #4a148c;
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     text-align: center;
     width: 100%;
 }
@@ -96,7 +102,7 @@
 
 .image-upload input[type="file"] {
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .image-upload .uploadBtn {
@@ -106,7 +112,7 @@
     border-radius: 4px;
     padding: 8px 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .image-upload .uploadBtn:hover {
@@ -116,25 +122,27 @@
 /* 일정 섹션 스타일 */
 .schedule p {
     color: #757575;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
 }
 
 /* 회원 탈퇴 버튼 */
 .changeBtn {
-    background-color: #f06292;
+    display: block; /* 버튼을 블록 요소로 설정 */
+    background-color: #ff5555;
     color: white;
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
     text-align: center;
-    margin-top: 20px;
+    margin: 20px auto; /* 상하 20px, 좌우 자동 중앙 정렬 */
+    width: fit-content; /* 버튼 크기를 내용에 맞게 조정 */
 }
 
 .changeBtn:hover {
-    background-color: #ec407a;
+    background-color: #ff3333;
 }
 
 /* 반응형 디자인 */

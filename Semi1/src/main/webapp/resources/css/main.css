@@ -57,7 +57,8 @@
 .MyPicture img {
 	width: 70px;
 	height: 70px;
-	margin-top: 10px; border-radius : 50%;
+	margin-top: 10px;
+	border-radius: 50%;
 	object-fit: cover;
 	border-radius: 50%;
 }
@@ -221,6 +222,16 @@
 
 .board-container .subject-list:hover {
 	background-color: #FBF8FC;
+}
+
+/* 로그인 전 비밀게시판 */
+#loginBefore {
+	height: 135px;
+}
+
+.loginPlz {
+	margin-top: 55px;
+	font-weight: bold;
 }
 
 /* 오른쪽 사이드바 */

@@ -9,78 +9,73 @@
 }
 
 .sidebar {
-    width: 320px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    padding: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+	width: 320px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	padding: 10px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* 검색창 */
 .search-bar input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    
-    font-size: 14px;
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ccc;
+	font-size: 14px;
 }
 
 .section {
-    margin-bottom: 5px;
-    border: 1px solid #d6d6d6;
-    
-    margin-top: 10px;
-    
+	margin-bottom: 5px;
+	border: 1px solid #d6d6d6;
+	margin-top: 10px;
 }
 
 .section-header {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    color: #A447AB;
-    padding: 10px;
-    margin: 0;
+	display: flex;
+	justify-content: space-between;
+	font-weight: bold;
+	color: #A447AB;
+	padding: 10px;
 }
 
 .section-header a {
-    text-decoration: none;
-    font-size: 12px;
-    color:#5C8EC7;
+	text-decoration: none;
+	font-size: 12px;
+	color: #5C8EC7;
 }
 
 .section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+	list-style: none;
+	padding: 0;
+	margin: 0;
 }
 
 .section ul li {
-    font-size: 13px;
-    border-top: 1px solid #e3e3e3;
-	padding: 10px;
+	font-size: 13px;
+	border-top: 1px solid #e3e3e3;
+	padding: 5px;
 	display: flex; /* flex를 사용하여 같은 줄 배치 */
-    justify-content: space-between; /* 양 끝으로 배치 */
-    align-items: center; /* 수직 중앙 정렬 */
-    margin: 0;
+	justify-content: space-between; /* 양 끝으로 배치 */
+	align-items: center; /* 수직 중앙 정렬 */
 }
 
 .section ul li span {
-    display: block;
-    font-size: 12px;
-    color: #888;
-    margin-top: 2px;
+	display: block;
+	font-size: 12px;
+	color: #888;
+	margin-top: 2px;
 }
 
 .section li a {
 	text-decoration: none; /* 밑줄 제거 */
 	color: black; /* 텍스트 색상 */
 }
-        
+
 .section li a:hover {
 	background-color: #FBF8FC;
 }
 
-.title a{
+.title a {
 	text-decoration: none; /* 밑줄 제거 */
 	color: black; /* 텍스트 색상 */
 }
@@ -90,24 +85,23 @@
 }
 
 .review {
-    font-size: 14px;
-    padding: 10px;
-    border-top: 1px solid #e3e3e3;
-    margin: 0;
+	font-size: 14px;
+	padding: 10px;
+	border-top: 1px solid #e3e3e3;
 }
 
 .review p {
-    margin: 5px 0;
+	margin: 5px 0;
 }
 
 .review strong {
-    color: #333;
+	color: #333;
 }
 
 .review p.title {
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 5px;
+	font-size: 13px;
+	font-weight: bold;
+	margin-bottom: 5px;
 }
 
 .review p.content {
@@ -115,28 +109,33 @@
 	display: -webkit-box; /* Flexbox의 텍스트 클램핑 지원 */
 	-webkit-box-orient: vertical;
 	overflow: hidden; /* 넘치는 텍스트 숨김 */
-    text-overflow: ellipsis; /* 생략부호 표시 */
-    line-clamp: 2; /* 표시할 줄 수 */
-    -webkit-line-clamp: 2;
+	text-overflow: ellipsis; /* 생략부호 표시 */
+	line-clamp: 2; /* 표시할 줄 수 */
+	-webkit-line-clamp: 2;
 }
 
 .star-rate {
-    display: flex;
-    margin: 2px 0px;
+	display: flex;
+	margin: 2px 0px;
 }
 
 /* 별 회색 */
 .star-rate i {
-    font-size: 8px;
-    color: #ddd;
-    margin-right: 2px;
+	font-size: 8px;
+	color: #ddd;
+	margin-right: 2px;
 }
 
 /* 별 노란색 */
 .star-rate i.active {
-    color: #ffd700;
+	color: #ffd700;
 }
 
+/* 현승 추가 */
+#loginPlz {
+	height: 110px;
+	margin-top: 55px;
+}
 
 /* 화면 축소 시 중앙화면만 보이게 설정 */
 @media ( max-width : 992px) {

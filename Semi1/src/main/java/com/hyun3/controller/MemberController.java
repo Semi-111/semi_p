@@ -5,8 +5,6 @@ import static com.hyun3.mvc.annotation.RequestMethod.POST;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +17,9 @@ import com.hyun3.mvc.annotation.RequestMapping;
 import com.hyun3.mvc.annotation.RequestMethod;
 import com.hyun3.mvc.annotation.ResponseBody;
 import com.hyun3.mvc.view.ModelAndView;
-
 import com.hyun3.util.FileManager;
 import com.hyun3.util.MyMultipartFile;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
